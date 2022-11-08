@@ -43,13 +43,13 @@ sequelize.sync({force:false})
 /* import Routes */
 
 const authRouter = require("./routes/auth");
-const postRouter = require("./routes/post");
-const userRouter = require("./routes/user");
+const postRouter = require("./routes/posts");
+const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 
 app.use("/auth",authRouter);
-app.use("/post",postRouter);
-app.use("/user",userRouter);
+app.use("/posts",postRouter);
+app.use("/users",userRouter);
 app.use("/admin",adminRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.listen(PORT,()=>{console.log("Running...")});
