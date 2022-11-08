@@ -1,5 +1,5 @@
-const db = require('../models')
-const { Post, User, Hashtag } = require('../models');
+const db = require('../sequelize/models')
+const { Post, User, Hashtag } = require('../sequelize/models');
 
 module.exports = {
     postFindAll :async ()=>{
