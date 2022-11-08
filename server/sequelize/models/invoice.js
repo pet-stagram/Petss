@@ -13,8 +13,8 @@ module.exports = class Hashtag extends Sequelize.Model{
             }
         },{
             sequelize,
-            timestamps:false,
-            underscored:false,
+            timestamps:true,
+            underscored:true,
             paranoid:false, 
             modelName:'Invoice', // Sequelize 모델 명 Hashtag
             tableName:'invoice', // MySQL 테이블 명 hashtags
