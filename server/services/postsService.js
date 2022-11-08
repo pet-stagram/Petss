@@ -56,13 +56,17 @@ module.exports = {
                 attributes :["id","name","nick","image"]
                 },
                 {
-                model : Heart
+                    model:Heart,
+                    // where:{
+                        // post_id : this.id
+                    // }
                 }
             ],
-
             raw: true,
             nest:true
         });
+
+
         return result;
     }catch(err){
         throw new Error(err);
