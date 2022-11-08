@@ -10,10 +10,18 @@ module.exports = class Hashtag extends Sequelize.Model{
             content:{
                 type:Sequelize.STRING(1000),
                 allowNull:false
-            }
+            },
+            createdAt: {
+                field: 'created_at',
+                type: Sequelize.DATE,
+            },
+            updatedAt: {
+                field: 'updated_at',
+                type: Sequelize.DATE,
+            },
         },{
             sequelize,
-            timestamps:true,
+            timestamps:false,
             underscored:true,
             paranoid:false, 
             modelName:'Invoice', // Sequelize 모델 명 Hashtag
