@@ -5,8 +5,7 @@ module.exports = class Hashtag extends Sequelize.Model{
             title :{
                 type:Sequelize.STRING(20),
                 allowNull:false
-            }
-            ,
+            },
             content:{
                 type:Sequelize.STRING(1000),
                 allowNull:false

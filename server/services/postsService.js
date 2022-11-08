@@ -21,7 +21,6 @@ async function findFollowUser(userId) {
     followingsResult.forEach((following) => {
         followingsId.push(following.Followings.id);
     });
-
     return followingsId;
 }
 
@@ -65,11 +64,50 @@ module.exports = {
             raw: true,
             nest:true
         });
-
-
         return result;
     }catch(err){
         throw new Error(err);
     }
     },
+    selectPostOne : async (postId) =>{
+        try{
+        const result = await Post.findOne({
+            where : {
+                id : postId
+            },
+            attributes:[
+                "id",
+                "content",
+                "img",
+                [
+                    sequelize.fn
+                    (
+                      "DATE_FORMAT", 
+                      sequelize.col("updated_at"), 
+                      "%d-%m-%Y %H:%i:%s"
+                    ),
+                    "updated_at",
+                ],
+                [sequelize.fn('COUNT', sequelize.col('hearts.user_id')) ,'heart_count']
+            ],
+            include :[
+                {
+                    model : User,
+                    attributes :["id","name","nick","image"]
+                },
+                {
+                    model:Heart,
+                    attributes : []
+                }
+            ],
+            raw:true,
+            nest:true
+        });
+
+        return result;
+    }
+    catch(err){
+        throw new Error(err);
+    }
+    }
 };
