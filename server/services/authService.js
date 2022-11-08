@@ -1,10 +1,10 @@
-const db = require('../models')
-const { Post, User, Hashtag } = require('../models');
+const db = require("../models")
+const { Post, User, Hashtag } = require("../models");
 
 module.exports = {
     postFindAll :async ()=>{
         const posts = await Post.findAll({
-            order:[[ 'id', 'DESC' ]],
+            order:[[ "id", "DESC" ]],
         });
 
         return posts;
