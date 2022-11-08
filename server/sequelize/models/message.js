@@ -30,5 +30,6 @@ module.exports = class Messanger extends Sequelize.Model{
         /*  Chat 테이블에서 chat_id이라는 컬럼명으로 foreign key 참조하여 가져옴*/
         db.Message.belongsTo(db.ChatRoom,{foreignKey:"chat_id"});
 
+        
     }
 }

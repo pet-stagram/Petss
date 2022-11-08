@@ -36,6 +36,16 @@ module.exports = {
                     [Op.in]: followingsId,
                 },
             },
+            include :[
+                {
+                    model : User,
+                    attributes :["id","name","nick","image"]
+                },
+                {
+                    model:Heart,
+                    attributes : []
+                }
+            ],
             attributes:[
                 "id",
                 "content",
@@ -48,20 +58,10 @@ module.exports = {
                       "%d-%m-%Y %H:%i:%s"
                     ),
                     "updated_at",
-                ]
+                ],
+                [sequelize.fn('COUNT', sequelize.col('hearts.user_id')) ,'heart_count']
             ],
-            include :[
-                {
-                model : User,
-                attributes :["id","name","nick","image"]
-                },
-                {
-                    model:Heart,
-                    // where:{
-                        // post_id : this.id
-                    // }
-                }
-            ],
+            group: ['id'],
             raw: true,
             nest:true
         });

@@ -14,7 +14,7 @@ module.exports = class Heart extends Sequelize.Model{
         });
     }
     static associate(db){
-        db.Heart.belongsTo(db.User);
-        db.Heart.belongsTo(db.Post);
+        db.Heart.belongsTo(db.Post,{foreignKey:"post_id"});
+        db.Heart.belongsTo(db.User,{foreignKey:"user_id"});
     }
 };

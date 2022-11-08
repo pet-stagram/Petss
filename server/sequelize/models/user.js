@@ -56,7 +56,7 @@ module.exports = class User extends Sequelize.Model{
         db.User.belongsToMany(db.ChatRoom,{through:'chat_room_has_users'});
 
         db.User.hasMany(db.Message);
-        db.User.hasOne(db.Heart);
+        db.User.hasMany(db.Heart);
         
 
         /* Follow 테이블에 1 : N 관계 
