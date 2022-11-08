@@ -8,11 +8,11 @@ const options = {
       },
       servers: [
         {
-          url: "http://example.com/",
+          url: "http://localhost:5100/",
         },
       ],
     },
-    apis: ["swagger.yaml"],
+    apis: ["./routes/*.js"],
   };
 
 module.exports = options;
