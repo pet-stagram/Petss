@@ -15,7 +15,7 @@ module.exports = {
             }
         }
     },
-    getPostsId : async (req, res) => {
+    getPostsWithId : async (req, res) => {
             const postId = req.params.id;
             try{
                 const result = await service.selectPostOne(postId);
