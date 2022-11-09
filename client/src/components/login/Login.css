@@ -1,0 +1,96 @@
+@import url("https://webfontworld.github.io/gmarket/GmarketSans.css");
+
+body {
+  font-family: "GmarketSans";
+  font-weight: 500;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* font-family: 'Roboto', sans-serif; */
+}
+
+.logContainer {
+  display: flex;
+  /* 디스플레이 플렉스 줘야 얼라인아이템 먹음 */
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: rgb(245, 245, 245);
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+}
+
+.mainBox {
+  display: flex;
+}
+
+.logoBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 350px;
+  margin-right: 100px;
+}
+
+.logo img {
+  width: 100%;
+}
+
+.login {
+  border: 1px solid none;
+  background-color: white;
+  border-collapse: collapse;
+  border-radius: 20px;
+  width: 350px;
+  height: 400px;
+  padding: 30px;
+
+  /*색깔 저장소 
+        노랑색 : #ffec9a 
+        */
+}
+
+.loginfont {
+  text-align: center;
+  margin-bottom: 40px;
+  margin-top: 15px;
+}
+
+.id,
+.pw,
+.btn {
+  width: 250px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  height: 40px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+
+.btn {
+  background-color: rgb(255, 205, 95);
+  border: 1px solid none;
+  border-style: none;
+  font-size: 17px;
+  /* 색상표 
+        하늘색 : #b2ebf2
+
+        */
+}
+
+.mvReg,
+.findPw {
+  margin-top: 35px;
+  margin-left: 20px;
+}
