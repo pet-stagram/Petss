@@ -3,16 +3,21 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const session = require("express-session")
-const cookieParser = require('cookie-parser');
-const {sequelize} = require('./models');
+const cookieParser = require("cookie-parser");
+const {sequelize} = require("./sequelize/models");
 require("dotenv").config();
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require("swagger-ui-express");
+const options = require("./swagger");
+const specs = swaggerJsdoc(options);
+
 
 const app = express();
 const PORT = process.env.SERVER_PORT;
 
 /* Set express middleware */
 app.use(cors());
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname,"public")));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 app.use(cookieParser(process.env.COOKIE_SECRECT));
@@ -29,7 +34,7 @@ app.use(
 /* Set Sequelize(DB) */
 sequelize.sync({force:false})
 .then(()=>{
-    console.log('db connected');
+    console.log("db connected");
 })
 .catch((err)=>{
     console.error(err);
@@ -38,13 +43,13 @@ sequelize.sync({force:false})
 /* import Routes */
 
 const authRouter = require("./routes/auth");
-const postRouter = require("./routes/post");
-const userRouter = require("./routes/user");
+const postRouter = require("./routes/posts");
+const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 
 app.use("/auth",authRouter);
-app.use("/post",postRouter);
-app.use("/user",userRouter);
+app.use("/posts",postRouter);
+app.use("/users",userRouter);
 app.use("/admin",adminRouter);
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.listen(PORT,()=>{console.log("Running...")});
