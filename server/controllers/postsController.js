@@ -33,19 +33,19 @@ module.exports = {
     postPosts : async (req , res) => {
         const files = req.files;
         const postInfo = {
-            user : req.session.id,
+            user : 1,
             content : req.body.content            
         }
         try{
             await service.insertPosts(postInfo);
         }catch(err){
-            res.sendStatus(400);
+            // res.sendStatus(400);
         }
 
         try{
             await service.uploadFile(files);
         }catch(err){
-            res.sendStatus(400);
+            // res.sendStatus(400);
         }
 
         /* 파일 받아서 파베에 올리기 */

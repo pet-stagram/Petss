@@ -11,6 +11,7 @@ const ChatRoom = require('./chatRoom');
 const Message = require('./message');
 const Heart = require('./heart');
 const Comment = require('./comment');
+const PostImage = require('./postImage');
 
 let sequelize = new Sequelize( config.database, config.username, config.password, config );
 
@@ -25,6 +26,7 @@ db.ChatRoom = ChatRoom;
 db.Message = Message;
 db.Heart = Heart;
 db.Comment = Comment;
+db.PostImage = PostImage;
 
 User.init(sequelize);
 Post.init(sequelize);
@@ -34,6 +36,7 @@ ChatRoom.init(sequelize);
 Message.init(sequelize);
 Heart.init(sequelize);
 Comment.init(sequelize);
+PostImage.init(sequelize);
 
 
 User.associate(db);
@@ -44,5 +47,6 @@ ChatRoom.associate(db);
 Message.associate(db);
 Heart.associate(db);
 Comment.associate(db);
+PostImage.associate(db);
 
 module.exports = db;

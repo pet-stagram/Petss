@@ -1,22 +1,22 @@
-const { User, Post, Heart } = require("../sequelize/models/index");
+const { User, Post, Heart, PostImage } = require("../sequelize/models/index");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
-const stream = require('stream');
-const firebaseAdmin = require('firebase-admin');
-const {v4: uuidv4} = require("uuid");
-const serviceAccount = require('../config/petss-b5d7b-firebase-adminsdk-8rolr-eeb3aba037.js');
+const stream = require("stream");
+const firebaseAdmin = require("firebase-admin");
+const { v4: uuidv4 } = require("uuid");
+const serviceAccount = require("../config/petss-b5d7b-firebase-adminsdk-8rolr-eeb3aba037.js");
 const fs = require("fs");
 const path = require("path");
 
-
-
 // firebase Admin 초기화
-const admin = firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert(serviceAccount),
-  }, "storage");
+const admin = firebaseAdmin.initializeApp(
+    {
+        credential: firebaseAdmin.credential.cert(serviceAccount),
+    },
+    "storage"
+);
 
 const storageRef = admin.storage().bucket(`gs://petss-b5d7b.appspot.com`);
-
 
 class LoadFeed {
     include = [
@@ -67,17 +67,17 @@ class LoadFeed {
         return followingsId;
     }
 
-    async getNewPostNum(){
-    try{
-        const findResult = await Post.findAll({
-            attributes: [[sequelize.fn('MAX',sequelize.col('id')),'max']],
-            raw: true
-        });
-        const result = findResult[0].max+1;
-        return result;
-    }catch(err){
-        throw new Error(err);
-    }
+    async getNewPostNum() {
+        try {
+            const findResult = await Post.findAll({
+                attributes: [[sequelize.fn("MAX", sequelize.col("id")), "max"]],
+                raw: true,
+            });
+            const result = findResult[0].max + 1;
+            return result;
+        } catch (err) {
+            throw new Error(err);
+        }
     }
 }
 
@@ -131,34 +131,65 @@ module.exports = {
             throw new Error(err);
         }
     },
-    insertPosts : async (info)=>{
-        ,
+
+
+    insertPosts: async (info) => {
+        let postId;
+        
+        await Post.create({
+            content: info.content,
+            user_id : 1,
+            created_at: Date.now(),
+            updated_at: Date.now(), 
+        })
+        .then(async (postCreateResult)=>{
+            postId = postCreateResult.get({plain:true}).id;
+            await PostImage.create({
+                postId: postId,
+                imgUrl : "qweqwqwe",
+            
+            }).then(()=>{
+                console.log("이미지 생성 성공")
+            }).catch((err)=> console.log(err));
+        })
+        .catch((err)=>{
+            console.log(err)
+        });
+       
+        
+         
+         
+   console.log(result);
+       
+       
+    },
     /**
-     * 
+     *
      * @param {Arary} files 클라이언트에서 선택하여 제출한 파일(이미지 혹은 동영상) 배열
-     * @returns  
+     * @returns
      */
-    uploadFile : async (files)=>{
+    uploadFile: async (files) => {
         const loadFeed = new LoadFeed();
         /* 새로운 피드 번호 가져와야함 */
         const newPostNum = await loadFeed.getNewPostNum();
         let storage;
-        try{
-        await files.forEach(async file => {
-            await storageRef.upload(file.path, {
-                public: true,
-                destination: `/uploads/feed/${newPostNum}/${file.filename}`,
-                metadata: {
-                    firebaseStorageDownloadTokens: uuidv4(),
-                }
+        try {
+            await files.forEach(async (file) => {
+                await storageRef.upload(file.path, {
+                    public: true,
+                    destination: `/uploads/feed/${newPostNum}/${file.filename}`,
+                    metadata: {
+                        firebaseStorageDownloadTokens: uuidv4(),
+                    },
+                });
+                fs.rmSync(file.path, { recursive: true, force: true });
             });
-            fs.rmSync(file.path,{recursive: true, force: true});    
-        });
-        return "success";
-    }catch(err){
-        return err;
-    }
-    
+
+            // return "success";
+        } catch (err) {
+            return err;
+        }
+
         // return storage[0].metadata.mediaLink;
-    }
+    },
 };
