@@ -10,10 +10,18 @@ module.exports = class Post extends Sequelize.Model{
             img:{
                 type:Sequelize.STRING(200),
                 allowNull:true,
-            }
+            },
+            createdAt: {
+                field: 'created_at',
+                type: Sequelize.DATE,
+            },
+            updatedAt: {
+                field: 'updated_at',
+                type: Sequelize.DATE,
+            },
         },{
             sequelize,
-            timestamp:true,   
+            timestamp:false,   
             underscored:true,
             paranoid:false,    
             modelName:'Post',   // sequelize가 사용할 모델(테이블) 이름
@@ -27,5 +35,7 @@ module.exports = class Post extends Sequelize.Model{
         db.Post.belongsTo(db.User);
         /* Hashtags와  N(post) : N(hashtags) 관계 -> N : M 관계의 경우 중간 테이블이 필요함. PostHashtag 테이블로 지정*/
         db.Post.belongsToMany(db.Hashtag,{through:'post_has_hashtag'});
+
+        db.Post.hasMany(db.Heart);
     }
 };

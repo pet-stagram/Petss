@@ -8,10 +8,14 @@ module.exports = class Messanger extends Sequelize.Model{
           content :{
             type: Sequelize.STRING(1000),
             allowNull: false,
+          },
+          sendAt : {
+            type: Sequelize.DATE,
+            field:"send_at"
           }
         },{
             sequelize,
-            timestamps:true,// 이 속성이 true면, createAt(생성시간), updateAt(수정시간) 필드가 자동생성
+            timestamps:false,// 이 속성이 true면, createAt(생성시간), updateAt(수정시간) 필드가 자동생성
             underscored:true,
             paranoid:false, 
             modelName:'Messanger', //모델 명
@@ -26,5 +30,6 @@ module.exports = class Messanger extends Sequelize.Model{
         /*  Chat 테이블에서 chat_id이라는 컬럼명으로 foreign key 참조하여 가져옴*/
         db.Message.belongsTo(db.ChatRoom,{foreignKey:"chat_id"});
 
+        
     }
 }
