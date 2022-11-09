@@ -1,25 +1,20 @@
 const nodemailer = require("nodemailer");
+require ("dotenv").config();
 
+const env = process.env;
 const email = {
-    "host" : "smtp.mailtrap.io",
-    "port": 2525,
+    "host" : env.EMAIL_HOST,
+    "port": env.EMAIL_PORT,
     "secure": false, // true for 465, false for other ports
     "auth": {
-      "user": "7249b116f938e2", 
-      "pass": "65297adab0c2ed",}
+      "user": env.AUTH_USER, 
+      "pass": env.AUTH_PASS,}
 }
+
+
 module.exports=email;
 
 
-// const smtpTransport = nodemailer.createTransport({//네이버설정
-//     service: "Naver",
-//     auth: {
-//         user: "YourEmail@naver.com",//내이메일?
-//         pass: "YourPassword"
-//     },
-//     tls: {
-//         rejectUnauthorized: false
-//     }
-//   });
+
 
   
