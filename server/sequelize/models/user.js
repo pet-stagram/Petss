@@ -34,9 +34,13 @@ module.exports = class User extends Sequelize.Model{
                 type:Sequelize.STRING(30),
                 allowNull:true,
             },
+            regDate:{
+                type:Sequelize.DATE,
+                allowNull:false
+            }
         },{
             sequelize,
-            timestamps:true,// 이 속성이 true면, createAt(생성시간), updateAt(수정시간) 필드가 자동생성
+            timestamps:false,// 이 속성이 true면, createAt(생성시간), updateAt(수정시간) 필드가 자동생성
             underscored:true,
             paranoid:false, 
             modelName:'User', //모델 명
@@ -52,12 +56,13 @@ module.exports = class User extends Sequelize.Model{
         db.User.belongsToMany(db.ChatRoom,{through:'chat_room_has_users'});
 
         db.User.hasMany(db.Message);
-    
+        db.User.hasMany(db.Heart);
+        
 
         /* Follow 테이블에 1 : N 관계 
             다른 사람이 해당 유저 팔로우 시 Follow 테이블 followerId 속성에 해당 유저 id 들어감
             반대의 경우 해당 유저 id가 followingId에 들어감 */
-        db.User.belongsToMany(db.User, {foreignKey:'followingId', as:'Followers',through:'follow'}); 
-        db.User.belongsToMany(db.User, {foreignKey:'followerId', as:'Followings', through:'follow'}); 
+        db.User.belongsToMany(db.User, {foreignKey:'followingId', as:'Followers',through:'follow' , timestamps : false}); 
+        db.User.belongsToMany(db.User, {foreignKey:'followerId', as:'Followings', through:'follow' , timestamps : false}); 
     }
 }
