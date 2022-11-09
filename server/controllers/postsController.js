@@ -1,4 +1,6 @@
 const service = require("../services/postsService");
+const path = require("path");
+const upload = require("../routes/posts");
 
 module.exports = {
     getPosts : async (req, res) =>{ 
@@ -27,5 +29,34 @@ module.exports = {
                     res.status(400).send(err);
             }
         }
+    },
+    postPosts : async (req , res) => {
+        const files = req.files;
+        const postInfo = {
+            user : req.session.id,
+            content : req.body.content            
+        }
+        try{
+            await service.insertPosts(postInfo);
+        }catch(err){
+            res.sendStatus(400);
+        }
+
+        try{
+            await service.uploadFile(files);
+        }catch(err){
+            res.sendStatus(400);
+        }
+
+        /* 파일 받아서 파베에 올리기 */
+        /* 업로드하고 해당 url을 돌려줌 */
+        // const url = await service.uploadFile(path.join(__dirname+ "../uploads/"+upload.name+),"flower.jpeg");
+        // console.log(url);
+        res.send("하이");
+    },
+    getImages : (req, res)=>{
+        const imgName = req.query.imgName;
+        
+        service.getImage(imgName);
     }
 }
