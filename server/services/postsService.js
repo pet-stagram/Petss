@@ -132,36 +132,33 @@ module.exports = {
         }
     },
 
-
     insertPosts: async (info) => {
         let postId;
-        
+        //이제 이미지 url을 어떻게 가져올 것인인가?
+        let result;
         await Post.create({
             content: info.content,
-            user_id : 1,
+            user_id: 1,
             created_at: Date.now(),
-            updated_at: Date.now(), 
-        })
-        .then(async (postCreateResult)=>{
-            postId = postCreateResult.get({plain:true}).id;
-            await PostImage.create({
-                postId: postId,
-                imgUrl : "qweqwqwe",
-            
-            }).then(()=>{
-                console.log("이미지 생성 성공")
-            }).catch((err)=> console.log(err));
-        })
-        .catch((err)=>{
-            console.log(err)
-        });
-       
-        
-         
-         
-   console.log(result);
-       
-       
+            updated_at: Date.now(),
+            })
+            .then(async (postCreateResult) => {
+                postId = postCreateResult.get({ plain: true }).id;
+                const promise = info.fileUrl.map(async (url) => {
+                    await PostImage.create({
+                        postId: postId,
+                        imgUrl: url,
+                    });
+                });
+                try{await Promise.all(promise); result = "success";}
+                catch(err){
+                    result = err;
+                };
+            })
+            .catch((err) => {
+                result = err;
+            });
+        return result;
     },
     /**
      *
@@ -171,25 +168,21 @@ module.exports = {
     uploadFile: async (files) => {
         const loadFeed = new LoadFeed();
         /* 새로운 피드 번호 가져와야함 */
-        const newPostNum = await loadFeed.getNewPostNum();
+        const newPostNum = loadFeed.getNewPostNum();
+        const urlArr = [];
         let storage;
-        try {
-            await files.forEach(async (file) => {
-                await storageRef.upload(file.path, {
-                    public: true,
-                    destination: `/uploads/feed/${newPostNum}/${file.filename}`,
-                    metadata: {
-                        firebaseStorageDownloadTokens: uuidv4(),
-                    },
-                });
-                fs.rmSync(file.path, { recursive: true, force: true });
+        const promises = files.map(async (file, index) => {
+            storage = await storageRef.upload(file.path, {
+                public: true,
+                destination: `/uploads/feed/${newPostNum}/${file.filename}`,
+                metadata: {
+                    firebaseStorageDownloadTokens: uuidv4(),
+                },
             });
-
-            // return "success";
-        } catch (err) {
-            return err;
-        }
-
-        // return storage[0].metadata.mediaLink;
+            urlArr.push(storage[0].metadata.mediaLink);
+            fs.rmSync(file.path, { recursive: true, force: true });
+        });
+        await Promise.all(promises);
+        return urlArr;
     },
 };

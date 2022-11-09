@@ -32,27 +32,25 @@ module.exports = {
     },
     postPosts : async (req , res) => {
         const files = req.files;
-        const postInfo = {
-            user : 1,
-            content : req.body.content            
-        }
+        
         try{
+            let fileUrl = await service.uploadFile(files);
+            const postInfo = {
+                user : 1, // 현재 로그인 중인 유저의 idx
+                content : req.body.content,
+                fileUrl : fileUrl            
+            }
             await service.insertPosts(postInfo);
+            res.sendStatus(201);
         }catch(err){
-            // res.sendStatus(400);
-        }
-
-        try{
-            await service.uploadFile(files);
-        }catch(err){
-            // res.sendStatus(400);
+            console.log(err)
+            res.status(400).send(err);
         }
 
         /* 파일 받아서 파베에 올리기 */
         /* 업로드하고 해당 url을 돌려줌 */
         // const url = await service.uploadFile(path.join(__dirname+ "../uploads/"+upload.name+),"flower.jpeg");
         // console.log(url);
-        res.send("하이");
     },
     getImages : (req, res)=>{
         const imgName = req.query.imgName;
