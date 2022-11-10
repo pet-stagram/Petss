@@ -53,15 +53,36 @@ const upload = multer({ // multer의 인수로 설정을 넣음
  *                      content:
  *                        type: string
  *                        example: 안녕하세요
- *                      img:
- *                          type: string
- *                          example : firebase storage url
  *                      updated_at:
  *                          type: date
  *                          example: 2022-11-10 10:29:10
  *                      heart_count:
  *                          type: integer
  *                          example : 15
+ *                      User:
+ *                        type: object
+ *                        properties:
+ *                          id: 
+ *                            type: integer
+ *                            example: 1
+ *                          name:
+ *                            type: string
+ *                            example: 홍길동
+ *                          nick:
+ *                            type: string
+ *                            example: cocoS2
+ *                          image:
+ *                            type: string
+ *                            example: firebase storage url주소
+ *                      PostImages:
+ *                         type: array
+ *                         items:
+ *                            type: object
+ *                            properties:
+ *                              img_url:
+ *                                type: string
+ *                                example : firebase storage url 주소
+ *                                  
  *       204:
  *        description: 조회는 완료되었으나 결과가 없음(팔로우를 안했거나, 팔로잉한 사람의 게시글이 없음)       
  *       401:
@@ -87,7 +108,7 @@ router.get("/",controller.getPosts);
  *        description: 해당 피드 idx 값
  *      responses:
  *       200:
- *        description: 전체 피드 조회 성공
+ *        description: 해당 피드 조회 성공
  *        content:
  *          application/json:
  *            schema: 
@@ -108,6 +129,30 @@ router.get("/",controller.getPosts);
  *                  heart_count:
  *                      type: integer
  *                      example : 15
+ *                  User:
+ *                    type: object
+ *                    properties:
+ *                      id: 
+ *                        type: integer
+ *                        example: 1
+ *                      name:
+ *                        type: string
+ *                        example: 홍길동
+ *                      nick:
+ *                        type: string
+ *                        example: cocoS2
+ *                      image:
+ *                        type: string
+ *                        example: firebase storage url주소
+ *                      PostImages:
+ *                        type: array
+ *                        items:
+ *                          type: object
+ *                          properties:
+ *                            img_url:
+ *                              type: string
+ *                              example : firebase storage url 주소
+ *                  
  *       401:
  *        description : 로그인 필요
  *       500:
@@ -143,6 +188,7 @@ router.get("/:id",controller.getPosts);
  *        description: 서버 내부 에러 ( db 연결 등 )
  */
 router.post("/", upload.array('files',6), controller.postPosts);
-router.get("/images",controller.getImages);
+
+router.put("/like", controller.putLike);
 
 module.exports = router, upload;

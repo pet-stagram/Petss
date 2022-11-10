@@ -30,9 +30,7 @@ class LoadFeed {
         },
         {
             model:PostImage,
-            // attributes: ["id","img_url"],
-            // plain:false,
-            // raw:true
+            attributes:["img_url"],                        
         }
     ];
     attributes = [
@@ -47,6 +45,7 @@ class LoadFeed {
             "updated_at",
         ],
         [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
+        
     ];
 
     async findFollowUser(userId) {
@@ -105,35 +104,9 @@ module.exports = {
                         [Op.in]: followingsId,
                     },
                 },
-                include: [
-                    {
-                        model: User,
-                        attributes: ["id", "name", "nick", "image"],
-                    },
-                    {
-                        model: Heart,
-                        attributes: [],
-                    },
-                    {
-                        model:PostImage,
-                        attributes:["img_url"],                        
-                        
-                    }
-                ],
-                attributes: [
-                    "id",
-                    "content",
-                    [
-                        sequelize.fn(
-                            "DATE_FORMAT",
-                            sequelize.col("updated_at"),
-                            "%Y-%m-%d %H:%i:%s"
-                        ),
-                        "updated_at",
-                    ],
-                    [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
-                    
-                ],
+                include: loadFeed.include,
+                attributes: loadFeed.attributes,
+                /* group으로 묶어주니 1:N이 모두 출력됨 */
                 group: ["id","postImages.id"]        
             });
             
@@ -156,8 +129,9 @@ module.exports = {
                 },
                 attributes: loadFeed.attributes,
                 include: loadFeed.include,
-                raw: true,
-                nest: true,
+                group: ["postImages.id"]   
+                
+                
             });
             return result;
         } catch (err) {

@@ -51,11 +51,8 @@ module.exports = {
                 res.sendStatus(500);
             }
         }
-
     },
-    getImages : (req, res)=>{
-        const imgName = req.query.imgName;
-        
-        service.getImage(imgName);
+    putLike : (req, res)=>{
+
     }
 }
