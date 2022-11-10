@@ -191,4 +191,35 @@ module.exports = {
         await Promise.all(promises);
         return urlArr;
     },
+    updateHeart : async (likeDto)=>{
+
+        const dtoObject ={
+            user_id:likeDto.user,
+            post_id:likeDto.postId
+        }
+
+        const findAlreadyLike = await Heart.findAll({
+            where:dtoObject,
+            raw:true
+        });
+        if(findAlreadyLike.length===0){
+            try{
+            await Heart.create(dtoObject);
+            return "created";
+            }
+            catch(err){
+                return err;
+            }
+        }else{
+            try{
+                await Heart.destroy({
+                    where:dtoObject
+                });
+                return "destroy";
+            }catch(err){
+                return err;
+            }
+        }
+        
+    }
 };

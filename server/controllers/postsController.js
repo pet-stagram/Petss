@@ -52,7 +52,18 @@ module.exports = {
             }
         }
     },
-    putLike : (req, res)=>{
-
+    putLike : async (req, res)=>{
+        // 세션 아이디 -> 피드하나에 좋아요 클릭
+        const likeDto = {
+            postId : req.params.id,
+            user : 1//후에 세션 유저로 변경
+        }
+        try{
+            await service.updateHeart(likeDto);
+            res.sendStatus(200);
+        }catch(err){
+            console.log(err);
+            res.sendStatus(400);
+        }
     }
 }

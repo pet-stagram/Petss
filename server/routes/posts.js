@@ -189,6 +189,6 @@ router.get("/:id",controller.getPosts);
  */
 router.post("/", upload.array('files',6), controller.postPosts);
 
-router.put("/like", controller.putLike);
+router.put("/like/:id", controller.putLike);
 
 module.exports = router, upload;
