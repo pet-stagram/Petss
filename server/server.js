@@ -10,10 +10,12 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require("swagger-ui-express");
 const options = require("./swagger");
 const specs = swaggerJsdoc(options);
-
+/* multer */
+const multer = require('multer');
 
 const app = express();
 const PORT = process.env.SERVER_PORT;
+
 
 /* Set express middleware */
 app.use(cors());
@@ -47,6 +49,7 @@ const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 
+app.use('/uploads', express.static('uploads'));
 app.use("/auth",authRouter);
 app.use("/posts",postRouter);
 app.use("/users",userRouter);
