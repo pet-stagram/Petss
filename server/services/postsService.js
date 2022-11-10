@@ -24,13 +24,21 @@ class LoadFeed {
             model: User,
             attributes: ["id", "name", "nick", "image"],
         },
+        /* Heart.length가 0인 경우 로그인한 유저가 좋아요안함 */
         {
             model: Heart,
-            attributes: [],
+            attributes: ["id"],
+            where:{
+                /* 세션유저 idx값 */
+                user_id: 1
+            },
+            plain:true,
+            required : false,
         },
         {
             model:PostImage,
-            attributes:["img_url"],                        
+            attributes:["img_url"],    
+            plain:true               
         }
     ];
     attributes = [
@@ -45,7 +53,7 @@ class LoadFeed {
             "updated_at",
         ],
         [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
-        
+        // [sequelize.fn("COUNT", sequelize.col("hearts.user_id")),{where:{user_id:1}},"count"]
     ];
 
     async findFollowUser(userId) {
@@ -94,7 +102,6 @@ module.exports = {
     selectPostsAll: async (userId) => {
         const loadFeed = new LoadFeed();
         let result;
-      
         try {
             const followingsId = await loadFeed.findFollowUser(userId);
             result = await Post.findAll({
@@ -107,7 +114,10 @@ module.exports = {
                 include: loadFeed.include,
                 attributes: loadFeed.attributes,
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
-                group: ["id","postImages.id"]        
+                group: ["id","postImages.id"]   ,
+                nest:true,
+                // raw:true
+                // required:false, 
             });
             
         } catch (err) {

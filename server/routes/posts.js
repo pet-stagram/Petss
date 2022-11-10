@@ -74,6 +74,14 @@ const upload = multer({ // multer의 인수로 설정을 넣음
  *                          image:
  *                            type: string
  *                            example: firebase storage url주소
+ *                      Hearts:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties: 
+ *                              id:
+ *                                type: integer
+ *                                example: 해당 값이 있을 경우 현재 로그인 유저가 좋아요 한 피드
  *                      PostImages:
  *                         type: array
  *                         items:
@@ -189,6 +197,27 @@ router.get("/:id",controller.getPosts);
  */
 router.post("/", upload.array('files',6), controller.postPosts);
 
+/**
+ * @swagger
+ *  /like/:id:
+ *    put:
+ *     summary: 좋아요 추가 및 제거
+ *     tags:
+ *       - posts
+ *     description: 현재 로그인 된 유저가 좋아요 누를 시 DB(heart)에 해당 유저 id값과 피드의 id값이 저장됨
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: 해당 피드의 id값
+ *     responses:
+ *       200:
+ *        description: 좋아요 추가 및 제거 완료
+ *       400:
+ *        description: 요청값이 올바르지 않음
+ *  
+ */
 router.put("/like/:id", controller.putLike);
 
 module.exports = router, upload;
