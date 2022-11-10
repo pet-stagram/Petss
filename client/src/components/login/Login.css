@@ -39,8 +39,8 @@ a {
 }
 
 .logo {
-  width: 350px;
-  margin-right: 100px;
+  width: 450px;
+  margin-right: 150px;
 }
 
 .logo img {
@@ -53,7 +53,7 @@ a {
   border-collapse: collapse;
   border-radius: 20px;
   width: 350px;
-  height: 400px;
+  height: 430px;
   padding: 30px;
 
   /*색깔 저장소 
@@ -74,8 +74,17 @@ a {
   margin-bottom: 20px;
   margin-left: 20px;
   height: 40px;
-  border: 1px solid transparent;
-  border-radius: 3px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.email:focus {
+  outline: 1px solid black;
+}
+
+.pw:focus {
+  outline: 1px solid black;
 }
 
 .btn {
@@ -83,14 +92,15 @@ a {
   border: 1px solid none;
   border-style: none;
   font-size: 17px;
-  /* 색상표 
-        하늘색 : #b2ebf2
-
-        */
+  cursor: pointer;
 }
 
-.mvReg,
 .findPw {
-  margin-top: 35px;
   margin-left: 20px;
+  margin-top: 10px;
+}
+
+.mvReg {
+  margin-left: 20px;
+  margin-top: 35px;
 }
