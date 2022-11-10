@@ -31,20 +31,43 @@ const upload = multer({ // multer의 인수로 설정을 넣음
  * @swagger
  *  /posts:
  *    get:
+ *      summary: 팔로잉 중인 유저의 모든 피드 조회
  *      tags:
- *      - getPostsAll
- *      description: 팔로잉 중인 유저의 모든 피드 조회
+ *      - posts
+ *      description: 현재 로그인 중인 아이디의 팔로우를 모두 확인하여 전체 피드를 반환
  *      produces:
  *      - application/json
  *      responses:
  *       200:
  *        description: 전체 피드 조회 성공
+ *        content:
+ *          application/json:
+ *            schema: 
+ *              type: array
+ *              items:
+ *                  type: object
+ *                  properties:
+ *                      id:
+ *                        type: integer
+ *                        example: 1
+ *                      content:
+ *                        type: string
+ *                        example: 안녕하세요
+ *                      img:
+ *                          type: string
+ *                          example : firebase storage url
+ *                      updated_at:
+ *                          type: date
+ *                          example: 2022-11-10 10:29:10
+ *                      heart_count:
+ *                          type: integer
+ *                          example : 15
  *       204:
- *        description: 조회 결과가 없음(팔로우를 안했거나, 팔로잉한 사람의 게시글이 없음)
- *       400:
- *        description : 피드 조회 실패
+ *        description: 조회는 완료되었으나 결과가 없음(팔로우를 안했거나, 팔로잉한 사람의 게시글이 없음)       
  *       401:
  *        description : 로그인 필요
+ *       500:
+ *        description : 서버에서 피드 조회 실패
  */
 router.get("/",controller.getPosts);
 
@@ -52,9 +75,10 @@ router.get("/",controller.getPosts);
  * @swagger
  *  /posts/{id}:
  *    get:
+ *      summary: 피드 하나만 보기
  *      tags:
- *      - getPostOne
- *      description: 피드 하나만 보기
+ *      - posts
+ *      description: 피드의 idx값을 query string으로 요청하면 해당하는 피드를 반환
  *      produces:
  *      - application/json
  *      parameters:
@@ -63,14 +87,61 @@ router.get("/",controller.getPosts);
  *        description: 해당 피드 idx 값
  *      responses:
  *       200:
- *        description: 피드 조회 성공
- *       400:
- *        description : 피드 조회 실패
+ *        description: 전체 피드 조회 성공
+ *        content:
+ *          application/json:
+ *            schema: 
+ *              type: object
+ *              properties:
+ *                  id:
+ *                      type: integer
+ *                      example: 1
+ *                  content:
+ *                      type: string
+ *                      example: 안녕하세요
+ *                  img:
+ *                      type: string
+ *                      example : firebase storage url
+ *                  updated_at:
+ *                      type: date
+ *                      example: 2022-11-10 10:29:10
+ *                  heart_count:
+ *                      type: integer
+ *                      example : 15
  *       401:
  *        description : 로그인 필요
+ *       500:
+ *        description : 서버에서 해당 피드 조회 실패
  */
 router.get("/:id",controller.getPosts);
 
+/**
+ * @swagger
+ *  /posts:
+ *    post:
+ *      summary : 피드 게시
+ *      tags:
+ *      - posts
+ *      description: 피드 내용과 사진을 업로드하고 DB와 Firestore에 각각 저장
+ *      requestBody:
+ *        content:
+ *          multipart/form-data:
+ *            schema:
+ *                type: object
+ *                properties:
+ *                  content:
+ *                    type: string
+ *                  files:
+ *                    type: array
+ *                    format: binary
+ *      responses:
+ *       201:
+ *        description: 피드 게시 성공
+ *       400:
+ *        description: 파일이 첨부되지 않음
+ *       500:
+ *        description: 서버 내부 에러 ( db 연결 등 )
+ */
 router.post("/", upload.array('files',6), controller.postPosts);
 router.get("/images",controller.getImages);
 

@@ -6,7 +6,7 @@ module.exports = {
     getPosts : async (req, res) =>{ 
             if(false){
                 /* session이 없으면 401. 나중에 수정하기 */
-                res.status(401).send("need login");
+                res.sendStatus(401);
             }else{
                  try{
                     const postId = req.params.id;
@@ -14,7 +14,7 @@ module.exports = {
                     if(postId===undefined){
                         result = await service.selectPostsAll(2);
                         if(result.length === 0){
-                            res.status(204).send("nothing");
+                            res.sendStatus(204);
                         }else{
                             res.status(200).send(JSON.stringify(result,null,2));
                         }
@@ -26,31 +26,32 @@ module.exports = {
                     /* parameter로 현재 세션의 idx값 */
                     
                  }catch(err){
-                    res.status(400).send(err);
+                    res.sendStatus(500);
             }
         }
     },
     postPosts : async (req , res) => {
         const files = req.files;
-        
-        try{
-            let fileUrl = await service.uploadFile(files);
-            const postInfo = {
-                user : 1, // 현재 로그인 중인 유저의 idx
-                content : req.body.content,
-                fileUrl : fileUrl            
+        if(files.length===0){
+            /* 클라이언트에서 파일 첨부를 하지 않았을 시 */
+            res.sendStatus(400);
+        }else{
+            try{
+                let fileUrl = await service.uploadFile(files);
+                const postInfo = {
+                    user : 1, // 현재 로그인 중인 유저의 idx
+                    content : req.body.content,
+                    fileUrl : fileUrl            
+                }
+                await service.insertPosts(postInfo);
+                res.sendStatus(201);
+            }catch(err){
+                console.log(err);
+                /* db연결 에러 */
+                res.sendStatus(500);
             }
-            await service.insertPosts(postInfo);
-            res.sendStatus(201);
-        }catch(err){
-            console.log(err)
-            res.status(400).send(err);
         }
 
-        /* 파일 받아서 파베에 올리기 */
-        /* 업로드하고 해당 url을 돌려줌 */
-        // const url = await service.uploadFile(path.join(__dirname+ "../uploads/"+upload.name+),"flower.jpeg");
-        // console.log(url);
     },
     getImages : (req, res)=>{
         const imgName = req.query.imgName;

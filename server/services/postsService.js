@@ -37,7 +37,7 @@ class LoadFeed {
             sequelize.fn(
                 "DATE_FORMAT",
                 sequelize.col("updated_at"),
-                "%d-%m-%Y %H:%i:%s"
+                "%Y-%m-%d %H:%i:%s"
             ),
             "updated_at",
         ],
@@ -134,7 +134,6 @@ module.exports = {
 
     insertPosts: async (info) => {
         let postId;
-        //이제 이미지 url을 어떻게 가져올 것인인가?
         let result;
         await Post.create({
             content: info.content,
@@ -171,7 +170,7 @@ module.exports = {
         const newPostNum = loadFeed.getNewPostNum();
         const urlArr = [];
         let storage;
-        const promises = files.map(async (file, index) => {
+        const promises = files.map(async (file) => {
             storage = await storageRef.upload(file.path, {
                 public: true,
                 destination: `/uploads/feed/${newPostNum}/${file.filename}`,
