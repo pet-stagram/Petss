@@ -28,11 +28,16 @@ class LoadFeed {
             model: Heart,
             attributes: [],
         },
+        {
+            model:PostImage,
+            // attributes: ["id","img_url"],
+            // plain:false,
+            // raw:true
+        }
     ];
     attributes = [
         "id",
         "content",
-        "img",
         [
             sequelize.fn(
                 "DATE_FORMAT",
@@ -89,25 +94,53 @@ module.exports = {
      */
     selectPostsAll: async (userId) => {
         const loadFeed = new LoadFeed();
+        let result;
+      
         try {
             const followingsId = await loadFeed.findFollowUser(userId);
-            const result = await Post.findAll({
+            result = await Post.findAll({
                 order: [["updatedAt", "DESC"]],
                 where: {
                     user_id: {
                         [Op.in]: followingsId,
                     },
                 },
-                include: loadFeed.include,
-                attributes: loadFeed.attributes,
-                group: ["id"],
-                raw: true,
-                nest: true,
+                include: [
+                    {
+                        model: User,
+                        attributes: ["id", "name", "nick", "image"],
+                    },
+                    {
+                        model: Heart,
+                        attributes: [],
+                    },
+                    {
+                        model:PostImage,
+                        attributes:["img_url"],                        
+                        
+                    }
+                ],
+                attributes: [
+                    "id",
+                    "content",
+                    [
+                        sequelize.fn(
+                            "DATE_FORMAT",
+                            sequelize.col("updated_at"),
+                            "%Y-%m-%d %H:%i:%s"
+                        ),
+                        "updated_at",
+                    ],
+                    [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
+                    
+                ],
+                group: ["id","postImages.id"]        
             });
-            return result;
+            
         } catch (err) {
-            throw new Error(err);
+            result = err;
         }
+        return result;
     },
     /**
      *

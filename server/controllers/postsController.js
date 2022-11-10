@@ -12,7 +12,7 @@ module.exports = {
                     const postId = req.params.id;
                     let result;
                     if(postId===undefined){
-                        result = await service.selectPostsAll(2);
+                        result = await service.selectPostsAll(1);
                         if(result.length === 0){
                             res.sendStatus(204);
                         }else{
