@@ -13,7 +13,6 @@ module.exports = {
         const posts = await Post.findAll({
             order:[[ "id", "DESC" ]],
         });
-
         return posts;
     },
 
