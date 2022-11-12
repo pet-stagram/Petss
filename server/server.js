@@ -32,6 +32,8 @@ app.use(
         httpOnly:true,
         secure:false
 }}));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 /* Set Sequelize(DB) */
 sequelize.sync({force:false})
@@ -48,6 +50,7 @@ const authRouter = require("./routes/auth");
 const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
+const passport = require("./sequelize/models/passport");
 
 app.use('/uploads', express.static('uploads'));
 app.use("/auth",authRouter);
