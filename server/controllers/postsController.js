@@ -16,12 +16,12 @@ module.exports = {
                         if(result.length === 0){
                             res.sendStatus(204);
                         }else{
-                            res.status(200).send(JSON.stringify(result,null,2));
+                            res.status(200).json(result,null,2);
                         }
                     }else{
                     /* url에 params(:id)가 존재하는 경우 */
                         result = await service.selectPostOne(postId);
-                        res.status(200).send(JSON.stringify(result,null,2));
+                        res.status(200).json(result,null,2);
                     }
                     /* parameter로 현재 세션의 idx값 */
                     
@@ -63,6 +63,19 @@ module.exports = {
             res.sendStatus(200);
         }catch(err){
             console.log(err);
+            res.sendStatus(400);
+        }
+    },
+    postComment : async (req, res)=>{
+        const commentDto = {
+            postId : parseInt(req.body.postId),
+            user : 1, // 지금 세션 유저
+            content : req.body.content
+        }
+        try{
+            await service.insertComment(commentDto);
+            res.sendStatus(201);
+        }catch(err){
             res.sendStatus(400);
         }
     }

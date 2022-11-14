@@ -1,4 +1,4 @@
-const { User, Post, Heart, PostImage } = require("../sequelize/models/index");
+const { User, Post, Heart, PostImage, Comment } = require("../sequelize/models/index");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
 const stream = require("stream");
@@ -139,8 +139,8 @@ module.exports = {
                 },
                 attributes: loadFeed.attributes,
                 include: loadFeed.include,
-                group: ["postImages.id"]   
-                
+                group: ["postImages.id"],
+                nest:true,
                 
             });
             return result;
@@ -201,13 +201,16 @@ module.exports = {
         await Promise.all(promises);
         return urlArr;
     },
+    /**
+     * 
+     * @param {Object} likeDto 좋아요하는 유저와 해당 피드 idx를 담은 객체
+     * @returns 좋아요가 추가되었는지("created"), 삭제되었는 지("destroy"), 에러가 발생했는 지(err)
+     */
     updateHeart : async (likeDto)=>{
-
         const dtoObject ={
             user_id:likeDto.user,
             post_id:likeDto.postId
         }
-
         const findAlreadyLike = await Heart.findAll({
             where:dtoObject,
             raw:true
@@ -229,6 +232,25 @@ module.exports = {
             }catch(err){
                 return err;
             }
+        }
+    },
+    /**
+     * 
+     * @param {Object} commentDto 댓글작성 시 해당 피드 idx, 현재 세션 유저, 댓글 내용이 담긴 객체
+     * @returns 실패 시 err
+     */
+    insertComment : async (commentDto)=>{
+        try{
+            await Comment.create({
+                content : commentDto.content,
+                user_id : commentDto.user,
+                post_id : commentDto.postId,
+                createdAt : Date.now(),
+                updatedAt : Date.now(),
+            });
+        }
+        catch(err){
+            throw new Error(err);
         }
         
     }

@@ -220,4 +220,6 @@ router.post("/", upload.array('files',6), controller.postPosts);
  */
 router.put("/like/:id", controller.putLike);
 
+router.post("/comment", controller.postComment);
+
 module.exports = router, upload;
