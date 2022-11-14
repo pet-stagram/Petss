@@ -1,6 +1,4 @@
 const service = require("../services/postsService");
-const path = require("path");
-const upload = require("../routes/posts");
 
 module.exports = {
     getPosts: async (req, res) => {

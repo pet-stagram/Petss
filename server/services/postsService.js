@@ -7,22 +7,13 @@ const {
 } = require("../sequelize/models/index");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
+const {uploadProfileImage, uploadPostsImages}= require("../module/firebase");
+
 const stream = require("stream");
-const firebaseAdmin = require("firebase-admin");
-const { v4: uuidv4 } = require("uuid");
-const serviceAccount = require("../config/petss-b5d7b-firebase-adminsdk-8rolr-eeb3aba037.js");
 const fs = require("fs");
 const path = require("path");
 
 // firebase Admin 초기화
-const admin = firebaseAdmin.initializeApp(
-    {
-        credential: firebaseAdmin.credential.cert(serviceAccount),
-    },
-    "storage"
-);
-
-const storageRef = admin.storage().bucket(`gs://petss-b5d7b.appspot.com`);
 
 class LoadFeed {
     include = [
@@ -126,7 +117,7 @@ module.exports = {
                 // required:false,
             });
         } catch (err) {
-            result = err;
+            throw err;
         }
         return result;
     },
@@ -183,7 +174,7 @@ module.exports = {
                 }
             })
             .catch((err) => {
-                result = err;
+                throw err;
             });
         return result;
     },
@@ -239,21 +230,8 @@ module.exports = {
     uploadFile: async (files) => {
         const loadFeed = new LoadFeed();
         /* 새로운 피드 번호 가져와야함 */
-        const newPostNum = loadFeed.getNewPostNum();
-        const urlArr = [];
-        let storage;
-        const promises = files.map(async (file) => {
-            storage = await storageRef.upload(file.path, {
-                public: true,
-                destination: `/uploads/feed/${newPostNum}/${file.filename}`,
-                metadata: {
-                    firebaseStorageDownloadTokens: uuidv4(),
-                },
-            });
-            urlArr.push(storage[0].metadata.mediaLink);
-            fs.rmSync(file.path, { recursive: true, force: true });
-        });
-        await Promise.all(promises);
+        const newPostNum = await loadFeed.getNewPostNum();
+        const urlArr = await uploadPostsImages(newPostNum,files);
         return urlArr;
     },
     /**
@@ -275,7 +253,7 @@ module.exports = {
                 await Heart.create(dtoObject);
                 return "created";
             } catch (err) {
-                return err;
+                throw err;
             }
         } else {
             try {
@@ -284,7 +262,7 @@ module.exports = {
                 });
                 return "destroy";
             } catch (err) {
-                return err;
+                throw err;
             }
         }
     },
