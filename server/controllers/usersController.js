@@ -21,7 +21,7 @@ module.exports = {
             throw err;
         }
     },
-    putUser : async (req, res)=>{
+    putUserInfo : async (req, res)=>{
         if(false){
             /* 세션유저 없으면 */
             res.sendStatus(401);
@@ -73,9 +73,17 @@ module.exports = {
             }else
                 res.sendStatus(403);    
         }
-       
-
-       
+    },
+    putFollow : async (req, res) => {
+        const followDto = {
+            follower : 1,//현재 세션 유저 idx
+            following : req.body.userId
+        };
+        try{
+            await service.updateFollow(followDto);
+        }catch(err){
+            throw err;
+        }
     }
 
 }
