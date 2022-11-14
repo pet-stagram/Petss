@@ -35,7 +35,10 @@ module.exports = {
         if(files.length===0){
             /* 클라이언트에서 파일 첨부를 하지 않았을 시 */
             res.sendStatus(400);
-        }else{
+        }
+        /* 세션 없으면 401 보내주기 */
+        // else if(!req.session.user){res.sendStatus(401);}
+        else{
             try{
                 let fileUrl = await service.uploadFile(files);
                 const postInfo = {
@@ -53,11 +56,16 @@ module.exports = {
         }
     },
     putLike : async (req, res)=>{
+        
+        /* 세션 없으면 401 보내주기 */
+        // if(!req.session.user){res.sendStatus(401);}
+
         // 세션 아이디 -> 피드하나에 좋아요 클릭
         const likeDto = {
             postId : req.params.id,
             user : 1//후에 세션 유저로 변경
         }
+        
         try{
             await service.updateHeart(likeDto);
             res.sendStatus(200);
@@ -82,7 +90,10 @@ module.exports = {
     putComment : async (req, res)=>{
         if(req.params.commentId === NaN){
             res.sendStatus(404);
-        }else{
+        }
+        /* 세션 없으면 401 보내주기 */
+        // else if(!req.session.user){res.sendStatus(401);}
+        else{
             const commentDto = {
                 user : 1, // 현재 세션 유저
                 commentId : parseInt(req.params.commentId),
@@ -101,6 +112,28 @@ module.exports = {
         }
     },
     deleteComment : async(req, res)=>{
+        if(req.params.commentId === NaN){
+            res.sendStatus(404);
+        }
+        /* 세션 없으면 401 보내주기 */
+        // else if(!req.session.user){res.sendStatus(401);}
+        else{
+            const commentDto = {
+                user :1, // 현재 세션 유저
+                commentId : parseInt(req.params.commentId)
+            }
+
+            try{
+                const destroyResult = await service.destroyComment(commentDto);
+                if(destroyResult === "notFound")
+                    res.sendStatus(404);
+                else
+                    res.sendStatus(204);
+            }catch(err){
+                res.sendStatus(403);
+                throw err;
+            }
+        }
 
     }
 }

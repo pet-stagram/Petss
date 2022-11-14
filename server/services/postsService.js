@@ -257,6 +257,11 @@ module.exports = {
             throw new Error(err);
         }
     },
+    /**
+     * 
+     * @param {Object} commentDto 댓글 수정 시 현재 세션 유저, 해당 댓글 idx, 수정할 댓글 내용이 담긴 객체
+     * @returns db 처리결과에 따른 상태코드
+     */
     updateComment : async (commentDto) => {
         try{
             const currentUserComments = await Comment.findAll({
@@ -286,5 +291,25 @@ module.exports = {
         }catch(err){
             throw new Error(err);
         }
+    },
+    /**
+     * 
+     * @param {Object} commentDto 댓글 삭제 시 현재 세션 유저와
+     * @returns 
+     */
+    destroyComment : async (commentDto)=>{
+    try{
+        const result = await Comment.destroy({
+            where:{
+                id : commentDto.commentId,
+                user_id : commentDto.user
+            }
+        });
+        if(result === 0){
+            return "notFound";
+        }
+    }catch(err){
+        throw new Error(err);
+    }
     }
 };
