@@ -222,4 +222,7 @@ router.put("/like/:id", controller.putLike);
 
 router.post("/comment", controller.postComment);
 
+router.put("/comment/:commentId",controller.putComment);
+
+router.delete("/comment/:commentId",controller.deleteComment);
 module.exports = router, upload;

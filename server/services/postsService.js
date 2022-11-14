@@ -1,4 +1,10 @@
-const { User, Post, Heart, PostImage, Comment } = require("../sequelize/models/index");
+const {
+    User,
+    Post,
+    Heart,
+    PostImage,
+    Comment,
+} = require("../sequelize/models/index");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
 const stream = require("stream");
@@ -28,18 +34,18 @@ class LoadFeed {
         {
             model: Heart,
             attributes: ["id"],
-            where:{
+            where: {
                 /* 세션유저 idx값 */
-                user_id: 1
+                user_id: 1,
             },
-            plain:true,
-            required : false,
+            plain: true,
+            required: false,
         },
         {
-            model:PostImage,
-            attributes:["img_url"],    
-            plain:true               
-        }
+            model: PostImage,
+            attributes: ["img_url"],
+            plain: true,
+        },
     ];
     attributes = [
         "id",
@@ -114,12 +120,11 @@ module.exports = {
                 include: loadFeed.include,
                 attributes: loadFeed.attributes,
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
-                group: ["id","postImages.id"]   ,
-                nest:true,
+                group: ["id", "postImages.id"],
+                nest: true,
                 // raw:true
-                // required:false, 
+                // required:false,
             });
-            
         } catch (err) {
             result = err;
         }
@@ -140,8 +145,7 @@ module.exports = {
                 attributes: loadFeed.attributes,
                 include: loadFeed.include,
                 group: ["postImages.id"],
-                nest:true,
-                
+                nest: true,
             });
             return result;
         } catch (err) {
@@ -157,7 +161,7 @@ module.exports = {
             user_id: 1,
             created_at: Date.now(),
             updated_at: Date.now(),
-            })
+        })
             .then(async (postCreateResult) => {
                 postId = postCreateResult.get({ plain: true }).id;
                 const promise = info.fileUrl.map(async (url) => {
@@ -166,10 +170,12 @@ module.exports = {
                         imgUrl: url,
                     });
                 });
-                try{await Promise.all(promise); result = "success";}
-                catch(err){
+                try {
+                    await Promise.all(promise);
+                    result = "success";
+                } catch (err) {
                     result = err;
-                };
+                }
             })
             .catch((err) => {
                 result = err;
@@ -202,56 +208,83 @@ module.exports = {
         return urlArr;
     },
     /**
-     * 
+     *
      * @param {Object} likeDto 좋아요하는 유저와 해당 피드 idx를 담은 객체
      * @returns 좋아요가 추가되었는지("created"), 삭제되었는 지("destroy"), 에러가 발생했는 지(err)
      */
-    updateHeart : async (likeDto)=>{
-        const dtoObject ={
-            user_id:likeDto.user,
-            post_id:likeDto.postId
-        }
+    updateHeart: async (likeDto) => {
+        const dtoObject = {
+            user_id: likeDto.user,
+            post_id: likeDto.postId,
+        };
         const findAlreadyLike = await Heart.findAll({
-            where:dtoObject,
-            raw:true
+            where: dtoObject,
+            raw: true,
         });
-        if(findAlreadyLike.length===0){
-            try{
-            await Heart.create(dtoObject);
-            return "created";
-            }
-            catch(err){
+        if (findAlreadyLike.length === 0) {
+            try {
+                await Heart.create(dtoObject);
+                return "created";
+            } catch (err) {
                 return err;
             }
-        }else{
-            try{
+        } else {
+            try {
                 await Heart.destroy({
-                    where:dtoObject
+                    where: dtoObject,
                 });
                 return "destroy";
-            }catch(err){
+            } catch (err) {
                 return err;
             }
         }
     },
     /**
-     * 
+     *
      * @param {Object} commentDto 댓글작성 시 해당 피드 idx, 현재 세션 유저, 댓글 내용이 담긴 객체
      * @returns 실패 시 err
      */
-    insertComment : async (commentDto)=>{
-        try{
+    insertComment: async (commentDto) => {
+        try {
             await Comment.create({
-                content : commentDto.content,
-                user_id : commentDto.user,
-                post_id : commentDto.postId,
-                createdAt : Date.now(),
-                updatedAt : Date.now(),
+                content: commentDto.content,
+                user_id: commentDto.user,
+                post_id: commentDto.postId,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
             });
-        }
-        catch(err){
+        } catch (err) {
             throw new Error(err);
         }
-        
+    },
+    updateComment : async (commentDto) => {
+        try{
+            const currentUserComments = await Comment.findAll({
+                where:{
+                    user_id : commentDto.user
+                },
+                attributes: ["id"],
+                raw:true
+            });
+            const matchUserComment = currentUserComments.filter(userComment=>userComment.id === parseInt(commentDto.commentId));
+            if(matchUserComment.length > 0){
+                /* 현재 세션유저가 작성한 댓글이 맞으면 */
+                    await Comment.update({
+                    content: commentDto.content,
+                    updatedAt :Date.now()
+                },{
+                    where:{
+                        id : commentDto.commentId,
+                    }
+                }
+               );
+               return "created";
+            }else{
+                return "forbidden";
+            }
+          
+        }catch(err){
+            throw new Error(err);
+        }
     }
 };

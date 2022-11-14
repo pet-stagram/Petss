@@ -69,7 +69,7 @@ module.exports = {
     postComment : async (req, res)=>{
         const commentDto = {
             postId : parseInt(req.body.postId),
-            user : 1, // 지금 세션 유저
+            user : 1, // 현재 세션 유저
             content : req.body.content
         }
         try{
@@ -78,5 +78,29 @@ module.exports = {
         }catch(err){
             res.sendStatus(400);
         }
+    },
+    putComment : async (req, res)=>{
+        if(req.params.commentId === NaN){
+            res.sendStatus(404);
+        }else{
+            const commentDto = {
+                user : 1, // 현재 세션 유저
+                commentId : parseInt(req.params.commentId),
+                content : req.body.content
+            }
+            try{
+                const updateResult = await service.updateComment(commentDto);
+                if(updateResult === "forbidden") 
+                    res.sendStatus(403);
+                else 
+                    res.sendStatus(201);
+            }catch(err){
+                res.sendStatus(400);
+                throw err;
+            }
+        }
+    },
+    deleteComment : async(req, res)=>{
+
     }
 }
