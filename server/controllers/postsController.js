@@ -187,4 +187,20 @@ module.exports = {
             }
         }
     },
+    getComment : async (req, res)=>{
+        const postId = req.params.postId;
+        if (isNaN(req.params.postId)) {
+            res.sendStatus(404);
+        }else if(false){
+            /* 세션 없으면 401 */
+            res.sendStatus(401);
+        }else{
+            try{
+                const selectResult = await service.selectComment(postId);
+                res.status(200).json(selectResult);
+            }catch(err){
+                res.sendStatus(400);
+            }
+        }
+    }
 };

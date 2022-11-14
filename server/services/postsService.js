@@ -365,4 +365,26 @@ module.exports = {
             throw new Error(err);
         }
     },
+    /**
+     * 
+     * @param {Number} postId 댓글 조회를 위한 해당 피드의 idx
+     * @returns DB findAll 결과 or err
+     */
+    selectComment : async (postId) => {
+        try{
+            const findResult = await Comment.findAll({
+                order:[["created_at","ASC"]],
+                where :{
+                    post_id : postId
+                },
+                raw:true
+            });
+            console.log(findResult);
+            return findResult;
+        }
+        catch(err){
+            throw err
+        }
+        
+    }
 };

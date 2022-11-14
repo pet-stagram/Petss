@@ -363,6 +363,55 @@ router.delete("/comment/:commentId",controller.deleteComment);
 
 /**
  * @swagger
+ *  /posts/comment/{postId}:
+ *    get:
+ *      summary: 해당 피드의 댓글 조회
+ *      tags:
+ *      - posts
+ *      description: 해당 피드(postId)의 전체 댓글 조회
+ *      produces:
+ *      - application/json
+ *      responses:
+ *       200:
+ *        description: 댓글 조회 성공
+ *        content:
+ *          application/json:
+ *            schema: 
+ *              type: array
+ *              items:
+ *                  type: object
+ *                  properties:
+ *                      id:
+ *                        type: integer
+ *                        example: 1
+ *                      content:
+ *                        type: string
+ *                        example: 안녕하세요
+ *                      updatedAt:
+ *                          type: date
+ *                          example: 2022-11-10 10:29:10
+ *                      createdAt:
+ *                          type: date
+ *                          example: 2022-11-10 10:29:10
+ *                      user_id:
+ *                        type: integer
+ *                        example: 1
+ *                      post_id:
+ *                        type: integer
+ *                        example: 1     
+ *       400:
+ *        description: 잘못된 요청값                      
+ *       401:
+ *        description : 세션없음 (로그인 안됨)
+ *       404:
+ *        description: 해당 피드가 존재하지 않거나, url의 params가 숫자가 아님
+ *       500:
+ *        description : 서버에서 피드 조회 실패
+ */
+router.get("/comment/:postId",controller.getComment);
+
+/**
+ * @swagger
  *  /like/{id}:
  *    put:
  *     summary: 좋아요 추가 및 제거
