@@ -94,7 +94,7 @@ const upload = multer({ // multer의 인수로 설정을 넣음
  *       204:
  *        description: 조회는 완료되었으나 결과가 없음(팔로우를 안했거나, 팔로잉한 사람의 게시글이 없음)       
  *       401:
- *        description : 로그인 필요
+ *        description : 세션없음 (로그인 안됨)
  *       500:
  *        description : 서버에서 피드 조회 실패
  */
@@ -192,6 +192,8 @@ router.get("/:id",controller.getPosts);
  *        description: 피드 게시 성공
  *       400:
  *        description: 파일이 첨부되지 않음
+ *       401:
+ *        description: 세션이 없음(로그인 안됨)
  *       500:
  *        description: 서버 내부 에러 ( db 연결 등 )
  */
@@ -199,7 +201,169 @@ router.post("/", upload.array('files',6), controller.postPosts);
 
 /**
  * @swagger
- *  /like/:id:
+ *  /posts/{postId}:
+ *    put:
+ *      summary: 피드 수정
+ *      tags:
+ *      - posts
+ *      description: 현재 로그인한 유저가 자신의 피드 수정
+ *      produces:
+ *      - application/json
+ *      parameters:
+ *      - name : postId
+ *        in : path
+ *        description: 해당 피드 idx 값
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                  content:
+ *                      type: string
+ *                      description: 수정할 피드 내용
+ *      responses:
+ *          201: 
+ *              description: 피드 수정완료
+ *          400:
+ *              description: 잘못된 요청값
+ *          401:
+ *              description: 세션 없음(로그인 안됨)
+ *          403: 
+ *              description: 현재 사용자의 피드가 아니거나 존재하지 않는 피드
+ *          500:
+ *              description: DB 서버오류
+ * 
+ */
+router.put("/:postId",controller.putPosts);
+
+/**
+ * @swagger
+ *  /posts/{postId}:
+ *    delete:
+ *      summary: 피드 삭제
+ *      tags:
+ *      - posts
+ *      description: 현재 로그인한 유저가 자신의 피드 삭제
+ *      produces:
+ *      - application/json
+ *      parameters:
+ *      - name : postId
+ *        in : path
+ *        description: 해당 피드 idx 값
+ *      responses:
+ *          204: 
+ *              description: 피드 삭제완료
+ *          400:
+ *              description: 잘못된 요청값
+ *          401:
+ *              description: 세션이 없음(로그인 안됨)
+ *          403: 
+ *              description: 현재 사용자의 피드가 아니거나 존재하지 않는 피드
+ *          404:
+ *              description: url의 commentId 값이 숫자가 아니거나, 해당 comment가 존재하지 않을 때
+ *          500:
+ *              description: DB 서버오류
+ * 
+ */
+router.delete("/:postId",controller.deletePosts);
+
+/**
+ * @swagger
+ *  /posts/comment:
+ *    post:
+ *      summary : 댓글 작성
+ *      tags:
+ *      - posts
+ *      description: 해당 피드에 댓글작성
+ *      produces:
+ *       - application/json
+ *      requestBody:
+ *        content:
+ *          multipart/form-data:
+ *            schema:
+ *                type: object
+ *                properties:
+ *                  content:
+ *                    type: string
+ *                  postId:
+ *                    type: integer
+ *      responses:
+ *       201:
+ *        description: 댓글 작성 성공
+ *       400:
+ *        description: 클라이언트 요청(잘못된 body 값 등) 에러
+ *       401:
+ *        description: 세션 없음(로그인 안됨)
+ */
+router.post("/comment", controller.postComment);
+
+/**
+ * @swagger
+ *  /posts/comment/{commentId}:
+ *    put:
+ *      summary: 댓글 수정
+ *      tags:
+ *      - posts
+ *      description: 현재 로그인한 유저가 자신의 댓글 수정
+ *      produces:
+ *      - application/json
+ *      parameters:
+ *      - name : commentId
+ *        in : path
+ *        description: 해당 댓글 idx 값
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                  content:
+ *                      type: string
+ *                      description: 수정할 피드 내용
+ *      responses:
+ *          201: 
+ *              description: 댓글 수정완료
+ *          400:
+ *              description: 잘못된 요청값
+ *          401:
+ *              description: 세션없음(로그인 안됨)
+ *          403: 
+ *              description: 현재 사용자의 피드가 아니거나 존재하지 않는 피드
+ *          404:
+ *              description: url의 commentId 값이 숫자가 아니거나, 해당 comment가 존재하지 않을 때
+ */
+router.put("/comment/:commentId",controller.putComment);
+
+/**
+ * @swagger
+ *  /posts/comment/{commentId}:
+ *    delete:
+ *      summary: 댓글 삭제
+ *      tags:
+ *      - posts
+ *      description: 현재 로그인한 유저가 자신의 댓글 삭제
+ *      produces:
+ *      - application/json
+ *      parameters:
+ *      - name : commentId
+ *        in : path
+ *        description: 해당 댓글 idx 값
+ *      responses:
+ *          204: 
+ *              description: 댓글 삭제완료
+ *          401:
+ *              description: 세션 없음(로그인 안됨)
+ *          403: 
+ *              description: 현재 사용자의 피드가 아니거나 존재하지 않는 피드
+ *          404:
+ *              description: url의 commentId 값이 숫자가 아니거나, 해당 comment가 존재하지 않을 때
+ */
+router.delete("/comment/:commentId",controller.deleteComment);
+
+/**
+ * @swagger
+ *  /like/{id}:
  *    put:
  *     summary: 좋아요 추가 및 제거
  *     tags:
@@ -216,13 +380,10 @@ router.post("/", upload.array('files',6), controller.postPosts);
  *        description: 좋아요 추가 및 제거 완료
  *       400:
  *        description: 요청값이 올바르지 않음
+ *       401:
+ *        description: 세션이 없음(로그인 안되어있음)
  *  
  */
-router.put("/like/:id", controller.putLike);
+ router.put("/like/:id", controller.putLike);
 
-router.post("/comment", controller.postComment);
-
-router.put("/comment/:commentId",controller.putComment);
-
-router.delete("/comment/:commentId",controller.deleteComment);
 module.exports = router, upload;

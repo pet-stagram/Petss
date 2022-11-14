@@ -153,18 +153,23 @@ module.exports = {
         }
     },
 
-    insertPosts: async (info) => {
+    /**
+     *
+     * @param {Object} postDto 피드를 게시하기 위한 현재 세션유저, 피드 내용, 사진 및 파일이 담긴 객체
+     * @returns "success" 혹은 err
+     */
+    insertPosts: async (postDto) => {
         let postId;
         let result;
         await Post.create({
-            content: info.content,
+            content: postDto.content,
             user_id: 1,
             created_at: Date.now(),
             updated_at: Date.now(),
         })
             .then(async (postCreateResult) => {
                 postId = postCreateResult.get({ plain: true }).id;
-                const promise = info.fileUrl.map(async (url) => {
+                const promise = postDto.fileUrl.map(async (url) => {
                     await PostImage.create({
                         postId: postId,
                         imgUrl: url,
@@ -181,6 +186,50 @@ module.exports = {
                 result = err;
             });
         return result;
+    },
+    /**
+     * 
+     * @param {Object} postDto 피드를 수정하기 위한 현재 세션 유저, 피드 idx, 수정할 피드 내용이 담긴 객체
+     * @returns 상태코드를 구분하기 위한 문자열
+     */
+    updatePosts : async (postDto)=>{
+       
+        try{
+        const result = await Post.update({
+            content : postDto.content,
+            updatedAt : Date.now()
+        },
+        {
+            where:{
+                id: postDto.postId,
+                user_id : postDto.user
+        }});
+        if(result[0] === 0){
+            return "forbidden"
+        }
+    }catch(err){
+        return "serverError";
+    }
+    },
+    /**
+     * 
+     * @param {Object} postDto 피드를 삭제하기 위한 현재 세션유저, 해당 피드 idx가 담긴 객체
+     * @returns 상태코드를 구분하기 위한 문자열
+     */
+    destroyPosts : async (postDto) => {
+        try{
+            const result = await Post.destroy({
+            where: {
+                id: postDto.postId,
+                user_id: postDto.user,
+            }
+        });
+        if(result===0){
+            return "forbidden";
+        }
+    }catch(err){
+        return "serverError"
+    }
     },
     /**
      *
@@ -258,58 +307,62 @@ module.exports = {
         }
     },
     /**
-     * 
+     *
      * @param {Object} commentDto 댓글 수정 시 현재 세션 유저, 해당 댓글 idx, 수정할 댓글 내용이 담긴 객체
      * @returns db 처리결과에 따른 상태코드
      */
-    updateComment : async (commentDto) => {
-        try{
+    updateComment: async (commentDto) => {
+        try {
             const currentUserComments = await Comment.findAll({
-                where:{
-                    user_id : commentDto.user
+                where: {
+                    user_id: commentDto.user,
                 },
                 attributes: ["id"],
-                raw:true
+                raw: true,
             });
-            const matchUserComment = currentUserComments.filter(userComment=>userComment.id === parseInt(commentDto.commentId));
-            if(matchUserComment.length > 0){
+            const matchUserComment = currentUserComments.filter(
+                (userComment) =>
+                    userComment.id === parseInt(commentDto.commentId)
+            );
+            if (matchUserComment.length > 0) {
                 /* 현재 세션유저가 작성한 댓글이 맞으면 */
-                    await Comment.update({
-                    content: commentDto.content,
-                    updatedAt :Date.now()
-                },{
-                    where:{
-                        id : commentDto.commentId,
+                await Comment.update(
+                    {
+                        content: commentDto.content,
+                        updatedAt: Date.now(),
+                    },
+                    {
+                        where: {
+                            id: commentDto.commentId,
+                        },
                     }
-                }
-               );
-               return "created";
-            }else{
+                );
+                return "created";
+            } else {
                 return "forbidden";
             }
-          
-        }catch(err){
+        } catch (err) {
             throw new Error(err);
         }
     },
     /**
-     * 
-     * @param {Object} commentDto 댓글 삭제 시 현재 세션 유저와
-     * @returns 
+     *
+     * @param {Object} commentDto 댓글 삭제 시 현재 세션 유저와 해당 댓글의 idx가 담긴 객체
+     * @returns
      */
-    destroyComment : async (commentDto)=>{
-    try{
-        const result = await Comment.destroy({
-            where:{
-                id : commentDto.commentId,
-                user_id : commentDto.user
+    destroyComment: async (commentDto) => {
+        try {
+            const result = await Comment.destroy({
+                where: {
+                    id: commentDto.commentId,
+                    user_id: commentDto.user,
+                },
+            });
+            if (result === 0) {
+                return "notFound";
             }
-        });
-        if(result === 0){
-            return "notFound";
+        } catch (err) {
+            throw new Error(err);
         }
-    }catch(err){
-        throw new Error(err);
-    }
-    }
+    },
 };
