@@ -37,8 +37,8 @@ module.exports = class Post extends Sequelize.Model{
         /* Hashtags와  N(post) : N(hashtags) 관계 -> N : M 관계의 경우 중간 테이블이 필요함. PostHashtag 테이블로 지정*/
         db.Post.belongsToMany(db.Hashtag,{through:'post_has_hashtag'});
 
-        db.Post.hasMany(db.Heart);
+        db.Post.hasMany(db.Heart,{onDelete: "cascade",});
 
-        db.Post.hasMany(db.PostImage);
+        db.Post.hasMany(db.PostImage,{onDelete: "cascade",});
     }
 };

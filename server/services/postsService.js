@@ -24,24 +24,36 @@ class LoadFeed {
             model: User,
             attributes: ["id", "name", "nick", "image"],
         },
+        /* Heart.length가 0인 경우 로그인한 유저가 좋아요안함 */
         {
             model: Heart,
-            attributes: [],
+            attributes: ["id"],
+            where:{
+                /* 세션유저 idx값 */
+                user_id: 1
+            },
+            plain:true,
+            required : false,
         },
+        {
+            model:PostImage,
+            attributes:["img_url"],    
+            plain:true               
+        }
     ];
     attributes = [
         "id",
         "content",
-        "img",
         [
             sequelize.fn(
                 "DATE_FORMAT",
                 sequelize.col("updated_at"),
-                "%d-%m-%Y %H:%i:%s"
+                "%Y-%m-%d %H:%i:%s"
             ),
             "updated_at",
         ],
         [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
+        // [sequelize.fn("COUNT", sequelize.col("hearts.user_id")),{where:{user_id:1}},"count"]
     ];
 
     async findFollowUser(userId) {
@@ -89,9 +101,10 @@ module.exports = {
      */
     selectPostsAll: async (userId) => {
         const loadFeed = new LoadFeed();
+        let result;
         try {
             const followingsId = await loadFeed.findFollowUser(userId);
-            const result = await Post.findAll({
+            result = await Post.findAll({
                 order: [["updatedAt", "DESC"]],
                 where: {
                     user_id: {
@@ -100,14 +113,17 @@ module.exports = {
                 },
                 include: loadFeed.include,
                 attributes: loadFeed.attributes,
-                group: ["id"],
-                raw: true,
-                nest: true,
+                /* group으로 묶어주니 1:N이 모두 출력됨 */
+                group: ["id","postImages.id"]   ,
+                nest:true,
+                // raw:true
+                // required:false, 
             });
-            return result;
+            
         } catch (err) {
-            throw new Error(err);
+            result = err;
         }
+        return result;
     },
     /**
      *
@@ -123,8 +139,9 @@ module.exports = {
                 },
                 attributes: loadFeed.attributes,
                 include: loadFeed.include,
-                raw: true,
-                nest: true,
+                group: ["postImages.id"]   
+                
+                
             });
             return result;
         } catch (err) {
@@ -134,7 +151,6 @@ module.exports = {
 
     insertPosts: async (info) => {
         let postId;
-        //이제 이미지 url을 어떻게 가져올 것인인가?
         let result;
         await Post.create({
             content: info.content,
@@ -171,7 +187,7 @@ module.exports = {
         const newPostNum = loadFeed.getNewPostNum();
         const urlArr = [];
         let storage;
-        const promises = files.map(async (file, index) => {
+        const promises = files.map(async (file) => {
             storage = await storageRef.upload(file.path, {
                 public: true,
                 destination: `/uploads/feed/${newPostNum}/${file.filename}`,
@@ -185,4 +201,35 @@ module.exports = {
         await Promise.all(promises);
         return urlArr;
     },
+    updateHeart : async (likeDto)=>{
+
+        const dtoObject ={
+            user_id:likeDto.user,
+            post_id:likeDto.postId
+        }
+
+        const findAlreadyLike = await Heart.findAll({
+            where:dtoObject,
+            raw:true
+        });
+        if(findAlreadyLike.length===0){
+            try{
+            await Heart.create(dtoObject);
+            return "created";
+            }
+            catch(err){
+                return err;
+            }
+        }else{
+            try{
+                await Heart.destroy({
+                    where:dtoObject
+                });
+                return "destroy";
+            }catch(err){
+                return err;
+            }
+        }
+        
+    }
 };
