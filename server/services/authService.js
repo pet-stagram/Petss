@@ -1,8 +1,6 @@
 const { Post, User, Hashtag } = require('../sequelize/models');
 const email = require('../config/email');
 const nodemailer = require("nodemailer");
-const { response } = require('express');
-const { session } = require('passport');
 
 /* min ~ max까지 랜덤으로 숫자를 생성하는 함수 */ 
 const generateRandom = function (min, max) {
@@ -36,11 +34,10 @@ module.exports = {
         // -1, -1: error 시(catch)
             const checkEmailUser = await User.findOne({where: {email : userEmail }});
 
-            if(checkEmailUser){//이미 있는 이메일이라면 exist문자열을 return함
+            if(checkEmailUser){//이메일이 존재한다면,
                 //console.log(checkEmailUser);
                 return [0, -1];
-            }else{//인증번호 발송
-                //try. catch해서 성공하면 바로 return 200, 실패하면 return err, controller에서 400에러 찍고 send 에러보냄으로
+            }else{//존재하지 않으면 인증번호 발송
                 try{
                     // throw 'test';
                     const send = async(data) =>{//send function data 호출 할때 넣음
@@ -64,28 +61,32 @@ module.exports = {
                     return [randomNumber, randomNumber];
                 }catch(err){
                     return [-1, -1];
-                }//try,catch문에 빠져나와서 생긴 에러 처리하는게 좋겠다   
-            }           
+                }               
+            }   
+            //sendEmail자체에서 에러나는것(try,catch를 빠져나와 생기는 에러) = status 409에러를 따로 잡아야함
+            //인증번호 너무 많이 요청한 경우 409에러뜸. 5회 제한으로 할 수 있게
+
      },
 
 
 
-
-
-
-
-
-
-
-
-
-
-     checkEmailNum : (checknum)=>{
-        //sendEmail에서 보낸 랜덤숫자를 세션에 담는다.
+     checkEmailNum : (checkRanNumber,inputNum)=>{//controller에서 받아온 변수 randomNumber,inputNum
+        console.log("랜덤번호 : "+checkRanNumber, "입력한번호 : "+inputNum);
+        
+        
         //세션의 숫자와 유저가 입력한 숫자가 동일한지 확인한다
+        if(checkRanNumber.toString()!==inputNum.toString()){
+            console.log("틀림");//400에러
+            return 400;
+        }
+        else{
+            console.log("같음");//200status
+            return 200;
+        }
+        
         //세션은 db에 저장되고 db에 저장된 세션과 비교
         //동일하면 return 200, 동일하지 않으면 err를 보낸다 
-        
+        //코드번호 5회 오류시 메인화면으로?
 
         
            

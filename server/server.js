@@ -2,7 +2,8 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const session = require("express-session")
+const session = require("express-session");
+const fileStore = require("session-file-store")(session);
 const cookieParser = require("cookie-parser");
 const {sequelize} = require("./sequelize/models");
 require("dotenv").config();
@@ -26,8 +27,9 @@ app.use(cookieParser(process.env.COOKIE_SECRECT));
 app.use(
     session({
     resave:false,
-    saveUninitialized:false,
+    saveUninitialized:true,
     secret:process.env.COOKIE_SECRET,
+    store: new fileStore(),
     cookie:{
         httpOnly:true,
         secure:false
