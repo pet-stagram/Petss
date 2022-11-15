@@ -76,13 +76,41 @@ module.exports = {
     },
     putFollow : async (req, res) => {
         const followDto = {
-            follower : 1,//현재 세션 유저 idx
-            following : req.body.userId
+            currentUser : 2,//현재 세션 유저 idx
+            profileUser : isNaN(req.body.userId)?req.body.userId:parseInt(req.body.userId)
         };
         try{
-            await service.updateFollow(followDto);
+            const result = await service.updateFollow(followDto);
+            if(result==="Bad Request"){
+                res.sendStatus(400);
+            }else if(result ==="Created"){
+                res.sendStatus(201);
+            }else{
+                res.sendStatus(204);
+            }
         }catch(err){
+            res.sendStatus(400);
             throw err;
+        }
+    },
+    postInvoice : async (req, res) => {
+        if(false){
+            /* 세션없으면 */
+            res.sendStatus(401);
+        }else{
+            const invoiceDto = {
+                title : req.body.title,
+                content : req.body.content,
+                userId : 1//세션 유저
+            };
+            try{
+                await service.insertInvoice(invoiceDto);
+                res.sendStatus(201);
+            }catch(err){
+                res.sendStatus(400);
+                throw err;
+            }
+            
         }
     }
 

@@ -1,7 +1,17 @@
-const { User, Post, Heart, PostImage, Comment, follow } = require("../sequelize/models/index");
+const {
+    User,
+    Post,
+    Heart,
+    PostImage,
+    Comment,
+    follow,
+    Invoice,
+} = require("../sequelize/models/index");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
-const {uploadProfileImage} = require("../module/firebase");
+const { uploadProfileImage } = require("../module/firebase");
+const db = require("../sequelize/models/index");
+const usersController = require("../controllers/usersController");
 
 module.exports = {
     /**
@@ -12,7 +22,14 @@ module.exports = {
     selectUser: async (userId) => {
         try {
             const findResult = await User.findOne({
-                attributes:["id","email","name","nick","image","self_intro"],
+                attributes: [
+                    "id",
+                    "email",
+                    "name",
+                    "nick",
+                    "image",
+                    "self_intro",
+                ],
                 where: {
                     id: userId,
                 },
@@ -49,7 +66,7 @@ module.exports = {
         }
     },
     /**
-     * 
+     *
      * @param {Object} userDto 유저의 정보를 업데이트하기 위한 현재 세션 유저(id), params의 유저id(paramsUserId), 변경할 이름(name), 별명(nick), 비밀번호(password), 자기소개(selfIntro)가 담긴 객체
      */
     updateUser: async (userDto) => {
@@ -72,53 +89,72 @@ module.exports = {
         }
     },
     /**
-     * 
+     *
      * @param {Object} userDto 유저의 사진을 수정하기위한 현재 세션 유저(id), 변경할 유저의 idx(paramsUserId), 변경할 사진(file)
      */
-    updateUserImage : async (userDto)=>{
-        const imgUrl = await uploadProfileImage(userDto.id,userDto.file);
-        try{
-            await User.update(
-                { image : imgUrl },{ where : { id : userDto.id } }
-            );
-        }catch(err){
+    updateUserImage: async (userDto) => {
+        const imgUrl = await uploadProfileImage(userDto.id, userDto.file);
+        try {
+            await User.update({ image: imgUrl }, { where: { id: userDto.id } });
+        } catch (err) {
             throw err;
         }
     },
-    updateFollow : async (followDto)=>{
-       try{
-        const findResult = await User.findAll({
-            attributes:[
-                "Followers.follow.following_id"
-            ],
-            raw: true,
-            // nest:true,
-            include : [
-                {
-                    model: User,
-                    as: "Followers",
-                    attributes:[],
-                    where:{
-                        '$Followers.follow.following_id$' : followDto.following,
-                        '$Followers.follow.follower_id$' : followDto.follower
-                    },
-                    // plain:true,
-                    // raw:true,
-                },
-            ]
+    /**
+     *
+     * @param {Object} followDto 팔로잉을 위한 현재 세션 유저의 id값(currentUser)과 팔로잉 상대 유저의 id값(profileUser)이 담긴 객체
+     * @returns 로직 결과
+     */
+    updateFollow: async (followDto) => {
+        const Follow = db.sequelize.models.follow;
+        const followObj = {
+            following_id: followDto.profileUser,
+            follower_id: followDto.currentUser,
+        };
+        // console.log(followObj.follower_id);
+        // console.log(typeof followObj.following_id);
+        if (followObj.follower_id === followObj.following_id) {
+            /* 본인 스스로를 팔로우하는 경우 HTTP 400 리턴 */
+            return "Bad Request";
+        } else {
+            try {
+                const followable = await Follow.findAll({
+                    where: followObj,
+                    raw: true,
+                });
+                if (followable.length > 0) {
+                    /* 팔로잉 중인 경우 팔로우 취소*/
+                    await Follow.destroy({
+                        where: followObj,
+                    });
+                    return "Destroy";
+                } else {
+                    const currentUser = await User.findOne({
+                        where: {
+                            id: followDto.currentUser,
+                        },
+                    });
+                    const profileUser = await User.findOne({
+                        where: {
+                            id: followDto.profileUser,
+                        },
+                    });
+                    await currentUser.addFollowings(profileUser);
+                    await profileUser.addFollowers(currentUser);
+                    return "Created";
+                }
+            } catch (err) {
+                throw err;
+            }
+        }
+    },
+    insertInvoice : async (invoiceDto)=>{
+        await Invoice.create({
+            title: invoiceDto.title,
+            content: invoiceDto.content,
+            createdAt : Date.now(),
+            updatedAt : Date.now(),
+            user_id: invoiceDto.userId
         });
-        if(findResult.length>0){
-            /* 현재 세션 사용자가 다른 사용자 화면을 볼때 그 사용자를 팔로우했다면 */
-            await User.has(follow)
-            .then(exists =>{
-                console.log(exists);
-            })
-        }   
-        console.log(findResult);
-    }catch(err){
-        throw err;
     }
-        
-    }
-    
 };

@@ -15,5 +15,6 @@ router.post("/:userId/image",upload.single('file'),controller.postUserImage);
 
 router.put("/follow",controller.putFollow);
 
+router.post("/invoice",controller.postInvoice);
 
 module.exports = router;
