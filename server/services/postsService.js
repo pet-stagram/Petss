@@ -1,22 +1,19 @@
-const { User, Post, Heart, PostImage } = require("../sequelize/models/index");
+const {
+    User,
+    Post,
+    Heart,
+    PostImage,
+    Comment,
+} = require("../sequelize/models/index");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
+const {uploadProfileImage, uploadPostsImages}= require("../module/firebase");
+
 const stream = require("stream");
-const firebaseAdmin = require("firebase-admin");
-const { v4: uuidv4 } = require("uuid");
-const serviceAccount = require("../config/petss-b5d7b-firebase-adminsdk-8rolr-eeb3aba037.js");
 const fs = require("fs");
 const path = require("path");
 
 // firebase Admin 초기화
-const admin = firebaseAdmin.initializeApp(
-    {
-        credential: firebaseAdmin.credential.cert(serviceAccount),
-    },
-    "storage"
-);
-
-const storageRef = admin.storage().bucket(`gs://petss-b5d7b.appspot.com`);
 
 class LoadFeed {
     include = [
@@ -28,18 +25,18 @@ class LoadFeed {
         {
             model: Heart,
             attributes: ["id"],
-            where:{
+            where: {
                 /* 세션유저 idx값 */
-                user_id: 1
+                user_id: 1,
             },
-            plain:true,
-            required : false,
+            plain: true,
+            required: false,
         },
         {
-            model:PostImage,
-            attributes:["img_url"],    
-            plain:true               
-        }
+            model: PostImage,
+            attributes: ["img_url"],
+            plain: true,
+        },
     ];
     attributes = [
         "id",
@@ -114,14 +111,13 @@ module.exports = {
                 include: loadFeed.include,
                 attributes: loadFeed.attributes,
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
-                group: ["id","postImages.id"]   ,
-                nest:true,
+                group: ["id", "postImages.id"],
+                nest: true,
                 // raw:true
-                // required:false, 
+                // required:false,
             });
-            
         } catch (err) {
-            result = err;
+            throw err;
         }
         return result;
     },
@@ -139,9 +135,8 @@ module.exports = {
                 },
                 attributes: loadFeed.attributes,
                 include: loadFeed.include,
-                group: ["postImages.id"]   
-                
-                
+                group: ["postImages.id"],
+                nest: true,
             });
             return result;
         } catch (err) {
@@ -149,32 +144,83 @@ module.exports = {
         }
     },
 
-    insertPosts: async (info) => {
+    /**
+     *
+     * @param {Object} postDto 피드를 게시하기 위한 현재 세션유저, 피드 내용, 사진 및 파일이 담긴 객체
+     * @returns "success" 혹은 err
+     */
+    insertPosts: async (postDto) => {
         let postId;
         let result;
         await Post.create({
-            content: info.content,
+            content: postDto.content,
             user_id: 1,
             created_at: Date.now(),
             updated_at: Date.now(),
-            })
+        })
             .then(async (postCreateResult) => {
                 postId = postCreateResult.get({ plain: true }).id;
-                const promise = info.fileUrl.map(async (url) => {
+                const promise = postDto.fileUrl.map(async (url) => {
                     await PostImage.create({
                         postId: postId,
                         imgUrl: url,
                     });
                 });
-                try{await Promise.all(promise); result = "success";}
-                catch(err){
+                try {
+                    await Promise.all(promise);
+                    result = "success";
+                } catch (err) {
                     result = err;
-                };
+                }
             })
             .catch((err) => {
-                result = err;
+                throw err;
             });
         return result;
+    },
+    /**
+     * 
+     * @param {Object} postDto 피드를 수정하기 위한 현재 세션 유저, 피드 idx, 수정할 피드 내용이 담긴 객체
+     * @returns 상태코드를 구분하기 위한 문자열
+     */
+    updatePosts : async (postDto)=>{
+       
+        try{
+        const result = await Post.update({
+            content : postDto.content,
+            updatedAt : Date.now()
+        },
+        {
+            where:{
+                id: postDto.postId,
+                user_id : postDto.user
+        }});
+        if(result[0] === 0){
+            return "forbidden"
+        }
+    }catch(err){
+        return "serverError";
+    }
+    },
+    /**
+     * 
+     * @param {Object} postDto 피드를 삭제하기 위한 현재 세션유저, 해당 피드 idx가 담긴 객체
+     * @returns 상태코드를 구분하기 위한 문자열
+     */
+    destroyPosts : async (postDto) => {
+        try{
+            const result = await Post.destroy({
+            where: {
+                id: postDto.postId,
+                user_id: postDto.user,
+            }
+        });
+        if(result===0){
+            return "forbidden";
+        }
+    }catch(err){
+        return "serverError"
+    }
     },
     /**
      *
@@ -184,51 +230,138 @@ module.exports = {
     uploadFile: async (files) => {
         const loadFeed = new LoadFeed();
         /* 새로운 피드 번호 가져와야함 */
-        const newPostNum = loadFeed.getNewPostNum();
-        const urlArr = [];
-        let storage;
-        const promises = files.map(async (file) => {
-            storage = await storageRef.upload(file.path, {
-                public: true,
-                destination: `/uploads/feed/${newPostNum}/${file.filename}`,
-                metadata: {
-                    firebaseStorageDownloadTokens: uuidv4(),
-                },
-            });
-            urlArr.push(storage[0].metadata.mediaLink);
-            fs.rmSync(file.path, { recursive: true, force: true });
-        });
-        await Promise.all(promises);
+        const newPostNum = await loadFeed.getNewPostNum();
+        const urlArr = await uploadPostsImages(newPostNum,files);
         return urlArr;
     },
-    updateHeart : async (likeDto)=>{
-
-        const dtoObject ={
-            user_id:likeDto.user,
-            post_id:likeDto.postId
-        }
-
+    /**
+     *
+     * @param {Object} likeDto 좋아요하는 유저와 해당 피드 idx를 담은 객체
+     * @returns 좋아요가 추가되었는지("created"), 삭제되었는 지("destroy"), 에러가 발생했는 지(err)
+     */
+    updateHeart: async (likeDto) => {
+        const dtoObject = {
+            user_id: likeDto.user,
+            post_id: likeDto.postId,
+        };
         const findAlreadyLike = await Heart.findAll({
-            where:dtoObject,
-            raw:true
+            where: dtoObject,
+            raw: true,
         });
-        if(findAlreadyLike.length===0){
-            try{
-            await Heart.create(dtoObject);
-            return "created";
+        if (findAlreadyLike.length === 0) {
+            try {
+                await Heart.create(dtoObject);
+                return "created";
+            } catch (err) {
+                throw err;
             }
-            catch(err){
-                return err;
-            }
-        }else{
-            try{
+        } else {
+            try {
                 await Heart.destroy({
-                    where:dtoObject
+                    where: dtoObject,
                 });
                 return "destroy";
-            }catch(err){
-                return err;
+            } catch (err) {
+                throw err;
             }
+        }
+    },
+    /**
+     *
+     * @param {Object} commentDto 댓글작성 시 해당 피드 idx, 현재 세션 유저, 댓글 내용이 담긴 객체
+     * @returns 실패 시 err
+     */
+    insertComment: async (commentDto) => {
+        try {
+            await Comment.create({
+                content: commentDto.content,
+                user_id: commentDto.user,
+                post_id: commentDto.postId,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+            });
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
+    /**
+     *
+     * @param {Object} commentDto 댓글 수정 시 현재 세션 유저, 해당 댓글 idx, 수정할 댓글 내용이 담긴 객체
+     * @returns db 처리결과에 따른 상태코드
+     */
+    updateComment: async (commentDto) => {
+        try {
+            const currentUserComments = await Comment.findAll({
+                where: {
+                    user_id: commentDto.user,
+                },
+                attributes: ["id"],
+                raw: true,
+            });
+            const matchUserComment = currentUserComments.filter(
+                (userComment) =>
+                    userComment.id === parseInt(commentDto.commentId)
+            );
+            if (matchUserComment.length > 0) {
+                /* 현재 세션유저가 작성한 댓글이 맞으면 */
+                await Comment.update(
+                    {
+                        content: commentDto.content,
+                        updatedAt: Date.now(),
+                    },
+                    {
+                        where: {
+                            id: commentDto.commentId,
+                        },
+                    }
+                );
+                return "created";
+            } else {
+                return "forbidden";
+            }
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
+    /**
+     *
+     * @param {Object} commentDto 댓글 삭제 시 현재 세션 유저와 해당 댓글의 idx가 담긴 객체
+     * @returns
+     */
+    destroyComment: async (commentDto) => {
+        try {
+            const result = await Comment.destroy({
+                where: {
+                    id: commentDto.commentId,
+                    user_id: commentDto.user,
+                },
+            });
+            if (result === 0) {
+                return "notFound";
+            }
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
+    /**
+     * 
+     * @param {Number} postId 댓글 조회를 위한 해당 피드의 idx
+     * @returns DB findAll 결과 or err
+     */
+    selectComment : async (postId) => {
+        try{
+            const findResult = await Comment.findAll({
+                order:[["created_at","ASC"]],
+                where :{
+                    post_id : postId
+                },
+                raw:true
+            });
+            console.log(findResult);
+            return findResult;
+        }
+        catch(err){
+            throw err
         }
         
     }
