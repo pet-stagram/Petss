@@ -28,13 +28,11 @@ module.exports = {
         }else{
             const userDto = {
                 id : 1, // 현재 세션 유저
-                paramsUserId : req.params.userId,
                 name : req.body.name,
                 nick : req.body.nick,
                 password : req.body.pw,
                 selfIntro : req.body.selfIntro
             }
-            if(req.params.userId === userDto.id){
                 try{
                     await service.updateUser(userDto);
                     res.sendStatus(201);
@@ -42,15 +40,12 @@ module.exports = {
                     res.sendStatus(400);
                     throw err;
                 }
-            }else
-                res.sendStatus(403);    
         }
         
     },
     postUserImage : async (req, res)=>{
         const userDto = {
             id : 1, // 현재 세션 유저
-            paramsUserId : parseInt(req.params.userId),
             file: req.file
         }
         if(isNaN(req.params.userId)){
@@ -61,7 +56,6 @@ module.exports = {
         }else if(userDto.file === undefined){
             res.sendStatus(400);
         } else{
-            if(userDto.paramsUserId === userDto.id){
                 try{
                     // await service.
                     await service.updateUserImage(userDto);
@@ -70,8 +64,7 @@ module.exports = {
                     res.sendStatus(400);
                     throw err;
                 }
-            }else
-                res.sendStatus(403);    
+            
         }
     },
     putFollow : async (req, res) => {
@@ -110,8 +103,6 @@ module.exports = {
                 res.sendStatus(400);
                 throw err;
             }
-            
         }
     }
-
 }

@@ -80,7 +80,7 @@ module.exports = {
                 },
                 {
                     where: {
-                        id: userDto.userId,
+                        id: userDto.id,
                     },
                 }
             );
@@ -148,13 +148,21 @@ module.exports = {
             }
         }
     },
+    /**
+     * 
+     * @param {Object} invoiceDto 문의사항 작성을 위한 문의사항 제목(title), 내용(content), 세션 유저아이디(userId)가 담긴 객체
+     */
     insertInvoice : async (invoiceDto)=>{
-        await Invoice.create({
+        try{
+        await Invoice.create({ 
             title: invoiceDto.title,
             content: invoiceDto.content,
             createdAt : Date.now(),
             updatedAt : Date.now(),
             user_id: invoiceDto.userId
         });
+    }catch(err){
+        throw err;
+    }
     }
 };
