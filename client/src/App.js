@@ -1,27 +1,19 @@
 import "./App.css";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import SearchUser from "./components/SearchUser";
-import Register from "./components/Register";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./components/login/Login";
+import MainFeed from "./components/feed/MainFeed";
+import Register from "./components/register/register";
 
 function App() {
-  const [a, setA] = useState("hi");
-  const callApi = async () => {
-    /* src/setupProxy.js 파일에 proxy 설정해놓음. 
-    만약에 api주소가 /auth 라면, /api/auth 로 요청하기 */
-    axios.get("/api/auth/login").then((res) => {
-      setA(res.data.test);
-    });
-  };
-  useEffect(() => {
-    callApi();
-  }, []);
-
   return (
-<div>
-<SearchUser/>
-<Register/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* setupProxy */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/posts" element={<MainFeed />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
