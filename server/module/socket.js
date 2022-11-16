@@ -17,7 +17,7 @@ const socket = (server) => {
       console.log(data);
       socket.join(data.roomName);
       roomName = data.roomName;
-    })
+    });
 
     socket.on('reqMsg', function (data) {
       console.log(data);
