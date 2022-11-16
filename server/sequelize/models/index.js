@@ -12,6 +12,7 @@ const Message = require('./message');
 const Heart = require('./heart');
 const Comment = require('./comment');
 const PostImage = require('./postImage');
+const Follow = require("./follow");
 
 let sequelize = new Sequelize( config.database, config.username, config.password, config );
 
@@ -27,6 +28,7 @@ db.Message = Message;
 db.Heart = Heart;
 db.Comment = Comment;
 db.PostImage = PostImage;
+db.Follow = Follow;
 
 User.init(sequelize);
 Post.init(sequelize);
@@ -37,6 +39,8 @@ Message.init(sequelize);
 Heart.init(sequelize);
 Comment.init(sequelize);
 PostImage.init(sequelize);
+Follow.init(sequelize);
+
 
 
 User.associate(db);
@@ -48,5 +52,7 @@ Message.associate(db);
 Heart.associate(db);
 Comment.associate(db);
 PostImage.associate(db);
+Follow.associate(db);
+
 
 module.exports = db;

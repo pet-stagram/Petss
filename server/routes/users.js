@@ -1,19 +1,39 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controllers/usersController")
-const upload = require("../module/upload");
 
-router.get("/:userId",controller.getUser);
 
-router.get("/:userId/posts",controller.getUserPosts);
 
-/* html form에 PUT Method가 존재하지 않음
-    추후 수정 필요 (ex. PUT -> POST ) */
-router.put("/:userId/info",controller.putUserInfo);
 
-router.post("/:userId/image",upload.single('file'),controller.postUserImage);
-
-router.put("/follow",controller.putFollow);
-
+/**
+ * @swagger
+ *  /users/invoice:
+ *   post:
+ *      summary: 문의사항 작성
+ *      tags:
+ *      - users
+ *      description: 문의사항 작성
+ *      produces:
+ *      - application/json
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          title:
+ *                              type: string
+ *                              description: 문의사항 제목
+ *                          content:
+ *                              type: string
+ *                              descrtipion: 문의사항 내용
+ *      responses:
+ *          201:
+ *              description: 문의사항 작성 성공
+ *          400:
+ *              description: 잘못된 요청
+ *          401:
+ *              description: 세션이 없음(로그인 안됨)
+ */
+router.post("/invoice",controller.postInvoice);
 
 module.exports = router;
