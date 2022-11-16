@@ -14,10 +14,14 @@ const specs = swaggerJsdoc(options);
 const rateLimit = require("express-rate-limit");
 /* multer */
 const multer = require('multer');
+const socket = require("./module/socket");
+const http = require("http");
 
 const app = express();
 const PORT = process.env.SERVER_PORT;
 
+const server = http.createServer(app);
+socket(server);
 
 /* Set express middleware */
 app.use(cors());

@@ -31,6 +31,6 @@ module.exports = class Hashtag extends Sequelize.Model{
     }
     static associate(db){
         /* users 테이블과 1 : n 관계에서 중간 테이블인 PostHashtag로 이동 */
-        db.Invoice.belongsTo(db.User);
+        db.Invoice.belongsTo(db.User,{foreignKey : "user_id"});
     }
 };

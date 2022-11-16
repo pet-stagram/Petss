@@ -1,28 +1,28 @@
-@import url("https://webfontworld.github.io/gmarket/GmarketSans.css");
+@import url("https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;600&display=swap");
 
 body {
-  font-family: "GmarketSans";
-  font-weight: 500;
+  font-family: "Gothic A1", sans-serif;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* font-family: 'Roboto', sans-serif; */
 }
 
 .logContainer {
+  font-weight: 500;
   display: flex;
-  /* 디스플레이 플렉스 줘야 얼라인아이템 먹음 */
   height: 100vh;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  background-color: rgb(245, 245, 245);
+  width: 100vw;
+  background-color: #e1f5fe;
+  /* background-color: #FFF9C4; */
+  /* background-color: rgb(245, 245, 245); */
 }
 
-a {
+.logContainer a {
   text-decoration: none;
   color: black;
   font-size: 15px;
@@ -38,9 +38,10 @@ a {
   align-items: center;
 }
 
-.logo {
-  width: 350px;
-  margin-right: 100px;
+.logoBox .logo {
+  width: 480px;
+  margin-right: 150px;
+  margin-bottom: 100px;
 }
 
 .logo img {
@@ -52,45 +53,54 @@ a {
   background-color: white;
   border-collapse: collapse;
   border-radius: 20px;
-  width: 350px;
-  height: 400px;
+  width: 400px;
+  height: 450px;
   padding: 30px;
-
-  /*색깔 저장소 
-        노랑색 : #ffec9a 
-        */
 }
 
-.loginfont {
+.loginIcon {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 35px;
   margin-top: 15px;
 }
 
-.id,
-.pw,
-.btn {
-  width: 250px;
+.logInput {
+  font-weight: 500;
+  width: 300px;
   margin-bottom: 20px;
   margin-left: 20px;
   height: 40px;
-  border: 1px solid transparent;
-  border-radius: 3px;
+  border: 1px solid rgb(213, 211, 211);
+  border-radius: 5px;
+  padding: 10px;
 }
 
-.btn {
+.logInput #email:focus,
+.logInput #pw:focus {
+  outline: 1px solid black;
+}
+
+#logBtn {
   background-color: rgb(255, 205, 95);
   border: 1px solid none;
   border-style: none;
   font-size: 17px;
-  /* 색상표 
-        하늘색 : #b2ebf2
-
-        */
+  cursor: pointer;
 }
 
-.mvReg,
 .findPw {
-  margin-top: 35px;
   margin-left: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.mvReg {
+  margin-left: 20px;
+  margin-top: 30px;
+  cursor: pointer;
+}
+
+.mvReg a:hover,
+.findPw a:hover {
+  color: #f9a825;
 }

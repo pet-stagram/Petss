@@ -1,0 +1,39 @@
+h1{
+    margin-bottom: 30px;
+
+}
+hr{
+    /* border: 1px solid #ddd; */
+    height: 1px;
+    color: #ddd;
+    background-color: #ddd;
+    border: none;
+}
+.logoImage{
+    width: 200px;
+}
+.propileBox{
+    width: 100%;
+    height: 130px;
+    padding: 0 20px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+.propileBox span{
+    margin-left: 20px;
+}
+.propileImage{
+    width: 60px;
+    height: 60px;
+    margin-left: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-image: url("../../../images/2.jpg");
+    background-size: cover;
+}
+.navbarList li, .navbarList li a{
+    margin: 50px 0;
+    font-size: 18px;
+}
+
