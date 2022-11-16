@@ -2,15 +2,19 @@
     background-color: rgb(250, 250, 250);
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
-    height: 100vh;
-    margin: 0 160px;
+    height: 100%;
+    margin: 0 190px;
 }
-.myFeedProfile{
+.myFeedWrap header{
     display: flex;
     align-items: center;
     text-align: left;
+    margin-bottom: 40px;
 }
-
+.myFeedProfile{
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
 .myFeedProfileImage{
     display: inline-block;
     text-align: left;
@@ -24,6 +28,9 @@
     background-image: url("../../../images/7.jpg");
     background-size: cover;
 }
+.myFeedWrap section{
+    margin-left: 60px;
+}
 
 .myFeedNickname{
     margin-left: 100px;
@@ -36,4 +43,32 @@
     border: 1px solid #ddd;
     padding: 8px 20px;
     border-radius: 5px;
+}
+.myFeedInfo{
+    display: flex;
+}
+.myFeedInfo li{
+    margin: 0 16px
+}
+.introduction{
+    margin-top: 30px;
+    font-size: 14px;
+}
+.myFeedPostsWrap{
+    width: 800px;
+    margin: 0 auto;
+}
+.myFeedPosts{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 10px;
+    column-gap: 10px;
+    margin: 0 24px;
+}
+.myFeedPostsTitle{
+    margin: 20px 0;
+}
+.myFeedPost img{
+    width: 240px;
+    height: 240px;
 }

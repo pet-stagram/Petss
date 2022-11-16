@@ -18,7 +18,7 @@ const MainFeed = () => {
                     <div className="postImageBox">
                         <img src={test7} alt="" className="postImage"/>
                     </div>
-                    <div class="postReaction">
+                    <div className="postReaction">
                         <button><img src={paw} alt="like" className="like"/></button>
                         <button><img src={reply} alt="like" className="like"/></button>
                         <button><img src={message} alt="like" className="like"/></button>
