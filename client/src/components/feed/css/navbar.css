@@ -32,7 +32,8 @@ hr{
     background-image: url("../../../images/2.jpg");
     background-size: cover;
 }
-li, li a{
+.navbarList li, .navbarList li a{
     margin: 50px 0;
     font-size: 18px;
 }
+

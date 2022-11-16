@@ -1,9 +1,11 @@
 import React from 'react'
+import Modal from "react-modal";
+
 
 const AddFeed = () => {
   return (
-    <div className='addPostBox'>
-      <input type="text" name=''></input>
+    <div>
+      피드추가페이지22
     </div>
   )
 }

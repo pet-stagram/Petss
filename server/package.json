@@ -18,6 +18,7 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "firebase-admin": "^11.2.0",
+    "firebase-tools": "^11.16.0",
     "firestore-storage": "^5.0.3",
     "http-proxy-middelware": "^0.0.1-security",
     "jest": "^29.3.1",

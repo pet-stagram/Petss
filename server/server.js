@@ -2,7 +2,8 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const session = require("express-session")
+const session = require("express-session");
+const fileStore = require("session-file-store")(session);
 const cookieParser = require("cookie-parser");
 const {sequelize} = require("./sequelize/models");
 require("dotenv").config();
@@ -26,12 +27,15 @@ app.use(cookieParser(process.env.COOKIE_SECRECT));
 app.use(
     session({
     resave:false,
-    saveUninitialized:false,
+    saveUninitialized:true,
     secret:process.env.COOKIE_SECRET,
+    store: new fileStore(),
     cookie:{
         httpOnly:true,
         secure:false
 }}));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 /* Set Sequelize(DB) */
 sequelize.sync({force:false})
@@ -48,6 +52,7 @@ const authRouter = require("./routes/auth");
 const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
+const passport = require("./sequelize/models/passport");
 
 app.use('/uploads', express.static('uploads'));
 app.use("/auth",authRouter);
