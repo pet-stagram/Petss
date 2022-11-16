@@ -9,9 +9,10 @@ import MyFeed from "./components/feed/pages/MyFeed";
 import { useState, useEffect } from "react";
 import React from "react";
 import axios from "axios";
+import Register from "./components/register/Register";
 
 function App() {
-  const [isLogined, setIsLogined] = useState(false);
+  const [isLogined, setIsLogined] = useState(true);
 
   //저장된 값 확인하는 용
   // useEffect(() => {
@@ -39,6 +40,7 @@ function App() {
           />
           <Route path="/addFeed" element={<Main component={<AddFeed />} />} />
           <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
         {/* <Routes
             path="/"
