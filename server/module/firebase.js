@@ -15,14 +15,16 @@ const admin = firebaseAdmin.initializeApp(
 
 const storageRef = admin.storage().bucket(`gs://petss-b5d7b.appspot.com`);
 
-async function uploadProfileImage(userId, file) {
-    const desertFile = storageRef.file(`uploads/users/${userId}/profile.jpeg`);
+async function uploadProfileImage(userDto) {
+    const {id, file, isBasic } = userDto;
+    console.log(id)
+    const desertFile = storageRef.file(`uploads/users/${id}/profile.jpeg`);
     try {
         await desertFile.delete();
     } catch (err) {}
-    const storage = await storageRef.upload(file.path, {
+    const storage = await storageRef.upload(file, {
         public: true,
-        destination: `/uploads/users/${userId}/profile.jpeg`,
+        destination: `/uploads/users/${id}/profile.jpeg`,
         metadata: {
             firebaseStorageDownloadTokens: uuidv4(),
         },
@@ -30,13 +32,15 @@ async function uploadProfileImage(userId, file) {
     
     const imgUrl = storage[0].metadata.mediaLink;
 
-    fs.rmSync(file.path, { recursive: true, force: true });
+    if(!isBasic){
+        fs.rmSync(file, { recursive: true, force: true });
+    }
+    
     return imgUrl;
 }
 
 async function uploadPostsImages(newPostNum, files) {
     const urlArr = [];
-    urlArr.map;
     let storage;
     const promises = files.map(async (file, index) => {
         const ext = path.extname(file.originalname);
