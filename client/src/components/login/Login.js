@@ -3,6 +3,8 @@ import "./Login.css";
 import Logo from "../../images/loginLogo.png";
 import register from "../register/Register";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaw } from "@fortawesome/free-solid-svg-icons";
 
 function Login() {
   return (
@@ -19,12 +21,14 @@ function Login() {
               </div>
             </div>
             <div class="logBox">
-              <form class="login" method="post">
+              <form
+                class="login"
+                method="post"
+                action="http://localhost:5100/auth/login"
+              >
                 {/*사용자 입력 데이터 저장해야 한다*/}
                 <h1 class="loginfont">
-                  <strong>
-                    <i class="fa-solid fa-paw"></i>
-                  </strong>
+                  <FontAwesomeIcon icon={faPaw} />
                 </h1>
                 <div>
                   <input

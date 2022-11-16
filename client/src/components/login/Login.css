@@ -15,7 +15,7 @@ body {
   height: 100vh;
   justify-content: center;
   align-items: center;
-  max-width: 100%;
+  width: 100vw;
   background-color: #e1f5fe;
   /* background-color: #FFF9C4; */
   /* background-color: rgb(245, 245, 245); */

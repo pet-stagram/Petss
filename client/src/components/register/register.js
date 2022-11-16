@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "../../images/regLogo.png";
-import "./Register.css";
+import "./register.css";
 
 function Register() {
   return (
@@ -10,11 +10,15 @@ function Register() {
           <div className="mainBox">
             <div className="logoBox">
               <div className="logo">
-                <img src={Logo} alt="logo" />
+                <img src={Logo} alt="펫스 로고 사진" />
               </div>
             </div>
             <div class="regBox">
-              <form class="register" method="post">
+              <form
+                class="register"
+                method="post"
+                action="http://localhost:5100/"
+              >
                 {/* maxlength정하고(db랑 맞춰야하겠지?) 모든 입력칸 필수 입력으로 만들고 인풋 칸 밑에 경고글씨 띄우기
                     해당 인풋칸을 눌렀다가 벗어날 때 입력확인, 중복검사 되도록, 그에 맞춰서 경고글씨 바뀜 */}
                 <div class="nameWrap">
