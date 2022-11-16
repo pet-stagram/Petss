@@ -67,6 +67,28 @@ module.exports = {
             
         }
     },
+    postUserImageBasic : async (req, res)=>{
+        const userDto = {
+            id : 1, // 현재 세션 유저
+            file: "/public/images/basic_profile.jpeg"
+        }
+        if(isNaN(req.params.userId)){
+            res.sendStatus(404);
+        }else if(false){
+            /* 세션 유저 없으면 */
+            res.sendStatus(401);
+        }else{
+                try{
+                    // await service.
+                    await service.updateUserImage(userDto);
+                    res.sendStatus(201);
+                }catch(err){
+                    res.sendStatus(400);
+                    throw err;
+                }
+            
+        }
+    },
     putFollow : async (req, res) => {
         const followDto = {
             currentUser : 2,//현재 세션 유저 idx

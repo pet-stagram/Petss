@@ -36,7 +36,6 @@ async function uploadProfileImage(userId, file) {
 
 async function uploadPostsImages(newPostNum, files) {
     const urlArr = [];
-    urlArr.map;
     let storage;
     const promises = files.map(async (file, index) => {
         const ext = path.extname(file.originalname);

@@ -168,6 +168,8 @@ router.put("/info",controller.putUserInfo);
  */
 router.post("/:userId/image",upload.single('file'),controller.postUserImage);
 
+router.post("/:userId/image/basic",controller.postUserImageBasic)
+
 /**
  * @swagger
  *   /users/follow:
