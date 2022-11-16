@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./components/login/Login";
 import MainFeed from "./components/feed/MainFeed";
-import Register from "./components/register/register";
+import Register from "./components/register/Register";
 
 function App() {
   return (

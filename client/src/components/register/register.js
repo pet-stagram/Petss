@@ -1,8 +1,8 @@
 import React from "react";
 import Logo from "../../images/regLogo.png";
-import "./register.css";
+import "./Register.css";
 
-function register() {
+function Register() {
   return (
     <>
       <body>
@@ -121,4 +121,4 @@ function register() {
   );
 }
 
-export default register;
+export default Register;
