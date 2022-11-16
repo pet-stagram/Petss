@@ -1,8 +1,6 @@
 import React from "react";
 import "./Login.css";
 import Logo from "../../images/loginLogo.png";
-import register from "../register/Register";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,7 +14,7 @@ function Login() {
             <div class="logoBox">
               <div class="logo">
                 <div>
-                  <img src={Logo} alt="logo" />
+                  <img src={Logo} alt="펫스 로고 사진" />
                 </div>
               </div>
             </div>
@@ -27,7 +25,8 @@ function Login() {
                 action="http://localhost:5100/auth/login"
               >
                 {/*사용자 입력 데이터 저장해야 한다*/}
-                <h1 class="loginfont">
+                {/* <h1 class="loginfont"> */}
+                <h1 className="loginIcon">
                   <FontAwesomeIcon icon={faPaw} />
                 </h1>
                 <div>
@@ -58,7 +57,7 @@ function Login() {
                         아이디가 틀렸을 시 -> "존재하지 않는 아이디 입니다."
                         비밀번호가 틀렸을 시  -> "비밀번호가 일치하지 않습니다."  */}
                 <div class="findPw">
-                  <a href="#">아이디 혹은 비밀번호를 잊으셨나요?</a>
+                  <a href="/modal">아이디 혹은 비밀번호를 잊으셨나요?</a>
                   {/* modal로 아이디,비번 찾는 페이지 만들기 */}
                 </div>
                 <div class="mvReg">
