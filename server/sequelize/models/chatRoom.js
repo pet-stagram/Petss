@@ -5,6 +5,7 @@ const Sequelize = require('sequelize');
 module.exports = class ChatRoom extends Sequelize.Model{
     static init( sequelize ){
         return super.init({
+            
             lastChatMsg : {
                 type: Sequelize.STRING(1000),
                 allowNull:true,

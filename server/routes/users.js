@@ -168,6 +168,24 @@ router.put("/info",controller.putUserInfo);
  */
 router.post("/:userId/image",upload.single('file'),controller.postUserImage);
 
+/**
+ * @swagger
+ *  /users/image:
+ *   post:
+ *      summary: 유저 프로필사진 삭제
+ *      tags:
+ *      - users
+ *      description: 현재 세션유저의 프로필 사진 삭제
+ *      produces:
+ *      - application/json
+ *      responses:
+ *          201:
+ *              description: 세션 유저의 프로필사진이 기본 프로필로 변경됨
+ *          400:
+ *              description: 잘못된 요청
+ *          401: 
+ *              description: 세션 유저가 없음(로그인 안됨)
+ */
 router.post("/:userId/image/basic",controller.postUserImageBasic)
 
 /**
