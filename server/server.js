@@ -11,6 +11,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require("swagger-ui-express");
 const options = require("./swagger");
 const specs = swaggerJsdoc(options);
+const rateLimit = require("express-rate-limit");
 /* multer */
 const multer = require('multer');
 
@@ -29,11 +30,13 @@ app.use(
     resave:false,
     saveUninitialized:true,
     secret:process.env.COOKIE_SECRET,
-    store: new fileStore(),
+    store: new fileStore({checkPeriod:1000*60*5}),
     cookie:{
         httpOnly:true,
-        secure:false
+        secure:false,
+        maxAge:1000*60*5,
 }}));
+
 // app.use(passport.initialize());
 // app.use(passport.session());
 

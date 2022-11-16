@@ -2,12 +2,14 @@ const { Post, User, Hashtag } = require('../sequelize/models');
 const email = require('../config/email');
 const nodemailer = require("nodemailer");
 
+
 /* min ~ max까지 랜덤으로 숫자를 생성하는 함수 */ 
 const generateRandom = function (min, max) {
     const ranNum = Math.floor(Math.random()*(max-min+1)) + min;
     return ranNum;
   }
 const randomNumber = generateRandom(111111,999999);//랜덤번호 받은 변수
+
 
 module.exports = {
     postFindAll :async ()=>{
@@ -27,6 +29,7 @@ module.exports = {
         })
      },
 
+     /* 이메일 인증 */
      sendEmail : async(userEmail)=>{//email주소로 인증번호 발송, 이미 존재하는 이메일이면 이메일 안보냄
         // return 값
         // 0, -1: 이메일 중복 시
@@ -37,7 +40,7 @@ module.exports = {
             if(checkEmailUser){//이메일이 존재한다면,
                 //console.log(checkEmailUser);
                 return [0, -1];
-            }else{//존재하지 않으면 인증번호 발송
+            }else if(!checkEmailUser){//존재하지 않으면 인증번호 발송
                 try{
                     // throw 'test';
                     const send = async(data) =>{//send function data 호출 할때 넣음
@@ -62,37 +65,43 @@ module.exports = {
                 }catch(err){
                     return [-1, -1];
                 }               
-            }   
-            //sendEmail자체에서 에러나는것(try,catch를 빠져나와 생기는 에러) = status 409에러를 따로 잡아야함
-            //인증번호 너무 많이 요청한 경우 409에러뜸. 5회 제한으로 할 수 있게
+            }
+            // else if(a){
+
+            // }   
+            //인증번호 너무 많이 요청한 경우 429에러뜸. 5회 제한으로 할 수 있게
+            
 
      },
 
 
-
-     checkEmailNum : (checkRanNumber,inputNum)=>{//controller에서 받아온 변수 randomNumber,inputNum
-        console.log("랜덤번호 : "+checkRanNumber, "입력한번호 : "+inputNum);
-        
+     checkEmailNum : async (emailCheckDto)=>{//controller에서 받아온 변수 randomNumber,inputNum
+        //console.log("랜덤번호 : "+checkRandomNumber, "입력한번호 : "+inputNum);
+        const {checkRandomNumber, inputNum, count } = emailCheckDto;
         
         //세션의 숫자와 유저가 입력한 숫자가 동일한지 확인한다
-        if(checkRanNumber.toString()!==inputNum.toString()){
-            console.log("틀림");//400에러
-            return 400;
-        }
-        else{
-            console.log("같음");//200status
-            return 200;
-        }
-        
-        //세션은 db에 저장되고 db에 저장된 세션과 비교
-        //동일하면 return 200, 동일하지 않으면 err를 보낸다 
-        //코드번호 5회 오류시 메인화면으로?
-
-        
+        //count  +1 해서 합이 5번 되면 안되게 하는것처럼 //for문으로 돌리지말고
            
-     },
+        let result;
+        if(checkRandomNumber.toString()===inputNum.toString()){
+                console.log("인증번호맞음")
+                result = 200;
+            }
+            else{             
+                if(count===5){
+                    console.log("5번 틀렸음");
+                    result = 400;
+                }else if(checkRandomNumber.toString()!==inputNum.toString()){
+                    console.log("인증번호 다시확인하삼");
+                    result = 409;  
+                }
+            }
+            //console.log(result);
+            return result;                             
+        },
+    
+     }
     
     
    
     
-}
