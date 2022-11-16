@@ -1,0 +1,6 @@
+
+.wrapper{
+    /* display: flex; */
+    display: grid;
+    grid-template-columns: 1fr 4fr 1.2fr;
+}
