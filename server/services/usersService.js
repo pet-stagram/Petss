@@ -93,7 +93,7 @@ module.exports = {
      * @param {Object} userDto 유저의 사진을 수정하기위한 현재 세션 유저(id), 변경할 유저의 idx(paramsUserId), 변경할 사진(file)
      */
     updateUserImage: async (userDto) => {
-        const imgUrl = await uploadProfileImage(userDto.id, userDto.file);
+        const imgUrl = await uploadProfileImage(userDto);
         try {
             await User.update({ image: imgUrl }, { where: { id: userDto.id } });
         } catch (err) {

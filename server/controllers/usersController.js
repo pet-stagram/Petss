@@ -46,7 +46,8 @@ module.exports = {
     postUserImage : async (req, res)=>{
         const userDto = {
             id : 1, // 현재 세션 유저
-            file: req.file
+            file: req.file,
+            isBasic: false
         }
         if(isNaN(req.params.userId)){
             res.sendStatus(404);
@@ -70,7 +71,8 @@ module.exports = {
     postUserImageBasic : async (req, res)=>{
         const userDto = {
             id : 1, // 현재 세션 유저
-            file: "/public/images/basic_profile.jpeg"
+            file: "public/images/basic_profile.jpeg",
+            isBasic: true
         }
         if(isNaN(req.params.userId)){
             res.sendStatus(404);
