@@ -10,14 +10,14 @@ module.exports = {
             const conversations = await Conversation.findAll({
                 where: {
                     [Op.or]: [{ user1: currentUser }, { user2: currentUser }],
+
                 },
-                required:true,
-                // nest:true,
+                
                 include: [
                     {
                         model: User,
                         as: 'User1',
-                        attribute:[["id","name","image"]],
+                        attributes:["id","name","image"],
                         where: {
                             id: {
                                 [Op.notLike]: currentUser,
@@ -28,7 +28,7 @@ module.exports = {
                     {
                         model: User,
                         as: 'User2',
-                        attribute:[["id","name","image"]],
+                        attributes:["id","name","image"],
                         where: {
                             id: {
                                 [Op.notLike]: currentUser,
@@ -38,17 +38,8 @@ module.exports = {
                     }
                 ],
             });
-            const partners = [];
-            conversations.forEach((conversation) => {
-                if (conversation.user1 === currentUser) {
-                    partners.push(conversation.user2);
-                } else {
-                    partners.push(conversation.user1);
-                }
-            });
-            console.log(partners);
-            User.findAll({});
 
+            /* User1이나 User2가 null이면 null이 아닌 User가 상대방임 */
             return conversations;
         } catch (err) {
             console.log(err);
@@ -77,7 +68,10 @@ module.exports = {
             conversation = await Conversation.create({
                 user1: currentUser,
                 user2: 2,
+                user1Read: false,
+                user2Read: false,
                 last_chat: content,
+                updatedAt: Date.now()
             });
         }
         const newMessage = await Message.create({
@@ -87,8 +81,11 @@ module.exports = {
             conversationId: conversation.id,
             sendAt: Date.now(),
         });
+        console.log(newMessage.senderId);
         const updateLastChat = await Conversation.update(
-            { lastChat: content },
+            { lastChat: content,
+                updatedAt: Date.now(),
+            },
             {
                 where: {
                     id: conversation.id,

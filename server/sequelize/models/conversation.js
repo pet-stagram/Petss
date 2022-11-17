@@ -7,6 +7,15 @@ module.exports = class Conversation extends Sequelize.Model{
         return super.init({
             lastChat : {
                 type: Sequelize.STRING
+            },
+            user1Read:{
+                type: Sequelize.BOOLEAN
+            },
+            user2Read:{
+                type: Sequelize.BOOLEAN
+            },
+            updatedAt : {
+                type: Sequelize.DATE
             }
         },{
             sequelize,
