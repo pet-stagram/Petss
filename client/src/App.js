@@ -12,7 +12,7 @@ import axios from "axios";
 import Register from "./components/register/Register";
 
 function App() {
-  const [isLogined, setIsLogined] = useState(false);
+  const [isLogined, setIsLogined] = useState(true);
 
   //저장된 값 확인하는 용
   // useEffect(() => {

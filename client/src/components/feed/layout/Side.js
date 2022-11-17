@@ -7,7 +7,7 @@ import { axios } from 'axios';
 const Side = () => {
 
   return (
-    <side>
+    <>
     <h2>Message</h2>
     <div>
         <div className="messageUserInfo">
@@ -20,7 +20,7 @@ const Side = () => {
         </div>
         <button className='testBtn'>Message</button>
     </div>
-    </side>
+    </>
   )
 }
 
