@@ -1,6 +1,7 @@
 const { Post, User, Hashtag } = require('../sequelize/models');
 const email = require('../config/email');
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
 
 
 /* min ~ max까지 랜덤으로 숫자를 생성하는 함수 */ 
@@ -19,14 +20,82 @@ module.exports = {
         return posts;
     },
 
-    insertUser : (user)=>{
-        return new Promise((resolve, reject)=>{          
-            User.create({email:"min@min.com",nick:user.name,password:user.pw,provider:"",snsid:user.id}).then((result)=>{
-                resolve("good")
-            }).catch((err)=>{
-                reject(err);
-            })     
-        })
+    /* 회원가입 */
+    insertUser : async (user,inputPw)=>{       
+            //닉넴 중복 확인
+            // const checkNick = await User.findOne({where: {nick : user}}); //user에서 넘어온 값과 nick비교
+            // console.log(checkNick);
+            // if(checkNick){
+            //     console.log(checkNick);
+            //     result = "exist";
+            // }else{
+            //     return checkNick;
+            // }
+        const {name, nick, password, phone, email, regDate, inputPassword} = user;
+        
+        //비번과 입력한 비번이 맞는지 확인
+        const inputPass = inputPw;//클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
+        const hashPass = password//db에 저장된 비밀번호
+        const hashPw = bcrypt.hashSync(hashPass, 12);//해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
+
+        const matchPw = await bcrypt.compare(inputPass,hashPw);
+        if(matchPw){
+            //console.log("맞");
+            result = 200;
+        }else{
+            //console.log("틀");
+            result = 400;
+        }
+        return result;
+
+        //동일한 닉네임 있는지 확인
+        // const mathEmail = await User.findOne()
+
+  
+        
+
+    //     const addUser =await User.create({
+    //         name:user.name,
+    //         nick:user.nick,
+    //         password:currentPw,
+    //         phone:user.phone, 
+    //         email:user.email,
+    //         regDate:user.regDate,
+    //    })
+       //console.log(addUser);
+        
+        // try{
+        //     //비번 암호화, 비번 맞는지 확인,
+        //     //const hash = await bcrypt.hash(password, 12);
+        //     const addUser = await User.create({user});
+        //     console.log(addUser);
+        //     //return result = "success"
+        //     // await User.create({
+        //     //     name:user.name,
+        //     //     nick:user.nick,
+        //     //     password:user.password,
+        //     //     passwordCheck:user.password,
+        //     //     phone:user.password, 
+        //     //     email:user.email,
+        //     // });
+            
+
+        // }catch(err){
+        //     console.log(err);
+        //     return err;
+        // }
+            
+          //---------------- 
+        // return new Promise((resolve, reject)=>{          
+        //     User.create({email:"min@min.com",nick:user.name,password:user.pw,provider:"",snsid:user.id}).then((result)=>{
+        //         resolve("good")
+        //     }).catch((err)=>{
+        //         reject(err);
+        //     })     
+        // })
+
+         
+        
      },
 
      /* 이메일 인증 */
@@ -66,15 +135,13 @@ module.exports = {
                     return [-1, -1];
                 }               
             }
-            // else if(a){
-
-            // }   
+           
             //인증번호 너무 많이 요청한 경우 429에러뜸. 5회 제한으로 할 수 있게
             
 
      },
 
-
+     /* 인증번호 비교 */
      checkEmailNum : async (emailCheckDto)=>{//controller에서 받아온 변수 randomNumber,inputNum
         //console.log("랜덤번호 : "+checkRandomNumber, "입력한번호 : "+inputNum);
         const {checkRandomNumber, inputNum, count } = emailCheckDto;

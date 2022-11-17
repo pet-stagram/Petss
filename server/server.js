@@ -12,6 +12,7 @@ const swaggerUi = require("swagger-ui-express");
 const options = require("./swagger");
 const specs = swaggerJsdoc(options);
 const rateLimit = require("express-rate-limit");
+const bcrypt = require("bcrypt");
 /* multer */
 const multer = require('multer');
 const socket = require("./module/socket");

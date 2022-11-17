@@ -5,8 +5,10 @@ const service = require("../services/authService.js");
 
 
 //controller에서는 req, res관련 작업만 하기!!! 다른거는 다 service에서 하면됨!! 기억하셈!!!
-const inputNum = "279223"; //입력한 숫자대신 임시적으로 사용할 변수
+const inputNum = "692438"; //입력한 숫자 대신 임시적으로 사용할 변수
 //731453
+
+const inputPw = "9"; //입력한 비번 대신 임시적으로 사용할 변수
 
 //HTTP 상태코드 보낼 때 send()나 status()보다 sendStatus() 함수만 사용하는 것이 좋아보입니다.
 //따로 보낼 정보가 있을 경우는 res.json()을 사용하여 json 파일 보내주면 좋을 것 같아요
@@ -21,15 +23,32 @@ module.exports = {
             
         }    
     },
-    postRegister : (req,res)=>{
-        const {name, nick, pw, pwCheck, phoneNumber, email } = req.body;
-        const user = req.body;
-        console.log(user)
-        service.insertUser(user).then((result)=>{
-            res.status(201).send("회원가입에 성공하였습니다.");
-        }).catch((err)=>{
-            res.status(400).send(err);
-        });     
+
+   
+
+    /* 회원가입 눌렀을 때 */
+    //https://victorydntmd.tistory.com/33
+    postRegister : async (req,res)=>{  
+        const {name, nick, password, phone, email, regDate, inputPassword } = req.body;
+        const user = req.body;  
+
+        // 비밀번호
+        const insertUserInfo = await service.insertUser(user,inputPw);
+        if(insertUserInfo===200){
+            //console.log("200");
+            res.sendStatus(200);
+        }else{
+            //console.log("400");
+            res.sendStatus(400);
+        }
+
+       
+        //---
+        // service.insertUser(user).then((result)=>{
+        //     res.sendStatus(201)
+        // }).catch((err)=>{
+        //     res8.sendStatus(400)
+        // });     
     },
     
     /* 이메일 인증 */
