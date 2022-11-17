@@ -5,7 +5,15 @@ import { axios } from 'axios';
 
 
 const Side = () => {
-
+  
+  useEffect(()=>{
+    axios.get("/chat/rooms")
+    .then((data)=>{
+      console.log(data);
+    })
+    .catch(()=>{})
+  },[])
+  
   return (
     <>
     <h2>Message</h2>

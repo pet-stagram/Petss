@@ -45,8 +45,8 @@ module.exports = {
     },
     postUserImage : async (req, res)=>{
         const userDto = {
-            id : 1, // 현재 세션 유저
-            file: req.file,
+            id : 4, // 현재 세션 유저
+            file: req.file.path,
             isBasic: false
         }
         if(isNaN(req.params.userId)){

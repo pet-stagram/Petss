@@ -8,11 +8,12 @@ module.exports = {
     selectChatRoomAll: async (currentUser) => {
         try {
             const conversations = await Conversation.findAll({
+                order:[["updatedAt","DESC"]]
+                ,
                 where: {
                     [Op.or]: [{ user1: currentUser }, { user2: currentUser }],
 
                 },
-                
                 include: [
                     {
                         model: User,
@@ -47,27 +48,89 @@ module.exports = {
         }
     },
     selectMessages: async (messageDto) => {
-        const { receiver, sender } = messageDto;
-        const conversation = await Conversation.findOne({
+        const { me, you } = messageDto;
+        
+        try{
+            const conversation = await Conversation.findOne({
             where: {
-                user1: { [Op.or]: [receiver, sender] },
-                user2: { [Op.or]: [receiver, sender] },
+                user1: { [Op.or]: [me, you] },
+                user2: { [Op.or]: [me, you] },
             },
         });
+        
+        const messages = await Message.findAll({
+            order:[["sendAt","ASC"]],
+            where:{
+                conversation_id : conversation.id
+            },
+            
+            /* Sender 혹은 Receiver가 null이면 나, 아니면 상대방( 이름, 프로필 사진 출력하기 위해 ) */
+            include : [
+                {
+                    model: User,
+                    attributes:["id","name","image","nick"],
+                    as: "Sender",
+                    where:{
+                        id: you
+                    },
+                    required:false
+                },
+                {
+                    model: User,
+                    as: "Receiver",
+                    attributes:["id","name","image","nick"],
+                    where:{
+                        id: you
+                    },
+                    required:false
+                }
+            ]
+        });
+        
+
+        /* 내가 누군지에 따라 읽음표시 */
+      await Conversation.update(
+            {
+                user1Read: true
+            },
+            {
+                where:{
+                    id : conversation.id, 
+                    user1: me
+                }
+            }
+        );
+        await Conversation.update(
+            {
+                user2Read: true
+            },
+            {
+                where:{
+                    id : conversation.id, 
+                    user2: me
+                }
+            }
+        );
+        return messages;
+    }catch(err){
+        throw err;
+    }
     },
     createMessages: async (messageDto) => {
-        const { currentUser, content } = messageDto;
+        const { me,you, content } = messageDto;
         /* 현재 유저, 상대방, 채팅 내용 가져와야함 */
+       
+       try{
         let conversation = await Conversation.findOne({
             where: {
-                user1: { [Op.or]: [currentUser, 2] },
-                user2: { [Op.or]: [currentUser, 2] },
+                user1: { [Op.or]: [me,you] },
+                user2: { [Op.or]: [me, you] },
             },
         });
         if (!conversation) {
             conversation = await Conversation.create({
-                user1: currentUser,
-                user2: 2,
+                user1: me,
+                user2: you,
                 user1Read: false,
                 user2Read: false,
                 last_chat: content,
@@ -75,16 +138,18 @@ module.exports = {
             });
         }
         const newMessage = await Message.create({
-            senderId: currentUser,
-            receiverId: 2,
+            senderId: me,
+            receiverId: 3,
             content: content,
             conversationId: conversation.id,
             sendAt: Date.now(),
         });
         console.log(newMessage.senderId);
+        
         const updateLastChat = await Conversation.update(
-            { lastChat: content,
-                updatedAt: Date.now(),
+            { 
+            lastChat: content,
+            updatedAt: Date.now(),
             },
             {
                 where: {
@@ -92,5 +157,32 @@ module.exports = {
                 },
             }
         );
+        /* 메시지 보낸 사람은 바로 읽음으로 설정 */
+        /* 만약 senderId가 user1이면 user1Read true, user2이면 user2Read true */
+        await Conversation.update(
+            {
+                user1Read: true
+            },
+            {
+                where:{
+                    id : conversation.id, 
+                    user1: newMessage.senderId
+                }
+            }
+        );
+        await Conversation.update(
+            {
+                user2Read: true
+            },
+            {
+                where:{
+                    id : conversation.id, 
+                    user2: newMessage.senderId
+                }
+            }
+        )
+    }catch(err){
+        throw err;
+    }
     },
 };

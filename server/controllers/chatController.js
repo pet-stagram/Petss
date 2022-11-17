@@ -12,14 +12,21 @@ module.exports ={
     },    
     getMessage : async (req, res)=>{
         const messageDto = {
-            receiver : 2,//req.query.receiver
-            sender : 1 // 세션아이디
+            me : 2,// 세션아이디
+            you : 1//req.query.receiver
         };
-        await service.selectMessages(messageDto);
+        try{
+            const selectResult = await service.selectMessages(messageDto);
+            res.status(200).json(selectResult);
+        }catch(err){
+            res.sendStatus(500);
+            throw err;
+        }
     },
     postMessage : async (req ,res) =>{
         const messageDto = {
-            currentUser : 1,
+            me : 1,
+            you : 2,
             content : req.body.content
         } 
         try{

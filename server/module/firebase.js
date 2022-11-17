@@ -20,8 +20,11 @@ async function uploadProfileImage(userDto) {
     console.log(id)
     const desertFile = storageRef.file(`uploads/users/${id}/profile.jpeg`);
     try {
-        await desertFile.delete();
-    } catch (err) {}
+        if(Object.keys(desertFile.metadata).length!==0)
+            await desertFile.delete();
+    } catch (err) {
+        throw err;
+    }
     const storage = await storageRef.upload(file, {
         public: true,
         destination: `/uploads/users/${id}/profile.jpeg`,
