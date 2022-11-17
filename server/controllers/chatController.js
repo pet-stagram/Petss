@@ -4,7 +4,7 @@ module.exports ={
     getChatRooms : async (req, res)=>{
         const currentUser = 1 // 현재 세션 정보
         try{
-            const selectResult = await service.selectChatRooms(currentUser);
+            const selectResult = await service.selectChatRoomAll(currentUser);
             res.status(201).json(selectResult);
         }catch(err){
             res.sendStatus(500);

@@ -20,6 +20,8 @@ module.exports = class Conversation extends Sequelize.Model{
         })
     }
     static associate(db){
-        db.Conversation.hasMany(db.Message,{foreignKet : "conversationId"});
+        db.Conversation.hasMany(db.Message,{foreignKey : "conversationId"});
+        db.Conversation.belongsTo(db.User,{foreignKey : "user1", as:'User1'});
+        db.Conversation.belongsTo(db.User,{foreignKey : "user2",as:"User2"});
     }
 }
