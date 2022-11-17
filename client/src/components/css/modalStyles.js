@@ -9,3 +9,4 @@
     },
   };
 export default modalStyles;
+// export default {modalStyles, modalStyles1, modalStyles2};
