@@ -55,11 +55,13 @@ const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 const passport = require("./sequelize/models/passport");
+const chatRouter = require("./routes/chat");
 
 app.use('/uploads', express.static('uploads'));
 app.use("/auth",authRouter);
 app.use("/posts",postRouter);
 app.use("/users",userRouter);
 app.use("/admin",adminRouter);
+app.use("/chat",chatRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.listen(PORT,()=>{console.log("Running...")});
