@@ -29,7 +29,7 @@ hr{
     margin-left: 20px;
     border-radius: 50%;
     overflow: hidden;
-    background-image: url("../../../images/2.jpg");
+    background-image: url("../../images/2.jpg");
     background-size: cover;
 }
 .navbarList li, .navbarList li a{

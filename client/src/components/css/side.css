@@ -14,7 +14,7 @@ h2{
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    background-image: url("../../../images/6.jpg");
+    background-image: url("../../images/6.jpg");
     background-size: cover;
     margin-right: 12px;
 }
@@ -23,7 +23,7 @@ h2{
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    background-image: url("../../../images/4.jpg");
+    background-image: url("../../images/4.jpg");
     background-size: cover;
     margin-right: 12px;
 }
