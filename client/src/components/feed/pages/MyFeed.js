@@ -1,5 +1,5 @@
 import React from 'react'
-import "../css/myFeed.css";
+import "../../css/myFeed.css";
 import image from "../../../images/6.jpg"
 
 const MyFeed = () => {

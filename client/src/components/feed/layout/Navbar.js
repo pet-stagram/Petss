@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import "../css/reset.css";
-import "../css/navbar.css";
+import "../../css/reset.css";
+import "../../css/navbar.css";
 import { Link, NavLink } from 'react-router-dom';
 import petssLogo from "../../../images/petss_logo.png"
 import Modal from "react-modal";
 import AddFeed from '../pages/AddFeed';
+import modalStyles from '../../css/modalStyles';
 
 
 const Navbar = () => {
@@ -13,7 +14,10 @@ const Navbar = () => {
   // const onOpenModal = () => {
   // setModalOn(!modalOn);
   // }
+
+
   const [openAddFeedOn, setOpenAddFeedOn] = useState(false);
+  // 변수명 바꾸세용 ㅎㅎ is ~ 
 
   return (        
     <div>
@@ -36,9 +40,9 @@ const Navbar = () => {
             </Modal>
             {/*  <button className="openBtn" onClick={onOpenModal}>모달창 open</button> 
                   {modalOn? <Modal/>: ''} */}
-            <li><NavLink to="myFeed">My Feed</NavLink></li>
+            <li><NavLink to="/myFeed">My Feed</NavLink></li>
             <li onClick={() => setOpenAddFeedOn(true)}>Feed 추가</li>
-            <Modal isOpen={openAddFeedOn} onRequestClose={() => setOpenAddFeedOn(false)} ariaHideApp={false}>
+            <Modal isOpen={openAddFeedOn} onRequestClose={() => setOpenAddFeedOn(false)} ariaHideApp={false} style={modalStyles}>
               <AddFeed/>
             </Modal>
             <li>알림</li>

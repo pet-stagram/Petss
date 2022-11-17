@@ -1,6 +1,7 @@
 import React from "react";
 import "./Login.css";
 import Logo from "../../images/loginLogo.png";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
 
