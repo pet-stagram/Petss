@@ -28,21 +28,20 @@ function App() {
   console.log(isLogined);
   return (
     <BrowserRouter>
-      <div className="wrapper">
-        {/* <div className="navbar">
+      {/* <div className="navbar">
           <Navbar />
         </div>
         <div className="main"> */}
-        <Routes>
-          <Route
-            path="/"
-            element={isLogined ? <Main component={<MainFeed />} /> : <Login />}
-          />
-          <Route path="/addFeed" element={<Main component={<AddFeed />} />} />
-          <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-        {/* <Routes
+      <Routes>
+        <Route
+          path="/"
+          element={isLogined ? <Main component={<MainFeed />} /> : <Login />}
+        />
+        <Route path="/addFeed" element={<Main component={<AddFeed />} />} />
+        <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+      {/* <Routes
             path="/"
             element={isLogined === true ? <MainFeed /> : <Login />}
           >
@@ -50,22 +49,16 @@ function App() {
             <Route path="/addFeed" element={<AddFeed />} />
             <Route path="/myFeed" element={<MyFeed />} />
           </Routes> */}
-      </div>
     </BrowserRouter>
   );
 }
 function Main(props) {
   return (
-    <>
-      <div className="navbar">
-        <Navbar />
-      </div>
+    <div className="wrapper">
+      <Navbar />
       {props.component}
-
-      <div className="side">
-        <Side />
-      </div>
-    </>
+      <Side />
+    </div>
   );
 }
 export default App;
