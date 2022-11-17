@@ -75,7 +75,7 @@ body {
   padding: 10px;
 }
 
-.logInput #email:focus,
+.logInput #logEmail:focus,
 .logInput #pw:focus {
   outline: 1px solid black;
 }

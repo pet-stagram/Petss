@@ -6,15 +6,14 @@
   box-sizing: border-box;
 }
 
-.regContainer {
+.wrapper div .regContainer {
   font-family: "Gothic A1", sans-serif;
   font-weight: 600;
   display: flex;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   justify-content: center;
   align-items: center;
-  width: 100%;
   background-color: #e1f5fe;
   /* background-color: rgb(245, 245, 245); */
   overflow: auto;
