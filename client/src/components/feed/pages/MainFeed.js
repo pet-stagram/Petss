@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import "../css/mainFeed.css"
+import "../../css/mainFeed.css"
 import test7 from "../../../images/7.jpg"
 import paw from "../../../images/paw.png"
 import reply from "../../../images/reply.png"
