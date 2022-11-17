@@ -77,7 +77,7 @@ function Register() {
                       type="text"
                       placeholder="이메일 "
                       class="regInput"
-                      id="email"
+                      id="regEmail"
                       name="email"
                       autoComplete="off"
                     />
