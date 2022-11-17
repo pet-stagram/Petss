@@ -25,6 +25,7 @@ async function uploadProfileImage(userDto) {
     } catch (err) {
         throw err;
     }
+    
     const storage = await storageRef.upload(file, {
         public: true,
         destination: `/uploads/users/${id}/profile.jpeg`,

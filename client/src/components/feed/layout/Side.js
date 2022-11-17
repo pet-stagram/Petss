@@ -5,6 +5,7 @@ import axios from "axios";
 import styled from "styled-components";
 
 
+
 const Side = () => {
   const FriendImg = styled.div`
     background-size:40px 40px;
