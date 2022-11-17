@@ -22,69 +22,59 @@ module.exports = {
 
     /* 회원가입 */
     insertUser : async (user,inputPw)=>{       
-            //닉넴 중복 확인
-            // const checkNick = await User.findOne({where: {nick : user}}); //user에서 넘어온 값과 nick비교
-            // console.log(checkNick);
-            // if(checkNick){
-            //     console.log(checkNick);
-            //     result = "exist";
-            // }else{
-            //     return checkNick;
-            // }
+            
         const {name, nick, password, phone, email, regDate, inputPassword} = user;
-        
-        //비번과 입력한 비번이 맞는지 확인
-        const inputPass = inputPw;//클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
-        const hashPass = password//db에 저장된 비밀번호
-        const hashPw = bcrypt.hashSync(hashPass, 12);//해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
 
-        const matchPw = await bcrypt.compare(inputPass,hashPw);
-        if(matchPw){
-            //console.log("맞");
-            result = 200;
-        }else{
-            //console.log("틀");
-            result = 400;
-        }
-        return result;
+        //console.log(user.nick);
 
         //동일한 닉네임 있는지 확인
-        // const mathEmail = await User.findOne()
+        try {
+            const chekNick = await User.findOne({ where: { nick } })//user.nick:nick
+            //console.log(chekNick);동일한 닉넴이 있는지 없는지 확인함
+            if (chekNick) {
+                console.log("닉넴없음");
+                result = 400;
 
-  
+            } else {
+                console.log("닉넴없음");
+                result = 200;
+            }
+
+            //비번과 입력한 비번이 맞는지 확인
+            const inputPass = inputPw;//클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
+            const hashPass = password//db에 저장된 비밀번호
+            const hashPw = bcrypt.hashSync(hashPass, 12);//해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
+
+            const matchPw = await bcrypt.compare(inputPass, hashPw);
+            if (matchPw) {
+                console.log("비번맞음");
+                result = 200;
+            } else {
+                console.log("비번틀림");
+                result = 400;
+            }
+
+            const addUser = await User.create({//try문 따로써야하나? 따로써보자
+                name: user.name,
+                nick: user.nick,
+                password: hashPw,
+                phone: user.phone,
+                email: user.email,
+                regDate: user.regDate,
+            });
+
+        } catch (err) {
+            console.log(err);
+            return err;
+        }
+
+
+       
+           
+       
         
-
-    //     const addUser =await User.create({
-    //         name:user.name,
-    //         nick:user.nick,
-    //         password:currentPw,
-    //         phone:user.phone, 
-    //         email:user.email,
-    //         regDate:user.regDate,
-    //    })
-       //console.log(addUser);
+        return result;
         
-        // try{
-        //     //비번 암호화, 비번 맞는지 확인,
-        //     //const hash = await bcrypt.hash(password, 12);
-        //     const addUser = await User.create({user});
-        //     console.log(addUser);
-        //     //return result = "success"
-        //     // await User.create({
-        //     //     name:user.name,
-        //     //     nick:user.nick,
-        //     //     password:user.password,
-        //     //     passwordCheck:user.password,
-        //     //     phone:user.password, 
-        //     //     email:user.email,
-        //     // });
-            
-
-        // }catch(err){
-        //     console.log(err);
-        //     return err;
-        // }
-            
           //---------------- 
         // return new Promise((resolve, reject)=>{          
         //     User.create({email:"min@min.com",nick:user.name,password:user.pw,provider:"",snsid:user.id}).then((result)=>{
