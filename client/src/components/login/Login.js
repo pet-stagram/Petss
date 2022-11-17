@@ -35,7 +35,7 @@ function Login() {
                     type="text"
                     placeholder="이메일"
                     class="logInput"
-                    id="email"
+                    id="logEmail"
                     name="email"
                   />
                 </div>
