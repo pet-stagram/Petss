@@ -56,7 +56,7 @@ async function uploadPostsImages(newPostNum, files) {
             },
         });
         urlArr.push(storage[0].metadata.mediaLink);
-        fs.rmSync(file.path, { recursive: true, force: true });
+        fs.rmSync(file.destination, { recursive: true, force: true });
     });
     await Promise.all(promises);
     return urlArr;

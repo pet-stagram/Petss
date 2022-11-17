@@ -41,6 +41,7 @@ const Side = () => {
     <div>
        {
         conversations.map((conversation, index)=>{
+          /* conversation의 User1값이 null이면 User2가 상대방인 것임 */
           const isMessageRead = conversation.User1===null?conversation.user1Read:conversation.user2Read;
           const friend = conversation.User1===null?conversation.User2:conversation.User1;
           return(

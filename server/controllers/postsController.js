@@ -44,7 +44,7 @@ module.exports = {
             content : req.body.content,
             user : 1 // 세션유저
         }
-        if (requestDto.files) {
+        if (requestDto.files.length===0) {
             /* 클라이언트에서 파일 첨부를 하지 않았을 시 */
             res.sendStatus(400);
         } else if (false) {
@@ -56,6 +56,7 @@ module.exports = {
         else {
             try {
                 let fileUrl = await service.uploadFile(requestDto.files);
+                
                 const postDto = {
                     user: 1, // 현재 로그인 중인 유저의 idx
                     content: req.body.content,

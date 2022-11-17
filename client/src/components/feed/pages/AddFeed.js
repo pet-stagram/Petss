@@ -13,7 +13,7 @@ const AddFeed = () => {
 
     /* WritePost 컴포넌트에 미리보기 이미지를 출력하기 위해 변환시킨 URL */
     const [previewImage, setPreviewImage] = useState([]);
-    
+
     return (
         <>
             {step === 1 ? (
@@ -78,11 +78,12 @@ const WritePost = ({ files, previews }) => {
           method: "POST",
           url: `api/posts`,
           data: formData,
+          withCredentials: true,
       })
-          .then(() => {
+          .then((result) => {
               console.log("성공");
           })
-          .catch(() => {});
+          .catch((err) => {});
   }
   return (
       <div>
