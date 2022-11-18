@@ -1,4 +1,15 @@
+
+const { post } = require('../routes/users');
 const service = require("../services/postsService");
+const File = require("file-class");
+
+
+function blobToFile(theBlob, fileName){
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
+}
 
 module.exports = {
     getPosts: async (req, res) => {
@@ -28,12 +39,12 @@ module.exports = {
         }
     },
     postPosts: async (req, res) => {
-        
-        const {files, content} = req.body;
-        console.log(content);
-        console.log(files);
-
-        if (files.length === 0) {
+        const requestDto = {
+            files : req.files,
+            content : req.body.content,
+            user : 1 // 세션유저
+        }
+        if (requestDto.files.length===0) {
             /* 클라이언트에서 파일 첨부를 하지 않았을 시 */
             res.sendStatus(400);
         } else if (false) {
@@ -44,7 +55,8 @@ module.exports = {
         // else if(!req.session.user){res.sendStatus(401);}
         else {
             try {
-                let fileUrl = await service.uploadFile(files);
+                let fileUrl = await service.uploadFile(requestDto.files);
+                
                 const postDto = {
                     user: 1, // 현재 로그인 중인 유저의 idx
                     content: req.body.content,

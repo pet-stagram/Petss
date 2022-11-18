@@ -1,31 +1,18 @@
 h2{
     margin-bottom: 20px;
 }
-.messageUserInfo{
+.messageInfo{
     text-align: left;
     display: flex;
     align-items: center;
     font-size: 14px;
-    margin: 8px 0 20px 20px;
-    
+    padding: 10px 10px;
+    transition: .3s;
 }
-.messageUserImage{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-image: url("../../images/6.jpg");
-    background-size: cover;
-    margin-right: 12px;
-}
-.messageUserImage2{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-image: url("../../images/4.jpg");
-    background-size: cover;
-    margin-right: 12px;
+.messageInfo:hover{
+    background-color: rgba(0, 0, 0, 0.03);
+    transition: .3s;
+    cursor: pointer;
 }
 
 .testBtn{
