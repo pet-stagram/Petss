@@ -28,10 +28,15 @@ module.exports = {
         }
     },
     postPosts: async (req, res) => {
-        
         const {files, content} = req.body;
-        console.log(content);
-        console.log(files);
+
+        const file = [files];
+
+        file.map(f => {
+            console.log(f);
+            console.log(typeof f);
+        })
+        
 
         if (files.length === 0) {
             /* 클라이언트에서 파일 첨부를 하지 않았을 시 */
