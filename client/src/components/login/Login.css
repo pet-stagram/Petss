@@ -1,13 +1,11 @@
 .logContainer {
   font-weight: 500;
   display: flex;
+  width: 100vw;
   height: 100vh;
   justify-content: center;
   align-items: center;
-  width: 100vw;
   background-color: #e1f5fe;
-  /* background-color: #FFF9C4; */
-  /* background-color: rgb(245, 245, 245); */
 }
 
 .logContainer a {
@@ -16,7 +14,7 @@
   font-size: 15px;
 }
 
-.mainBox {
+.logContainer .mainBox {
   display: flex;
 }
 
@@ -91,4 +89,15 @@
 .mvReg a:hover,
 .findPw a:hover {
   color: #f9a825;
+}
+
+@media (max-width: 1000px) {
+  .logContainer .mainBox {
+    display: block;
+    margin-left: 150px;
+  }
+
+  .logContainer .logo {
+    width: 400px;
+  }
 }

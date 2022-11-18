@@ -5,39 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
 
 function Login() {
-  // const [email, setEmail] = useState("");
-  // const [pw, setPw] = useState("");
-  // const [errMsg, setErrMsg] = useState("");
-
-  // //이메일 값 정합성 판단하는 유효성 함수
-  // const validateEmail = (email, pw) => {
-  //   const isValidated = false;
-
-  //   if (email === "") {
-  //     setErrMsg("이메일을 입력해주세요.");
-  //   } else {
-  //     isValidated = true;
-  //     setErrMsg("");
-  //   }
-
-  //   return isValidated;
-  // };
-
-  // //이메일 폼 입력값이 변경되는 이벤트를 관리할 input handler
-  // const emailChangeHandler = (e) => {
-  //   const inputValue = e.target.value;
-  //   setEmail(e.target.value);
-  // };
-
-  // //로그인 요청할 submit function
-  // const onSubmit = (e) => {
-  //   e.preventDefault(); //화면 새로고침 방지
-  //   const isValidated = validateEmail(email);
-  //   if (isValidated) {
-  //     login({ email });
-  //   }
-  // };
-
   return (
     <>
       <body>
@@ -57,8 +24,6 @@ function Login() {
                 method="post"
                 action="http://localhost:5100/auth/login"
               >
-                {/*사용자 입력 데이터 저장해야 한다*/}
-                {/* <h1 class="loginfont"> */}
                 <h1 className="loginIcon">
                   <FontAwesomeIcon icon={faPaw} />
                 </h1>

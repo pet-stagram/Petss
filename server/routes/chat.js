@@ -5,6 +5,7 @@ const controller = require("../controllers/chatController");
 const upload = require("../module/upload");
 
 router.get("/rooms", controller.getChatRooms);
+router.get("/message",controller.getMessage);
 router.post("/message", controller.postMessage);
 
 module.exports = router;

@@ -7,6 +7,7 @@ import reply from "../../../images/reply.png"
 import message from "../../../images/message.png"
 
 const MainFeed = () => {
+    
   return (
       <main className='mainFeedWrap'>
             <div className="postBox">
@@ -24,7 +25,7 @@ const MainFeed = () => {
                         <button><img src={message} alt="like" className="like"/></button>
                     </div>
                     <p className='likeCount'>좋아요  287 개  </p>
-                    <div className="content"> 
+                    <div className="postContent"> 
                         포니랑 오늘 2시에 공원에서 만나 같이 뛰어놀았는데 너무 재밌었다! 또 놀아야징ㅎ 
                         예니가 맛있는 간식을 포니와 나에게 주었다! 존맛탱!
                         예니도 포니를 만나면 즐거워한다 ㅎㅅㅎ 친구들이랑 노는 것은 언제나 즐겁다!
