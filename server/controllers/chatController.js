@@ -12,6 +12,7 @@ module.exports ={
     },    
     getMessage : async (req, res)=>{
         const messageDto = {
+            me : 1,// session
             conversationId : req.query.conversation
         };
         try{

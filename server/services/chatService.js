@@ -48,22 +48,23 @@ module.exports = {
         }
     },
     selectMessages: async (messageDto) => {
-        const { me, you } = messageDto;
+        // const { me, you } = messageDto;
+        const { me, conversationId } = messageDto;
         
         try{
-            const conversation = await Conversation.findOne({
-            where: {
-                user1: { [Op.or]: [me, you] },
-                user2: { [Op.or]: [me, you] },
-            },
-        });
-        
+        //     const conversation = await Conversation.findOne({
+        //     where: {
+        //         user1: { [Op.or]: [me, you] },
+        //         user2: { [Op.or]: [me, you] },
+        //     },
+        // });
         const messages = await Message.findAll({
             order:[["sendAt","ASC"]],
             where:{
-                conversation_id : conversation.id
+                conversation_id : conversationId
             },
-            
+            raw:true,
+            nest:true,
             /* Sender 혹은 Receiver가 null이면 나, 아니면 상대방( 이름, 프로필 사진 출력하기 위해 ) */
             include : [
                 {
@@ -71,7 +72,7 @@ module.exports = {
                     attributes:["id","name","image","nick"],
                     as: "Sender",
                     where:{
-                        id: you
+                        [Op.not] : {id: me}
                     },
                     required:false
                 },
@@ -80,14 +81,14 @@ module.exports = {
                     as: "Receiver",
                     attributes:["id","name","image","nick"],
                     where:{
-                        id: you
+                        [Op.not] : {id: me}
                     },
                     required:false
                 }
             ]
         });
         
-
+        console.log(messages);
         /* 내가 누군지에 따라 읽음표시 */
       await Conversation.update(
             {
@@ -95,7 +96,7 @@ module.exports = {
             },
             {
                 where:{
-                    id : conversation.id, 
+                    id : conversationId, 
                     user1: me
                 }
             }
@@ -106,7 +107,7 @@ module.exports = {
             },
             {
                 where:{
-                    id : conversation.id, 
+                    id : conversationId, 
                     user2: me
                 }
             }
@@ -144,7 +145,6 @@ module.exports = {
             conversationId: conversation.id,
             sendAt: Date.now(),
         });
-        console.log(newMessage.senderId);
         
         const updateLastChat = await Conversation.update(
             { 

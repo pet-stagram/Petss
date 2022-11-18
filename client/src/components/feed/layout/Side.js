@@ -33,18 +33,34 @@ const Side = () => {
     });
   },[]);
 
-  async function getConversation(friendId){
-    await axios.get(`/api/chat/message?receiver=${friendId}`)
+  function getConversation(){
+    let conversationId;
+    conversations.map((conversation, index)=>{
+      if(conversation.id===openedConversation){
+       conversationId = conversation.id;
+      }
+  })
+    axios.get(`/api/chat/message?conversation=${conversationId}`)
     .then((result)=>{
-
+      const messages = result.data;
+      console.log(messages);
+      const partnerMessages = [];
+      messages.map((message,index)=>{
+        const partner= message.Receiver === null? message.Sender : message.Receiver;
+        console.log(partner);
+        // partnerMessages.push()
+      })
+      // const partner = result.data.Receiver === null?result.data.Sender:result.data.Receiver;
+      // console.log(partner);
+      // console.log(result.data);
     })
     .catch((result)=>{
-      
+
     })
   }
 
-  function goMessage(friendId){
-    setOpenedConversation(friendId);
+  function goMessage(conversationId){
+    setOpenedConversation(conversationId);
     setIsMessageOpen(true);
   }
 
@@ -58,7 +74,7 @@ const Side = () => {
           const isMessageRead = conversation.User1===null?conversation.user1Read:conversation.user2Read;
           const friend = conversation.User1===null?conversation.User2:conversation.User1;
           return(
-        <div className="messageInfo" key={index} onClick={()=>goMessage(friend.id)}>
+        <div className="messageInfo" key={index} onClick={()=>goMessage(conversation.id)}>
           <FriendImg style = {{backgroundImage:`url(${friend.image})`}}alt="친구 프로필사진"></FriendImg>
           <div>
             <h4 style={{fontWeight: 700, marginBottom:"5px"}}>{friend.name}</h4>
@@ -75,17 +91,15 @@ const Side = () => {
     </div>
     <Modal
             isOpen={isMessageOpen} 
+            onAfterOpen={getConversation}
             onRequestClose={() => setIsMessageOpen(false)}
             ariaHideApp={false}
     >
+      <div>
       {
-       conversations.map((conversation, index)=>{
-          if(conversation.id===openedConversation){
-            conversation.
-          }
-       });
-      
+          
       }
+      </div>
     </Modal>
     </div>
   )
