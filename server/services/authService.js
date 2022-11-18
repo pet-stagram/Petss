@@ -54,7 +54,7 @@ module.exports = {
                 result = 400;
             }
 
-            const addUser = await User.create({//try문 따로써야하나? 따로써보자
+            const addUser = await User.create({//
                 name: user.name,
                 nick: user.nick,
                 password: hashPw,
