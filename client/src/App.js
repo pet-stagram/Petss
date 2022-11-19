@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import axios from "axios";
 import Register from "./components/register/Register";
+import Messanger from "./components/messanger/Messanger";
 
 function App() {
   const [isLogined, setIsLogined] = useState(true);
@@ -40,6 +41,8 @@ function App() {
         <Route path="/addFeed" element={<Main component={<AddFeed />} />} />
         <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/message" element={<Main component={<Messanger />} />} />
       </Routes>
       {/* <Routes
             path="/"

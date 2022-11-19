@@ -48,16 +48,9 @@ module.exports = {
         }
     },
     selectMessages: async (messageDto) => {
-        // const { me, you } = messageDto;
         const { me, conversationId } = messageDto;
         
         try{
-        //     const conversation = await Conversation.findOne({
-        //     where: {
-        //         user1: { [Op.or]: [me, you] },
-        //         user2: { [Op.or]: [me, you] },
-        //     },
-        // });
         const messages = await Message.findAll({
             order:[["sendAt","ASC"]],
             where:{

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Modal from "react-modal";
+import Messanger from '../../messanger/Messanger';
+import { Link } from 'react-router-dom';
 
 
 const Side = () => {
@@ -27,6 +29,10 @@ const Side = () => {
   const [conversations, setConversations] = useState([]);
   const [isMessageOpen, setIsMessageOpen] = useState(false);
   const [openedConversation, setOpenedConversation] = useState();
+  const [messageDto, setMessageDto] = useState({});
+  
+
+
   useEffect(()=>{
     axios.get("api/chat/rooms").then((result)=>{
       setConversations([...conversations,...result.data]);
@@ -43,16 +49,25 @@ const Side = () => {
     axios.get(`/api/chat/message?conversation=${conversationId}`)
     .then((result)=>{
       const messages = result.data;
-      console.log(messages);
       const partnerMessages = [];
+      const myMessages = [];
+      let partner;
       messages.map((message,index)=>{
-        const partner= message.Receiver === null? message.Sender : message.Receiver;
-        console.log(partner);
-        // partnerMessages.push()
-      })
-      // const partner = result.data.Receiver === null?result.data.Sender:result.data.Receiver;
-      // console.log(partner);
-      // console.log(result.data);
+        partner= message.Receiver === null? message.Sender : message.Receiver;
+        if(partner.id === message.senderId){
+          partnerMessages.push(message.content);
+        }else{
+          myMessages.push(message.content);
+        }
+      });
+      const partnerAndMyMessages = {
+        partner : partner,
+        partnerMessage : partnerMessages,
+        myMessage : myMessages
+      }
+
+      setMessageDto((prevObj)=>Object.assign(prevObj,partnerAndMyMessages));
+      
     })
     .catch((result)=>{
 
@@ -74,6 +89,7 @@ const Side = () => {
           const isMessageRead = conversation.User1===null?conversation.user1Read:conversation.user2Read;
           const friend = conversation.User1===null?conversation.User2:conversation.User1;
           return(
+        <Link to={`/message`} state={{ conversations: messageDto }} >
         <div className="messageInfo" key={index} onClick={()=>goMessage(conversation.id)}>
           <FriendImg style = {{backgroundImage:`url(${friend.image})`}}alt="친구 프로필사진"></FriendImg>
           <div>
@@ -83,24 +99,23 @@ const Side = () => {
           {/* 안 읽었으면 ReadNotification이 출력되게 ( 빨간색 원 ) */}
           {isMessageRead||<ReadNotification/>}
         </div>
+        </Link>
           );
           
         })
        }
         <button className='testBtn'>Message</button>
     </div>
-    <Modal
+    
+    {/* <Modal
             isOpen={isMessageOpen} 
             onAfterOpen={getConversation}
             onRequestClose={() => setIsMessageOpen(false)}
             ariaHideApp={false}
     >
-      <div>
-      {
-          
-      }
-      </div>
-    </Modal>
+      <Messanger conversations = {messageDto}/>
+    </Modal> */}
+
     </div>
   )
 }
