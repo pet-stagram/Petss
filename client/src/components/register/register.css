@@ -39,11 +39,10 @@
   background-color: white;
   border-radius: 20px;
   width: 500px;
-  padding: 30px;
+  padding: 80px 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 60px;
   margin-bottom: 100px;
 }
 
@@ -126,7 +125,6 @@
 /* 노트북 기준 */
 @media (max-width: 1800px) {
   .register {
-    height: 670px;
     /* margin-top: 100px; */
   }
   .regBox .nameWrap {

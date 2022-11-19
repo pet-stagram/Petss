@@ -35,24 +35,11 @@ function Register() {
     watch,
     formState: { errors },
   } = useForm({
-    mode: "onChange",
+    mode: "onTouched",
     resolver: yupResolver(formSchema),
   });
 
   const onSubmit = (data) => console.log(data);
-
-  //방문 상태를 관리
-  const [isFocusOut, setIsFocusOut] = useState({
-    regName: false,
-  });
-
-  //blur 이벤트가 발생하면 focusout 상태를 true로 바꾼다.
-  const hadleBlur = (e) => {
-    setIsFocusOut({
-      ...isFocusOut,
-      [e.target.name]: true,
-    });
-  };
 
   return (
     <>
@@ -100,10 +87,10 @@ function Register() {
                   type="password"
                   placeholder="비밀번호"
                   className="regInput"
-                  id="pw"
+                  id="password"
                   name="password"
                   autoComplete="off"
-                  {...register("pw")}
+                  {...register("password")}
                 />
                 {errors.password && <p>{errors.password.message}</p>}
               </div>

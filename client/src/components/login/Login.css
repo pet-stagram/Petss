@@ -92,12 +92,26 @@
 }
 
 @media (max-width: 1000px) {
+  .logContainer {
+    height: 850px;
+  }
   .logContainer .mainBox {
     display: block;
-    margin-left: 150px;
   }
 
   .logContainer .logo {
-    width: 400px;
+    width: 350px;
+    position: relative;
+    top: -30px;
+    left: 70px;
+  }
+
+  .logContainer .logBox {
+    position: relative;
+    top: -100px;
+    left: 50px;
+  }
+  .logContainer .login {
+    height: ;
   }
 }
