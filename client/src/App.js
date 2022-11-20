@@ -42,7 +42,8 @@ function App() {
         <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/message" element={<Main component={<Messanger />} />} />
+        <Route path="/message/:conversationId" element={<Main component={<Messanger />}/>}/>
+        {/* <Route path="/*" element={<Main component = {<MainFeed/>} />  } /> */}
       </Routes>
       {/* <Routes
             path="/"

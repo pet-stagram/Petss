@@ -45,7 +45,7 @@ module.exports = {
     },
     postUserImage : async (req, res)=>{
         const userDto = {
-            id : 2, // 현재 세션 유저
+            id : 5, // 현재 세션 유저
             file: req.file.path,
             isBasic: false
         }

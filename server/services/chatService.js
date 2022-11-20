@@ -49,7 +49,6 @@ module.exports = {
     },
     selectMessages: async (messageDto) => {
         const { me, conversationId } = messageDto;
-        
         try{
         const messages = await Message.findAll({
             order:[["sendAt","ASC"]],
