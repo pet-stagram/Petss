@@ -3,7 +3,7 @@ const email = require('../config/email');
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-const LocalStrategy = require("../passport/localStrategy");
+
 
 /* min ~ max까지 랜덤으로 숫자를 생성하는 함수 */ 
 const generateRandom = function (min, max) {
@@ -28,122 +28,86 @@ module.exports = {
      
         try{
             const userData = await User.findOne({where:{email:userEmail}});
-            
-            if(userData.email===userEmail){
+            console.log(userData);
+            if(userData!==null){
+                if(userData.email===userEmail){
 
-                const userPasswordData = await bcrypt.compare(userPassword, userData.password);
-                //console.log(userData.password);//postman
-                //console.log(userPassword);//변수userData에 저장되어있는 값
-                
-                if(userPasswordData){
-                    result = "200";
-                }else{
-                    result = "400";
+                    const userPasswordData = await bcrypt.compare(userPassword, userData.password);
+                    //console.log(userData.password);//postman
+                    //console.log(userPassword);//변수userData에 저장되어있는 값
+                    
+                    if(userPasswordData){
+                        result = userData;
+                       
+                    }else{
+                        result = "400";
+                    }
                 }
-            }else if(userData.email!==userEmail){
-                result = "401";
             }
+            
+             else{
+                result = "409";
+             }
+           
+           
+            return result;
         }catch(err){
-            console.log(err);
-            return err;
+            
+            throw err;
         }
         
-        return result;
-            
-        
-        
-        // try{
-        //     passport.authenticate("local", (authErr, user, info) =>{//authError localStrategy에있음
-        //         console.log(user,"authenticate(user)");
-        //         if(exUser!==user){
-        //             console.log(user);
-        //         }
-        //         successRedirect: "/",
-        //         failureRedirect: "/login"
- 
-                
-        //         if(authError){
-        //             console.log(authError,"authError");
-        //             return next(authError);
-        //         }
-        //         if(!user){
-        //             console.log(user);
-        //             return 400;
-        //         }
-                
-                
-        //         //--
-                
-        //         // if(!user){   //done(null(authError),false(user),{message:}(info))
-        //         //     console.log(user);
-        //         //     return ;
-        //         // }
-            
-        //     });
+       
 
-        // }catch(err){
-        //     console.log(err);
-        //     return err;
-        // }
     },
 
     logoutUser : () =>{},
 
     /* 회원가입 */
-    insertUser : async (user,inputPw)=>{       
-            
+    insertUser : async (user,inputPw)=>{        
         const {name, nick, password, phone, email, regDate, inputPassword} = user;
-
         //console.log(user.nick);
-
         //동일한 닉네임 있는지 확인
         try {
             const chekNick = await User.findOne({ where: { nick } })//user.nick:nick
-            //console.log(chekNick);동일한 닉넴이 있는지 없는지 확인함
-            if (chekNick) {
+            //console.log(chekNick.nick);//
+            if(!chekNick){
                 console.log("닉넴없음");
-                result = 400;
+                //비번과 입력한 비번이 맞는지 확인
+                const inputPass = inputPw;//클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
+                const hashPass = password//db에 저장된 비밀번호
+                const hashPw = bcrypt.hashSync(hashPass, 12);//해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
 
-            } else {
-                console.log("닉넴없음");
-                result = 200;
+                const matchPw = await bcrypt.compare(inputPass, hashPw);
+                if (matchPw) {
+                    console.log("비번맞음");
+                    result = 200;
+                } else {
+                    console.log("비번틀림");
+                    result = 400;
+                }
+
+                const addUser = await User.create({//
+                    name: user.name,
+                    nick: user.nick,
+                    password: hashPw,
+                    phone: user.phone,
+                    email: user.email,
+                    regDate: user.regDate,
+                });
+                console.log(chekNick);//null
+              
+            }else{
+                console.log("닉넴있음");
+                result =  400;
             }
-
-            //비번과 입력한 비번이 맞는지 확인
-            const inputPass = inputPw;//클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
-            const hashPass = password//db에 저장된 비밀번호
-            const hashPw = bcrypt.hashSync(hashPass, 12);//해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
-
-            const matchPw = await bcrypt.compare(inputPass, hashPw);
-            if (matchPw) {
-                console.log("비번맞음");
-                result = 200;
-            } else {
-                console.log("비번틀림");
-                result = 400;
-            }
-
-            const addUser = await User.create({//
-                name: user.name,
-                nick: user.nick,
-                password: hashPw,
-                phone: user.phone,
-                email: user.email,
-                regDate: user.regDate,
-            });
+            console.log(result);//null
+            return result;
 
         } catch (err) {
-            //console.log(err)로 띄워야 어떤 문제가 있는지 파악하기 쉬움
-            console.log(err);
-            return err;
+            throw err;
         }
-
-
-       
-           
-       
         
-        return result;
+       
         
           //---------------- 
         // return new Promise((resolve, reject)=>{          

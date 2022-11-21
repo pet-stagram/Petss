@@ -14,14 +14,13 @@ const specs = swaggerJsdoc(options);
 const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-const passportConfig = require("./passport");
+
 /* multer */
 const multer = require('multer');
 const socket = require("./module/socket");
 const http = require("http");
 
 const app = express();
-passportConfig();
 const PORT = process.env.SERVER_PORT;
 
 const server = http.createServer(app);
@@ -44,8 +43,7 @@ app.use(
         secure:false,
         maxAge:1000*60*5,
 }}));
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 /* Set Sequelize(DB) */
 sequelize.sync({force:false})

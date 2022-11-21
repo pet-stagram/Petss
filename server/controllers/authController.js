@@ -1,20 +1,19 @@
 
 const { Cookie } = require("express-session");
 const { session } = require("passport");
-const passport = require("../passport/index.js");
 const service = require("../services/authService.js");
-const LocalStrategy = require("../passport/localStrategy");
+
 
 
 //controller에서는 req, res관련 작업만 하기!!! 다른거는 다 service에서 하면됨!! 기억하셈!!!
 const inputNum = "692438"; //입력한 숫자 대신 임시적으로 사용할 변수
-//731453
+//7314531
 
-const inputPw = "12"; //입력한 비번 대신 임시적으로 사용할 변수
+const inputPw = "23"; //입력한 비번 대신 임시적으로 사용할 변수
 
 const userData = {
-    email: "10",
-    password: "10",
+    email: "1222222222",
+    password: "12",
     nickname: "1"
 }
 
@@ -31,22 +30,29 @@ module.exports = {
         const userPassword = userData.password;
         try{    
             const loggginUser= await service.loginUser(userEmail,userPassword); //db담은 exUser변수 loginUser로 전달
-            if(loggginUser==="200"){
-                req.session.isLogined = true;
-                req.session.nickname = userData.nickname;
-                console.log("성공");
-                res.sendStatus(200);      
-            }
+          
             //400 - bad_request - request 실패 ex) 유효성 검사 통과 실패, 잘못된 요청
             //401 - unauthorized - 인증 실패 ex) 세션 없음, 로그인 실패
-            else if(loggginUser==="400"){
+            
+            
+            
+            if(loggginUser==="400"){
                 console.log("비번틀림");
                 res.sendStatus(400);
             }
-            else{
-                console.log("이멜틀림");
-                res.sendStatus(401);
+            else if(loggginUser==="409"){
+                //console.log(err);
+                res.sendStatus(409);
             }   
+            else{
+                req.session.isLogined = true;
+                req.session.u_id = loggginUser.id;
+                console.log(req.session.u_id);
+              
+                console.log("성공");
+                res.sendStatus(200);      
+            }
+          
         }catch(err){
             console.log(err);
             res.sendStatus(500);
@@ -60,7 +66,8 @@ module.exports = {
             req.session.destroy(function(err){
                 res.sendStatus(200);
             })
-9   },
+            //세션이 없을때 로그아웃 하려는 시도? 뭐 그런거 있으면 err뜨게 
+   },
 
     /* 회원가입 눌렀을 때 */
     //https://victorydntmd.tistory.com/33
@@ -71,10 +78,9 @@ module.exports = {
         //inputPassword 비밀번호 확인 하기 위해 만든 변수
         // 비밀번호
         const insertUserInfo = await service.insertUser(user,inputPw);       
-      
+        //console.log(insertUserInfo);
         try {
-            if (insertUserInfo === 400) {
-                console.log("실패");
+            if (insertUserInfo===400) {
                 res.sendStatus(400);
             }
             else if (insertUserInfo === 200) {
@@ -83,19 +89,14 @@ module.exports = {
             }
             else
             {
-                throw 'Failed Registering New User!';
+                throw "Failed Registering New User!";
             }
           
         }catch(err){
             console.log(err);
             res.sendStatus(400);
         }
-        //---
-        // service.insertUser(user).then((result)=>{
-        //     res.sendStatus(201)
-        // }).catch((err)=>{
-        //     res8.sendStatus(400)
-        // });     
+          
     },
     
     /* 이메일 인증 */
