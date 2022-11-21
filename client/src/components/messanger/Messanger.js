@@ -4,6 +4,7 @@ import { useLocation, useParams } from "react-router-dom";
 import {  getSocket, joinChat, receiveMessage, sendSocketMessage } from '../../module/socketio';
 import { io } from 'socket.io-client';
 
+const socket = io('http://localhost:5100' ,{transports: ['websocket']});
 function Messanger(props) {
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState({});
@@ -12,8 +13,7 @@ function Messanger(props) {
     const location = useLocation();
 
     useEffect(() => {
-        const socket = io('http://localhost:5100');
-        socket.emit("joinRoom", {roomName: conversationId});
+        socket.emit("joinRoom", {roomName: room});
         setRoom(conversationId);
         const fetchConversationDetail = async (conversationId) => {
             try {
@@ -57,8 +57,7 @@ const MessageBox = ({ messages, conversationId }) => {
     useEffect(()=>{
         /* 대화바뀔 때마다 message가 담긴 state 초기화 */
         setMessageView([]);
-        const data = receiveMessage();
-        console.log(data);
+        
     },[conversationId]);
     
     const sendMessage = () => {
