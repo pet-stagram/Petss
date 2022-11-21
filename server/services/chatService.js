@@ -109,37 +109,37 @@ module.exports = {
     }
     },
     createMessages: async (messageDto) => {
-        const { me,you, content } = messageDto;
+        const { conversation, comment, sender, me, partner } = messageDto;
         /* 현재 유저, 상대방, 채팅 내용 가져와야함 */
-       
+       console.log(messageDto);
        try{
         let conversation = await Conversation.findOne({
             where: {
-                user1: { [Op.or]: [me,you] },
-                user2: { [Op.or]: [me, you] },
+                user1: { [Op.or]: [me, partner] },
+                user2: { [Op.or]: [me, partner] },
             },
         });
         if (!conversation) {
             conversation = await Conversation.create({
                 user1: me,
-                user2: you,
+                user2: partner,
                 user1Read: false,
                 user2Read: false,
-                last_chat: content,
+                last_chat: comment,
                 updatedAt: Date.now()
             });
         }
         const newMessage = await Message.create({
             senderId: me,
-            receiverId: 3,
-            content: content,
+            receiverId: partner,
+            content: comment,
             conversationId: conversation.id,
             sendAt: Date.now(),
         });
         
         const updateLastChat = await Conversation.update(
             { 
-            lastChat: content,
+            lastChat: comment,
             updatedAt: Date.now(),
             },
             {

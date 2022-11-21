@@ -27,9 +27,8 @@ const Side = () => {
     `;
 
     const [conversations, setConversations] = useState([]);
-    const [isMessageOpen, setIsMessageOpen] = useState(false);
-    const [openedConversation, setOpenedConversation] = useState();
     const [messageDto, setMessageDto] = useState({});
+    const [isChanged, setIsChanged] = useState(false);
 
     useEffect(() => {
         const fetchConversationList = async (callback) => {
@@ -43,11 +42,6 @@ const Side = () => {
     }, []);
 
     
-
-    function goMessage(conversationId) {
-        setOpenedConversation(conversationId);
-        setIsMessageOpen(true);
-    }
 
     return (
         <div className="side">
@@ -99,15 +93,6 @@ const Side = () => {
                 })}
                 <button className="testBtn">Message</button>
             </div>
-
-            {/* <Modal
-            isOpen={isMessageOpen} 
-            onAfterOpen={getConversation}
-            onRequestClose={() => setIsMessageOpen(false)}
-            ariaHideApp={false}
-    >
-      <Messanger conversations = {messageDto}/>
-    </Modal> */}
         </div>
     );
 };

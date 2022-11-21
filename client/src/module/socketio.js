@@ -11,7 +11,6 @@ export const joinChat= (room) => {
 }
 
 export const receiveMessage = () => {  
-  
   socket.on("reqMsg", (data) => {
     console.log(data);
     return data;
@@ -20,6 +19,6 @@ export const receiveMessage = () => {
 }
 
 export const sendSocketMessage = (messageInfo) => {
-  const {conversation, content, sender} = messageInfo;
-  socket.emit("reqMsg",{comment: content.value,conversation,sender});
+  const {conversation, content, sender, me, partner} = messageInfo;
+  socket.emit("reqMsg",{comment: content.value, conversation, sender, me, partner});
 }

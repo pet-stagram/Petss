@@ -59,24 +59,25 @@ const MessageBox = ({ messages, conversationId }) => {
         joinChat(conversationId);
         setRoom(conversationId);
         getSocket().on("reqMsg", (data) => {  
-            
             setMessageView((prevMsg)=>[...prevMsg,data]);
+     
           }
         );
         /* 대화바뀔 때마다 message가 담긴 state 초기화 */
         setMessageView([]);
     },[conversationId]);
     
-    const sendMessage = () => {
+    const sendMessage = (partner) => {
         const content = document.querySelector("#sendInput");
         try{
             const messageInfo = {
                 conversation,
                 content,
-                sender : "me"
+                sender : "me",
+                partner: partner.id,
+                me : 1//세션
             }
             sendSocketMessage(messageInfo);
-            // setMessageView((prevMsg)=>[...prevMsg,{comment : content.value,sender : "me"}]);
             setTimeout(()=>{
                 content.value="";
             },10);
@@ -183,7 +184,7 @@ const MessageBox = ({ messages, conversationId }) => {
                     <div className="sendWrap" style={{margin:"0 auto"}}>
                         <div style={{border:"1px solid #ccc",borderRadius:"10px",background:"white", padding:"3px 2px",display:"grid", gridTemplateColumns:"90% 10%"}}>
                             <input type="text" id="sendInput" style={{border:"none",padding:"10px 0 10px 10px",fontSize:"15px"}}/>
-                            <button style={{background:"none", border:"none", color:"blue",fontWeight:"700",paddingRight:"8px"}} onClick={sendMessage}>보내기</button>
+                            <button style={{background:"none", border:"none", color:"blue",fontWeight:"700",paddingRight:"8px"}} onClick={()=>sendMessage(messages.partner)}>보내기</button>
                         </div>
                     </div>
             </div>
