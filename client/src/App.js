@@ -12,7 +12,7 @@ import axios from "axios";
 import Register from "./components/register/Register";
 
 function App() {
-  const [isLogined, setIsLogined] = useState(true);
+  const [isLogined, setIsLogined] = useState(false);
 
   //저장된 값 확인하는 용
   // useEffect(() => {
@@ -25,13 +25,8 @@ function App() {
   //     .catch((err) => {});
   // }, []);
 
-  console.log(isLogined);
   return (
     <BrowserRouter>
-      {/* <div className="navbar">
-          <Navbar />
-        </div>
-        <div className="main"> */}
       <Routes>
         <Route
           path="/"
@@ -40,15 +35,8 @@ function App() {
         <Route path="/addFeed" element={<Main component={<AddFeed />} />} />
         <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
-      {/* <Routes
-            path="/"
-            element={isLogined === true ? <MainFeed /> : <Login />}
-          >
-            <Route index element={<MainFeed />} />
-            <Route path="/addFeed" element={<AddFeed />} />
-            <Route path="/myFeed" element={<MyFeed />} />
-          </Routes> */}
     </BrowserRouter>
   );
 }
