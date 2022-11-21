@@ -115,7 +115,7 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
   return (
       <div>
           <div className="previewImageWrap">
-            <ImageSlider effectDelay={500} autoPlayDelay={2000}>
+            <ImageSlider effectDelay={500} autoPlayDelay={2000} className={styles.imageSlider}>
                 {
                     previews.map((preview, index) => {
                         // console.log(preview);

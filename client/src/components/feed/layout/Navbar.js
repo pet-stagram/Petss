@@ -38,6 +38,7 @@ const Navbar = () => {
             isOpen={searchIsOpen}
             onRequestClose={() => setSearchIsOpen(false)}
             ariaHideApp={false}
+            style={searchStyles}
           >
             <input type="text" name="search" className="searchInput" />
           </Modal>
