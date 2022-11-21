@@ -3,11 +3,9 @@ const { Cookie } = require("express-session");
 const { session } = require("passport");
 const service = require("../services/authService.js");
 
-
-
 //controller에서는 req, res관련 작업만 하기!!! 다른거는 다 service에서 하면됨!! 기억하셈!!!
+
 const inputNum = "692438"; //입력한 숫자 대신 임시적으로 사용할 변수
-//7314531
 
 const inputPw = "23"; //입력한 비번 대신 임시적으로 사용할 변수
 
@@ -16,7 +14,6 @@ const userData = {
     password: "12",
     nickname: "1"
 }
-
 
 //HTTP 상태코드 보낼 때 send()나 status()보다 sendStatus() 함수만 사용하는 것이 좋아보입니다.
 //따로 보낼 정보가 있을 경우는 res.json()을 사용하여 json 파일 보내주면 좋을 것 같아요
@@ -29,13 +26,10 @@ module.exports = {
         const userEmail = userData.email;//원래는exUser 써야하는데 입력받은게 없으니까 임시적으로 userData변수를 적음
         const userPassword = userData.password;
         try{    
-            const loggginUser= await service.loginUser(userEmail,userPassword); //db담은 exUser변수 loginUser로 전달
-          
+            const loggginUser= await service.loginUser(userEmail,userPassword); //db담은 exUser변수 loginUser로 전달       
             //400 - bad_request - request 실패 ex) 유효성 검사 통과 실패, 잘못된 요청
             //401 - unauthorized - 인증 실패 ex) 세션 없음, 로그인 실패
-            
-            
-            
+
             if(loggginUser==="400"){
                 console.log("비번틀림");
                 res.sendStatus(400);

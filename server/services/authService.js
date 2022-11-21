@@ -15,12 +15,6 @@ const randomNumber = generateRandom(111111,999999);//랜덤번호 받은 변수
 
 
 module.exports = {
-    // postFindAll :async ()=>{
-    //     const posts = await Post.findAll({
-    //         order:[[ "id", "DESC" ]],
-    //     });
-    //     return posts;
-    // },
 
     /* 로그인 */
     loginUser : async (userEmail,userPassword) => {//isNotLoggendIn
@@ -47,17 +41,11 @@ module.exports = {
             
              else{
                 result = "409";
-             }
-           
-           
+             } 
             return result;
-        }catch(err){
-            
+        }catch(err){     
             throw err;
         }
-        
-       
-
     },
 
     logoutUser : () =>{},
