@@ -111,7 +111,6 @@ module.exports = {
     createMessages: async (messageDto) => {
         const { conversation, comment, sender, me, partner } = messageDto;
         /* 현재 유저, 상대방, 채팅 내용 가져와야함 */
-       console.log(messageDto);
        try{
         let conversation = await Conversation.findOne({
             where: {
