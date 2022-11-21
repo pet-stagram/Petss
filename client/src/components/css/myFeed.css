@@ -67,6 +67,7 @@
 }
 .myFeedPostsTitle{
     margin: 20px 0;
+    text-align: center;
 }
 .myFeedPost img{
     width: 240px;
