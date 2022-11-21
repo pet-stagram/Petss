@@ -14,8 +14,7 @@ const Navbar = () => {
   // setModalOn(!modalOn);
   // }
 
-  const [openAddFeedOn, setOpenAddFeedOn] = useState(false);
-  // 변수명 바꾸세용 ㅎㅎ is ~
+  const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
 
   return (
     <div className="navbar">
@@ -42,19 +41,19 @@ const Navbar = () => {
           >
             <input type="text" name="search" className="searchInput" />
           </Modal>
-          {/*  <button className="openBtn" onClick={onOpenModal}>모달창 open</button> 
+          {/*  <button className="openBtn" onClick={onOpenModal}>Modal open</button> 
                   {modalOn? <Modal/>: ''} */}
           <li>
             <NavLink to="/myFeed">My Feed</NavLink>
           </li>
-          <li onClick={() => setOpenAddFeedOn(true)}>Feed 추가</li>
+          <li onClick={() => setIsOpenAddFeed(true)}>Feed 추가</li>
           <Modal
-            isOpen={openAddFeedOn}
-            onRequestClose={() => setOpenAddFeedOn(false)}
+            isOpen={isOpenAddFeed}
+            onRequestClose={() => setIsOpenAddFeed(false)}
             ariaHideApp={false}
             style={modalStyles}
           >
-            <AddFeed />
+            <AddFeed setIsOpenAddFeed={setIsOpenAddFeed}/>
           </Modal>
           <li>알림</li>
           <li>설정</li>
