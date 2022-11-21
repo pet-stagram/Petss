@@ -44,10 +44,12 @@ function Register() {
   const onSubmit = (data) => console.log(data);
   //입력값 data에 저장되는 것 확인
 
-  //db 연동
+  //db 연동,중복불가인 내용은 인풋칸에 입력하고 focusout할 때 db랑 조회해서 겹치면 인풋 아래 메시지 띄어주기.
+  //1. db랑 연결이 되는지 확인?
   useEffect(() => {
+    // .post("http://localhost:5100/auth/register")
     axios
-      .post("http://localhost:5100/auth/register")
+      .get("http://localhost:5100/auth/me")
       .then((res) => console.log(res).catch());
   });
 
@@ -160,8 +162,7 @@ function Register() {
                           인증번호 틀렸을 시 띄우는 팝업창도 필요함. 성공하면  "인증에 성공하였습니다. " 하고 넘어가야함.
                           인증번호는 6자리 이고 한 칸씩 입력하게 만든다. 인증번호 입력하는 창 자체를 팝업으로 띄우는 게 나을듯. 문자인증 처럼..
                          아니면 처음부터 인증번호 입력 칸 만들고 비활성화에서 인증번호 받으면 -> 활성화 하게 
-                         인증번호 session 폴더에 저장(백앤드),번호 다르면 400에러 띄우게 하심 
-                         다시 시도 요청, 번호 같으면 200띄움. */}
+                         인증번호 session 폴더에 저장(백앤드),번호 다르면 400에러. 다시 시도 요청, 번호 같으면 200. */}
               </div>
 
               <div className="regRowWrap">
