@@ -20,8 +20,12 @@ async function uploadProfileImage(userDto) {
     console.log(id)
     const desertFile = storageRef.file(`uploads/users/${id}/profile.jpeg`);
     try {
-        await desertFile.delete();
-    } catch (err) {}
+        if(Object.keys(desertFile.metadata).length!==0)
+            await desertFile.delete();
+    } catch (err) {
+        throw err;
+    }
+    
     const storage = await storageRef.upload(file, {
         public: true,
         destination: `/uploads/users/${id}/profile.jpeg`,
@@ -52,7 +56,7 @@ async function uploadPostsImages(newPostNum, files) {
             },
         });
         urlArr.push(storage[0].metadata.mediaLink);
-        fs.rmSync(file.path, { recursive: true, force: true });
+        fs.rmSync(file.destination, { recursive: true, force: true });
     });
     await Promise.all(promises);
     return urlArr;

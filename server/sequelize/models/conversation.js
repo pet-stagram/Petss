@@ -7,6 +7,15 @@ module.exports = class Conversation extends Sequelize.Model{
         return super.init({
             lastChat : {
                 type: Sequelize.STRING
+            },
+            user1Read:{
+                type: Sequelize.BOOLEAN
+            },
+            user2Read:{
+                type: Sequelize.BOOLEAN
+            },
+            updatedAt : {
+                type: Sequelize.DATE
             }
         },{
             sequelize,
@@ -20,6 +29,8 @@ module.exports = class Conversation extends Sequelize.Model{
         })
     }
     static associate(db){
-        db.Conversation.hasMany(db.Message,{foreignKet : "conversationId"});
+        db.Conversation.hasMany(db.Message,{foreignKey : "conversationId"});
+        db.Conversation.belongsTo(db.User,{foreignKey : "user1", as:'User1'});
+        db.Conversation.belongsTo(db.User,{foreignKey : "user2",as:"User2"});
     }
 }
