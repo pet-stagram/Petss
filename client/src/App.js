@@ -9,7 +9,8 @@ import MyFeed from "./components/feed/pages/MyFeed";
 import { useState, useEffect } from "react";
 import React from "react";
 import axios from "axios";
-import Register from "./components/register/Register";
+import Register from "./components/register/register";
+import Messanger from "./components/messanger/Messanger";
 
 function App() {
   const [isLogined, setIsLogined] = useState(false);
@@ -36,6 +37,8 @@ function App() {
         <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/message/:conversationId" element={<Main component={<Messanger />}/>}/>
+        {/* <Route path="/*" element={<Main component = {<MainFeed/>} />  } /> */}
       </Routes>
     </BrowserRouter>
   );

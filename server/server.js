@@ -69,4 +69,5 @@ app.use("/users",userRouter);
 app.use("/admin",adminRouter);
 app.use("/chat",chatRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-app.listen(PORT,()=>{console.log("Running...")});
+/* socket 통신을 위해 app이 아닌 http 서버 사용 */
+server.listen(PORT,()=>{console.log("Running...")});
