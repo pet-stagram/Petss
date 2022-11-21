@@ -2,7 +2,8 @@ const { Post, User, Hashtag } = require('../sequelize/models');
 const email = require('../config/email');
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
-
+const passport = require("passport");
+const LocalStrategy = require("../passport/localStrategy");
 
 /* min ~ max까지 랜덤으로 숫자를 생성하는 함수 */ 
 const generateRandom = function (min, max) {
@@ -12,13 +13,81 @@ const generateRandom = function (min, max) {
 const randomNumber = generateRandom(111111,999999);//랜덤번호 받은 변수
 
 
+
 module.exports = {
-    postFindAll :async ()=>{
-        const posts = await Post.findAll({
-            order:[[ "id", "DESC" ]],
-        });
-        return posts;
+    // postFindAll :async ()=>{
+    //     const posts = await Post.findAll({
+    //         order:[[ "id", "DESC" ]],
+    //     });
+    //     return posts;
+    // },
+
+    /* 로그인 */
+    loginUser : async (userEmail,userPassword) => {//isNotLoggendIn
+        console.log("userEmail: ",userEmail," userPassword: ",userPassword); // { email: '1', password: '1' }
+     
+        try{
+            const userData = await User.findOne({where:{email:userEmail}});
+            
+            if(userData.email===userEmail){
+
+                const userPasswordData = await bcrypt.compare(userPassword, userData.password);
+                //console.log(userData.password);//postman
+                //console.log(userPassword);//변수userData에 저장되어있는 값
+                
+                if(userPasswordData){
+                    result = "200";
+                }else{
+                    result = "400";
+                }
+            }else if(userData.email!==userEmail){
+                result = "401";
+            }
+        }catch(err){
+            console.log(err);
+            return err;
+        }
+        
+        return result;
+            
+        
+        
+        // try{
+        //     passport.authenticate("local", (authErr, user, info) =>{//authError localStrategy에있음
+        //         console.log(user,"authenticate(user)");
+        //         if(exUser!==user){
+        //             console.log(user);
+        //         }
+        //         successRedirect: "/",
+        //         failureRedirect: "/login"
+ 
+                
+        //         if(authError){
+        //             console.log(authError,"authError");
+        //             return next(authError);
+        //         }
+        //         if(!user){
+        //             console.log(user);
+        //             return 400;
+        //         }
+                
+                
+        //         //--
+                
+        //         // if(!user){   //done(null(authError),false(user),{message:}(info))
+        //         //     console.log(user);
+        //         //     return ;
+        //         // }
+            
+        //     });
+
+        // }catch(err){
+        //     console.log(err);
+        //     return err;
+        // }
     },
+
+    logoutUser : () =>{},
 
     /* 회원가입 */
     insertUser : async (user,inputPw)=>{       
@@ -64,6 +133,7 @@ module.exports = {
             });
 
         } catch (err) {
+            //console.log(err)로 띄워야 어떤 문제가 있는지 파악하기 쉬움
             console.log(err);
             return err;
         }

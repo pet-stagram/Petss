@@ -45,8 +45,8 @@ module.exports = {
     },
     postUserImage : async (req, res)=>{
         const userDto = {
-            id : 1, // 현재 세션 유저
-            file: req.file,
+            id : 2, // 현재 세션 유저
+            file: req.file.path,
             isBasic: false
         }
         if(isNaN(req.params.userId)){
@@ -69,8 +69,9 @@ module.exports = {
         }
     },
     postUserImageBasic : async (req, res)=>{
+        
         const userDto = {
-            id : 1, // 현재 세션 유저
+            id : 3, // 현재 세션 유저
             file: "public/images/basic_profile.jpeg",
             isBasic: true
         }

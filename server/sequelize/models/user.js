@@ -54,12 +54,12 @@ module.exports = class User extends Sequelize.Model{
 
         /* 여러 채팅방과 1:N 관계 */
 
-        db.User.hasMany(db.Message,{foreignKey : "senderId" , as : "OutgoingMessages"});
-        db.User.hasMany(db.Message,{foreignKey : "receiverId",as : "IncomingMessages"});
+        db.User.hasMany(db.Message,{foreignKey : "senderId" , as : "Sender"});
+        db.User.hasMany(db.Message,{foreignKey : "receiverId",as : "Receiver"});
         
         db.User.hasMany(db.Heart);
-        db.User.hasMany(db.Conversation,{foreignKey: "user1"});
-        db.User.hasMany(db.Conversation,{foreignKey: "user2"});
+        db.User.hasMany(db.Conversation,{foreignKey: "user1",as:"User1"});
+        db.User.hasMany(db.Conversation,{foreignKey: "user2",as:"User2"});
 
         /* Follow 테이블에 1 : N 관계 
             다른 사람이 해당 유저 팔로우 시 Follow 테이블 followerId 속성에 해당 유저 id 들어감

@@ -1,47 +1,188 @@
-const {
-    Conversation,
-    Message
-} = require("../sequelize/models/index");
-const { Op } = require("sequelize");
+const { Conversation, Message, User } = require("../sequelize/models/index");
+const { Op, Model } = require("sequelize");
 const sequelize = require("sequelize");
 const { uploadProfileImage } = require("../module/firebase");
 const db = require("../sequelize/models/index");
 const usersController = require("../controllers/usersController");
-module.exports ={
-    selectChatRooms: async (currentUser) =>{
+module.exports = {
+    selectChatRoomAll: async (currentUser) => {
+        try {
+            const conversations = await Conversation.findAll({
+                order:[["updatedAt","DESC"]]
+                ,
+                where: {
+                    [Op.or]: [{ user1: currentUser }, { user2: currentUser }],
 
-    },
-    createMessages : async (currentUser) =>{
-       let conversation = await Conversation.findOne({
-        where:{
-            user1: {[Op.or]:[currentUser,2]},
-            user2: {[Op.or]:[currentUser,2]}
+                },
+                include: [
+                    {
+                        model: User,
+                        as: 'User1',
+                        attributes:["id","name","image"],
+                        where: {
+                            id: {
+                                [Op.notLike]: currentUser,
+                            }
+                        },
+                        required:false
+                    },
+                    {
+                        model: User,
+                        as: 'User2',
+                        attributes:["id","name","image"],
+                        where: {
+                            id: {
+                                [Op.notLike]: currentUser,
+                            }
+                        },
+                        required:false
+                    }
+                ],
+            });
+
+            /* User1이나 User2가 null이면 null이 아닌 User가 상대방임 */
+            return conversations;
+        } catch (err) {
+            console.log(err);
+            throw err;
         }
-       });
-
-       if(!conversation){
-        conversation = await Conversation.create({
-            user1: currentUser,
-            user2: 2,
-            last_chat : "안녕 ㅋㅋ"
+    },
+    selectMessages: async (messageDto) => {
+        const { me, you } = messageDto;
+        
+        try{
+            const conversation = await Conversation.findOne({
+            where: {
+                user1: { [Op.or]: [me, you] },
+                user2: { [Op.or]: [me, you] },
+            },
         });
-       }
-       const newMessage = await Message.create({
-        senderId: currentUser,
-        receiverId : 2,
-        content: "안녕 ㅋㅋ",
-        conversationId: conversation.id
-       });
+        
+        const messages = await Message.findAll({
+            order:[["sendAt","ASC"]],
+            where:{
+                conversation_id : conversation.id
+            },
+            
+            /* Sender 혹은 Receiver가 null이면 나, 아니면 상대방( 이름, 프로필 사진 출력하기 위해 ) */
+            include : [
+                {
+                    model: User,
+                    attributes:["id","name","image","nick"],
+                    as: "Sender",
+                    where:{
+                        id: you
+                    },
+                    required:false
+                },
+                {
+                    model: User,
+                    as: "Receiver",
+                    attributes:["id","name","image","nick"],
+                    where:{
+                        id: you
+                    },
+                    required:false
+                }
+            ]
+        });
+        
 
-       const updateLastChat = await Conversation.update(
-        {lastChat : "안녕 ㅋㅋ"},
+        /* 내가 누군지에 따라 읽음표시 */
+      await Conversation.update(
+            {
+                user1Read: true
+            },
             {
                 where:{
-                    id: conversation.id
-                 }
+                    id : conversation.id, 
+                    user1: me
+                }
             }
-         );
-         console.log(updateLastChat);
-    
-}
-}
+        );
+        await Conversation.update(
+            {
+                user2Read: true
+            },
+            {
+                where:{
+                    id : conversation.id, 
+                    user2: me
+                }
+            }
+        );
+        return messages;
+    }catch(err){
+        throw err;
+    }
+    },
+    createMessages: async (messageDto) => {
+        const { me,you, content } = messageDto;
+        /* 현재 유저, 상대방, 채팅 내용 가져와야함 */
+       
+       try{
+        let conversation = await Conversation.findOne({
+            where: {
+                user1: { [Op.or]: [me,you] },
+                user2: { [Op.or]: [me, you] },
+            },
+        });
+        if (!conversation) {
+            conversation = await Conversation.create({
+                user1: me,
+                user2: you,
+                user1Read: false,
+                user2Read: false,
+                last_chat: content,
+                updatedAt: Date.now()
+            });
+        }
+        const newMessage = await Message.create({
+            senderId: me,
+            receiverId: 3,
+            content: content,
+            conversationId: conversation.id,
+            sendAt: Date.now(),
+        });
+        console.log(newMessage.senderId);
+        
+        const updateLastChat = await Conversation.update(
+            { 
+            lastChat: content,
+            updatedAt: Date.now(),
+            },
+            {
+                where: {
+                    id: conversation.id,
+                },
+            }
+        );
+        /* 메시지 보낸 사람은 바로 읽음으로 설정 */
+        /* 만약 senderId가 user1이면 user1Read true, user2이면 user2Read true */
+        await Conversation.update(
+            {
+                user1Read: true
+            },
+            {
+                where:{
+                    id : conversation.id, 
+                    user1: newMessage.senderId
+                }
+            }
+        );
+        await Conversation.update(
+            {
+                user2Read: true
+            },
+            {
+                where:{
+                    id : conversation.id, 
+                    user2: newMessage.senderId
+                }
+            }
+        )
+    }catch(err){
+        throw err;
+    }
+    },
+};
