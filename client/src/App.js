@@ -27,10 +27,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* <div className="navbar">
-          <Navbar />
-        </div>
-        <div className="main"> */}
       <Routes>
         <Route
           path="/"
@@ -41,14 +37,6 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-      {/* <Routes
-            path="/"
-            element={isLogined === true ? <MainFeed /> : <Login />}
-          >
-            <Route index element={<MainFeed />} />
-            <Route path="/addFeed" element={<AddFeed />} />
-            <Route path="/myFeed" element={<MyFeed />} />
-          </Routes> */}
     </BrowserRouter>
   );
 }

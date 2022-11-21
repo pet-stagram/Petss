@@ -1,10 +1,11 @@
-import React, { useCallback } from "react";
+import React from "react";
 import Logo from "../../images/regLogo.png";
 import "./register.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function Register() {
   const formSchema = yup.object({
@@ -19,9 +20,9 @@ function Register() {
       .string()
       .required("영문, 숫자포함 8자리를 입력해주세요")
       .min(8, "최소 8자 이상 가능합니다.")
-      .max(15, "최대 15자 까지만 가능합니다")
+      .max(30, "최대 30자 까지만 가능합니다")
       .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/,
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,30}$/,
         "영문 숫자포함 8자리를 입력해주세요."
       ),
     passwordConfirm: yup
@@ -29,6 +30,7 @@ function Register() {
       .oneOf([yup.ref("password")], "비밀번호가 다릅니다."),
   });
 
+  //mode를 onTouched로 해줘야 input focusout때마다 유효성 검사된다.
   const {
     register,
     handleSubmit,
@@ -40,6 +42,14 @@ function Register() {
   });
 
   const onSubmit = (data) => console.log(data);
+  //입력값 data에 저장되는 것 확인
+
+  //db 연동
+  useEffect(() => {
+    axios
+      .post("http://localhost:5100/auth/register")
+      .then((res) => console.log(res).catch());
+  });
 
   return (
     <>
@@ -70,6 +80,7 @@ function Register() {
                 {errors.regName && <p>{errors.regName.message}</p>}
               </div>
               <div className="regRowWrap">
+                {/* 겹치는 활동명이면 겹친다고 말해주고 다시 바로 지워지게 만들기 */}
                 <input
                   type="text"
                   placeholder="활동명"
@@ -81,7 +92,7 @@ function Register() {
                 />
                 {errors.nick && <p>{errors.nick.message}</p>}
               </div>
-              {/* 비밀번호 규칙 정하기  */}
+              {/* 비밀번호 규칙 db에 맞춰서 넣기  */}
               <div className="regRowWrap">
                 <input
                   type="password"

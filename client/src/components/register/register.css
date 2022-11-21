@@ -122,16 +122,15 @@
 }
 .emailCheck {
 }
+
 /* 노트북 기준 */
 @media (max-width: 1800px) {
-  .register {
-    /* margin-top: 100px; */
-  }
   .regBox .nameWrap {
     margin-top: 20px;
   }
+
   .regContainer .logo {
-    margin-top: 100px;
+    margin-top: 50px;
     padding: 20px;
   }
 }
