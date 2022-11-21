@@ -2,8 +2,12 @@ import React from "react";
 import Modal from "react-modal";
 import { useState } from "react";
 import axios from "axios";
+import notifStyle from "../../css/notifStyle";
+import styles from "../../css/addFeed.module.css";
+import ImageSlider, { Slide } from "react-auto-image-slider";
+// import { Slide } from 'react-slideshow-image';
 
-const AddFeed = () => {
+const AddFeed = ({setIsOpenAddFeed}) => {
 
   /* 사진 선택 컴포넌트와 피드 게시(Submit form) 컴포넌트를 나누기 위해 사용 */
     const [step, setStep] = useState(1);
@@ -23,7 +27,7 @@ const AddFeed = () => {
                     setPreviewImage={setPreviewImage}
                 />
             ) : (
-                <WritePost files={imageFile} previews={previewImage} />
+                <WritePost files={imageFile} previews={previewImage} setIsOpenAddFeed={setIsOpenAddFeed}/>
             )}
         </>
     );
@@ -36,19 +40,20 @@ const AddFeed = () => {
  */
 const SelectImage = ({ setStep, setImageFile, setPreviewImage }) => {
     return (
-        <>
-            <div>
-                <input
-                    type="file"
-                    name="choiceImage"
-                    accept="image/*"
-                    onChange={(e) =>
-                        saveFileImage(e, setStep, setImageFile, setPreviewImage)
-                    }
-                    multiple
-                />
-            </div>
-        </>
+        <div className={styles.selectImageBox}>
+            <label className={styles.fileButton}  htmlFor="inputImage">
+                이미지 파일을 선택하세요
+            </label>
+            <input
+                type="file"
+                name="inputImage"
+                id="inputImage"
+                accept="image/*"
+                onChange={(e) => saveFileImage(e, setStep, setImageFile, setPreviewImage)}
+                multiple
+                style={{display:"none"}}
+            />
+        </div>
     );
 };
 
@@ -58,21 +63,37 @@ const SelectImage = ({ setStep, setImageFile, setPreviewImage }) => {
  * @param {Object} props 안녕 
  * @returns 
  */
-const WritePost = ({ files, previews }) => {
+const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
   const [content, setContent] = useState("");
-  
+  const [isOpenErr, setIsOpenErr] = useState(false);
+
+  const isCloseErr = () => {
+    setIsOpenErr(false);
+  }
+
+  const isCloseAddFeed = () => {
+    setIsOpenAddFeed(false);
+  }
   /**
    * 다른 컴포넌트(SelectImage)에서 가져온 파일을 axios로 제출(POST)하기 위한 form handler function
    * @param {Event} e 피드 작성 폼을 제출했을 때 (onSubmit) 발생하는 이벤트
    */
-  async function frmHandler(e) {
+  const formHandler = async(e) => {
+    // files 받아온 부분..
       e.preventDefault();
       let formData = new FormData();
 
       files.map((file) => {
           formData.append("files", file);
       });
+      
       formData.append("content", JSON.stringify(content));
+
+    //   console.log(formData);
+    //   for ( let key of formData.keys()) {
+    //     console.log(formData.get(key));
+    //   }
+      
 
       await axios({
           method: "POST",
@@ -82,12 +103,46 @@ const WritePost = ({ files, previews }) => {
       })
           .then((result) => {
               console.log("성공");
+              setIsOpenAddFeed(false);
           })
-          .catch((err) => {});
+          .catch((err) => {
+            // err.response.status === '401' 
+              console.log("업로드 실패");
+              setIsOpenErr(true);
+          });
   }
+  
   return (
       <div>
-          <form onSubmit={frmHandler} encType="multipart/form-data">
+          <div className="previewImageWrap">
+            <ImageSlider effectDelay={500} autoPlayDelay={2000}>
+                {
+                    previews.map((preview, index) => {
+                        // console.log(preview);
+                        return(
+                            <Slide key={index}>
+                                <img className="previewImage" src={preview} alt="uploadImagePreview" style={{width: "300px", height: "200px"}}/>
+                            </Slide>    
+                        )
+                    })
+                }
+            </ImageSlider>
+
+            {/* ******************************************************************************* */}
+
+            {/* <Slide>
+            {previews.map((preview, index)=> {
+                return(
+                    <div className="each-slide" key={index}>
+                        <div style={{'backgroundImage': `url(${preview})`}}>
+                            <span>{preview.caption}</span>
+                        </div>
+                    </div>
+                )})} 
+            </Slide> */}
+          </div>
+          {/* image preview */}
+          <form onSubmit={formHandler} encType="multipart/form-data">
               <div>
                   <input
                       type="text"
@@ -98,21 +153,26 @@ const WritePost = ({ files, previews }) => {
                   />
               </div>
               <div>
-                  <input type="submit" value="SUBMIT" />
+                  <input type="submit" value="SUBMIT" style={{width:"100px"}}/>
               </div>
           </form>
-          <div style={{ display: "flex" }}>
-              {previews.map((preview, index) => {
-                  return (
-                      <img
-                          src={preview}
-                          alt=""
-                          key={index}
-                          style={{ width: "400px", margin: "10px 20px" }}
-                      />
-                  );
-              })}
-          </div>
+           {
+            isOpenErr&&
+            <Modal
+            isOpen={isOpenErr}
+            onRequestClose={() => setIsOpenErr(false)}
+            ariaHideApp={false}
+            style={notifStyle}
+            >
+                <div>게시물 업로드를 실패했습니다.</div>
+                {/* <button onClick={() => setIsOpenErr(false)} >닫기</button> */}
+                <button onClick={() => {isCloseErr(); isCloseAddFeed();}} >닫기</button>
+                
+            </Modal>
+           
+           }
+            
+          
       </div>
   );
 };

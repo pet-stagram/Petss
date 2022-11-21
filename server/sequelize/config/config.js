@@ -34,6 +34,7 @@ const test = {
   password: env.DB_PASSWORD,
   database: env.DB_DATABASE,
   host: env.DB_TEST,
+  host: "127.0.0.1",
   timezone:"+09:00",             // 한국 timezone 설정 
   dialectOptions:{
     dateStrings:true,            // 가져올 때 string으로 가져오기 

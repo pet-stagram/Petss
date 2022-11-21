@@ -27,22 +27,31 @@ body {
   font-family: "Gothic A1", sans-serif;
 }
 /* reset end */
+.wrapper{
+  display: grid;
+  grid-template-columns: 3.2fr 1fr;
+  /* margin-left: 340px; */
+  margin-left: 18%;
+}
 
 .navbar,
 .main,
 .side {
   text-align: center;
-  height: 100vh;
-  /* height: 100%; */
 }
 .navbar {
   border-right: 1px solid #ccc;
   background-color: white;
   padding: 30px 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 16%;
 }
-/* .main{
-    margin: 0px 270px 0 300px;
-} */
+.main{
+ background-color: red; 
+}
 .side {
   border-left: 1px solid #ddd;
   background-color: rgba(255, 255, 255, 0.8);

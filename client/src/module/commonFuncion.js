@@ -13,7 +13,6 @@ export async function getConversationList() {
 }
 
 export async function getConversationDetail(selectedConversation) {
-    let conversationId;
     try{
       const result = await axios.get(`/api/chat/message?conversation=${selectedConversation}`);  
       const messages = result.data;
@@ -35,6 +34,7 @@ export async function getConversationDetail(selectedConversation) {
           partner: partner,
           chats: messages,
       };
+      console.log(partner);
       return partnerAndMyMessages;
     }catch(err){
       throw err;

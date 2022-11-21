@@ -12,6 +12,8 @@ module.exports = {
         }
     },
     getUserPosts : async (req, res) => {
+        
+        console.log(req.params.userId);
         const userId = req.params.userId;
         try{
             const result = await service.selectUserPosts(userId);

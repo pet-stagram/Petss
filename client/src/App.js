@@ -9,11 +9,11 @@ import MyFeed from "./components/feed/pages/MyFeed";
 import { useState, useEffect } from "react";
 import React from "react";
 import axios from "axios";
-import Register from "./components/register/Register";
+import Register from "./components/register/register";
 import Messanger from "./components/messanger/Messanger";
 
 function App() {
-  const [isLogined, setIsLogined] = useState(true);
+  const [isLogined, setIsLogined] = useState(false);
 
   //저장된 값 확인하는 용
   // useEffect(() => {
@@ -26,13 +26,8 @@ function App() {
   //     .catch((err) => {});
   // }, []);
 
-  console.log(isLogined);
   return (
     <BrowserRouter>
-      {/* <div className="navbar">
-          <Navbar />
-        </div>
-        <div className="main"> */}
       <Routes>
         <Route
           path="/"
@@ -45,14 +40,6 @@ function App() {
         <Route path="/message/:conversationId" element={<Main component={<Messanger />}/>}/>
         {/* <Route path="/*" element={<Main component = {<MainFeed/>} />  } /> */}
       </Routes>
-      {/* <Routes
-            path="/"
-            element={isLogined === true ? <MainFeed /> : <Login />}
-          >
-            <Route index element={<MainFeed />} />
-            <Route path="/addFeed" element={<AddFeed />} />
-            <Route path="/myFeed" element={<MyFeed />} />
-          </Routes> */}
     </BrowserRouter>
   );
 }
