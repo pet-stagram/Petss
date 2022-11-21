@@ -1,24 +1,20 @@
 import { useState, useEffect } from "react";
 import * as common from "../../module/commonFuncion";
 import { useLocation, useParams } from "react-router-dom";
-import {  getSocket, joinChat, receiveMessage, sendSocketMessage } from '../../module/socketio';
+import { socket, getSocket, joinChat, receiveMessage, sendSocketMessage } from '../../module/socketio';
 import { io } from 'socket.io-client';
 
 
 function Messanger(props) {
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState({});
-    const [room, setRoom] = useState("");
+    
     const { conversationId } = useParams();
     const location = useLocation();
 
     useEffect(() => {
-        // const socket = io('http://localhost:5100' ,{transports: ['websocket']});
-        // socket.emit("joinRoom", {roomName: room});
-        setRoom(conversationId);
         const fetchConversationDetail = async (conversationId) => {
             try {
-                console.log(conversationId);
                 const messageResult = await common.getConversationDetail(
                     conversationId
                 );
@@ -55,18 +51,32 @@ function Messanger(props) {
 const MessageBox = ({ messages, conversationId }) => {
     const [messageView, setMessageView] = useState([]);
     const [conversation, setConversation ] = useState(conversationId);   
-    console.log(messages);
+    const [room, setRoom] = useState("");
+    
+   
+      
     useEffect(()=>{
+        joinChat(conversationId);
+        setRoom(conversationId);
+        getSocket().on("reqMsg", (data) => {  
+            
+            setMessageView((prevMsg)=>[...prevMsg,data]);
+          }
+        );
         /* 대화바뀔 때마다 message가 담긴 state 초기화 */
         setMessageView([]);
-        
     },[conversationId]);
     
     const sendMessage = () => {
         const content = document.querySelector("#sendInput");
         try{
-            sendSocketMessage(content);
-            setMessageView((prevMsg)=>[...prevMsg,{comment : content.value,sender : "me"}]);
+            const messageInfo = {
+                conversation,
+                content,
+                sender : "me"
+            }
+            sendSocketMessage(messageInfo);
+            // setMessageView((prevMsg)=>[...prevMsg,{comment : content.value,sender : "me"}]);
             setTimeout(()=>{
                 content.value="";
             },10);

@@ -34,7 +34,7 @@ export async function getConversationDetail(selectedConversation) {
           partner: partner,
           chats: messages,
       };
-      console.log(partner);
+
       return partnerAndMyMessages;
     }catch(err){
       throw err;

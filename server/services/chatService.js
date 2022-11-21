@@ -65,7 +65,7 @@ module.exports = {
                     as: "Sender",
                     where:{
                         [Op.not] : {id: me}
-                    },
+                    }, 
                     required:false
                 },
                 {
@@ -79,6 +79,7 @@ module.exports = {
                 }
             ]
         });
+        
         /* 내가 누군지에 따라 읽음표시 */
       await Conversation.update(
             {

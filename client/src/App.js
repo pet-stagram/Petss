@@ -13,7 +13,7 @@ import Register from "./components/register/register";
 import Messanger from "./components/messanger/Messanger";
 
 function App() {
-  const [isLogined, setIsLogined] = useState(false);
+  const [isLogined, setIsLogined] = useState(true);
 
   //저장된 값 확인하는 용
   // useEffect(() => {

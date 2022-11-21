@@ -1,22 +1,25 @@
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5100' ,{transports: ['websocket']});
+export const socket = io('http://localhost:5100' ,{credentials: true,transports: ['websocket']});
 
 export const getSocket = () => {
   return socket;
 }
 
-
 export const joinChat= (room) => {
   socket.emit("joinRoom", {roomName: room});
 }
 
-export const receiveMessage = () => {
-  let chatComment;
-                                                               
-  socket.on("reqMsg", (data) => {return data});
+export const receiveMessage = () => {  
+  
+  socket.on("reqMsg", (data) => {
+    console.log(data);
+    return data;
+  }
+  );
 }
 
-export const sendSocketMessage = (content) => {
-  socket.emit("reqMsg",{comment: content.value});
+export const sendSocketMessage = (messageInfo) => {
+  const {conversation, content, sender} = messageInfo;
+  socket.emit("reqMsg",{comment: content.value,conversation,sender});
 }
