@@ -10,18 +10,18 @@ const socket = (server) => {
     }
   });
 
-  io.on('connection', (socket) => {
+  io.on("connection", (socket) => {
     let instanceId = socket.id;
   
-    socket.on('joinRoom',(data)=>{
-      console.log(data);
+    socket.on("joinRoom",(data)=>{ 
       socket.join(data.roomName);
       roomName = data.roomName;
+      console.log(roomName);
     });
 
-    socket.on('reqMsg', function (data) {
-      console.log(data);
-      io.sockets.in(roomName).emit('reqMsg', {comment: instanceId + " : " + data.comment+'\n'});
+    socket.on("reqMsg", (data) => {
+      console.log(roomName);
+      io.sockets.in(roomName).emit("reqMsg", {comment: instanceId + " : " + data.comment+"\n"});
   })
   });
 };

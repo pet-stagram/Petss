@@ -79,8 +79,6 @@ module.exports = {
                 }
             ]
         });
-        
-        console.log(messages);
         /* 내가 누군지에 따라 읽음표시 */
       await Conversation.update(
             {
