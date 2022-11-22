@@ -1,5 +1,14 @@
-import { useState } from "react";
+import { useState, useReducer } from "react";
 import axios from "axios";
+
+export function reducer(state,action){
+    switch (action.type){
+        case "isChanged":
+            return !state;
+        default:
+            return state;
+    }
+}
 
 export async function getConversationList() {
     let conversations;
@@ -10,6 +19,10 @@ export async function getConversationList() {
     } catch (err) {
         throw err;
     }
+}
+
+export function getChanged(bool){
+    return !bool;
 }
 
 export async function getConversationDetail(selectedConversation) {
@@ -34,7 +47,6 @@ export async function getConversationDetail(selectedConversation) {
           partner: partner,
           chats: messages,
       };
-      console.log(partner);
       return partnerAndMyMessages;
     }catch(err){
       throw err;
