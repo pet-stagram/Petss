@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require("../controllers/usersController")
 const upload = require("../module/upload");
 
+router.get("/me",controller.getMe);
 /**
  * @swagger
  *  /users/{userId}:

@@ -1,12 +1,13 @@
 import React from "react";
 import "../../css/side.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Modal from "react-modal";
 import Messanger from "../../messanger/Messanger";
 import { Link } from "react-router-dom";
 import * as common from "../../../module/commonFuncion";
+import { getSocket } from '../../../module/socketio';
 
 const Side = () => {
     const FriendImg = styled.div`
@@ -27,10 +28,8 @@ const Side = () => {
     `;
 
     const [conversations, setConversations] = useState([]);
-    const [isMessageOpen, setIsMessageOpen] = useState(false);
-    const [openedConversation, setOpenedConversation] = useState();
     const [messageDto, setMessageDto] = useState({});
-
+    const [reload, setReload] = useState(0);
     useEffect(() => {
         const fetchConversationList = async (callback) => {
             const getConversationResult = await common.getConversationList();
@@ -40,17 +39,19 @@ const Side = () => {
         fetchConversationList((result) => {
             setConversations((prevArr) => [...prevArr, ...result]);
         });
-    }, []);
 
-    
+        getSocket().on("reqMsg", (data) => { 
+            /* 소켓에 메시지 들어오면 Side에 있는 Conversations 초기화하고 ReRender */
+            setConversations([]); 
+            setReload(()=>reload+1);
+          }
+        );
 
-    function goMessage(conversationId) {
-        setOpenedConversation(conversationId);
-        setIsMessageOpen(true);
-    }
+    }, [reload]);
+
 
     return (
-        <div className="side">
+        <div className="sideConversation" style={{position:"fixed", right:"0", width:"200px"}}>
             <h2>Message</h2>
             <div>
                 {conversations.map((conversation, index) => {
@@ -68,9 +69,7 @@ const Side = () => {
                             <div
                                 className="messageInfo"
                                 key={index}
-                                // onClick={() =>
-                                //     fetchConversationDetail(conversation.id)
-                                // }
+                                
                             >
                                 <FriendImg
                                     style={{
@@ -97,17 +96,7 @@ const Side = () => {
                         </Link>
                     );
                 })}
-                <button className="testBtn">Message</button>
             </div>
-
-            {/* <Modal
-            isOpen={isMessageOpen} 
-            onAfterOpen={getConversation}
-            onRequestClose={() => setIsMessageOpen(false)}
-            ariaHideApp={false}
-    >
-      <Messanger conversations = {messageDto}/>
-    </Modal> */}
         </div>
     );
 };

@@ -4,7 +4,7 @@ const {
     Heart,
     PostImage,
     Comment,
-    follow,
+    Follow,
     Invoice,
 } = require("../sequelize/models/index");
 const { Op } = require("sequelize");
@@ -15,28 +15,66 @@ const usersController = require("../controllers/usersController");
 
 module.exports = {
     /**
+     * 
+     * @param {Number} currentUser 현재 세션의 id값
+     * @returns {Object} 세션 유저 정보(info), 팔로잉 중인 유저 목록(following), 팔로워 중인 유저 목록(follower), 팔로잉 수(followingCount), 팔로워 수(followerCount), 포스트, 포스트 개수
+     */
+    selectMyInfo : async (currentUser)=>{
+        try{
+            const user = await User.findOne({where:{id:currentUser}});
+
+            const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
+            const followingCount = following.length;
+            const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
+            const followerCount = follower.length;
+            const posts = await user.getPosts({raw:true, group: ["id","postImages.id"],  nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
+            const postsCount = posts.length;
+
+            const currentUserData = 
+            {
+                info : user.dataValues,
+                following,
+                followingCount,
+                follower,
+                followerCount,
+                posts,
+                postsCount
+            }
+
+            return currentUserData;
+        }catch(err){
+            throw err;
+        }
+    },
+    /**
      *
      * @param {Number} userId 조회하고자 하는 사용자의 idx
      * @returns 조회값 or 에러
      */
     selectUser: async (userId) => {
-        try {
-            const findResult = await User.findOne({
-                attributes: [
-                    "id",
-                    "email",
-                    "name",
-                    "nick",
-                    "image",
-                    "self_intro",
-                ],
-                where: {
-                    id: userId,
-                },
-                raw: true,
-            });
-            return findResult;
-        } catch (err) {
+        try{
+            const user = await User.findOne({where:{id:userId}});
+
+            const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
+            const followingCount = following.length;
+            const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
+            const followerCount = follower.length;
+            const posts = await user.getPosts({raw:true, group: ["id","postImages.id"],  nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
+            const postsCount = posts.length;
+
+            const userData = 
+            {
+                info : user.dataValues,
+                following,
+                followingCount,
+                follower,
+                followerCount,
+                posts,
+                postsCount
+            }
+
+            return userData;
+        }catch(err){
             throw err;
         }
     },
