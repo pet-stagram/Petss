@@ -1,6 +1,17 @@
 const service = require("../services/usersService");
 
 module.exports = {
+    getMe : async (req, res)=>{
+        // const currentUser = req.session.u_id;
+        const currentUser = 1;
+        try{
+            const result = await service.selectMyInfo(currentUser);
+            res.json(result);
+        }catch(err){
+            res.sendStatus(400);
+            throw err;
+        }
+    },
     getUser: async (req, res)=>{
         const userId = req.params.userId;
         try{

@@ -4,7 +4,7 @@ const {
     Heart,
     PostImage,
     Comment,
-    follow,
+    Follow,
     Invoice,
 } = require("../sequelize/models/index");
 const { Op } = require("sequelize");
@@ -14,6 +14,33 @@ const db = require("../sequelize/models/index");
 const usersController = require("../controllers/usersController");
 
 module.exports = {
+    /**
+     * 
+     * @param {Number} currentUser 현재 세션의 id값
+     * @returns {Object} 세션 유저 정보(info), 팔로잉 중인 유저 목록(following), 팔로워 중인 유저 목록(follower), 팔로잉 수(followingCount), 팔로워 수(followerCount)
+     */
+    selectMyInfo : async (currentUser)=>{
+        try{
+            const user = await User.findOne({where:{id:currentUser}});
+
+            const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
+            const followingCount = following.length;
+            const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
+            const followerCount = follower.length;
+            
+            const currentUserData = 
+            {
+                info : user.dataValues,
+                following,
+                followingCount,
+                follower,
+                followerCount
+            }
+            return currentUserData;
+        }catch(err){
+            throw err;
+        }
+    },
     /**
      *
      * @param {Number} userId 조회하고자 하는 사용자의 idx
