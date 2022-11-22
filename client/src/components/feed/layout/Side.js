@@ -45,10 +45,10 @@ const Side = () => {
                             ? conversation.User2
                             : conversation.User1;
                     return (
-                        <Link to={`/message/${conversation.id}`}>
+                        <Link to={`/message/${conversation.id}`} key={index}>
                             <div
                                 className="messageInfo"
-                                key={index}
+                                
                                 
                             >
                                 <div style={{

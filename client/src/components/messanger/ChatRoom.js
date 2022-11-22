@@ -1,4 +1,3 @@
-
 function ChatRoom({messages, messageView}) {
   return (
     <div className="chatRoom" style={{ margin: "90px 0 70px 0", zIndex:"-1" ,position:"static"}} >
@@ -8,7 +7,7 @@ function ChatRoom({messages, messageView}) {
                             <div
                                 className="chatWrap"
                                 style={{ width: "100%", display: "block" }}
-                                key={index}
+                                key={chat.id}
                             >
                                 <span
                                     style={{
@@ -31,6 +30,7 @@ function ChatRoom({messages, messageView}) {
                                     width: "100%",
                                     display: "inline-block",
                                 }}
+                                key={chat.id}
                             >
                                 <span
                                     style={{
@@ -78,6 +78,7 @@ function ChatRoom({messages, messageView}) {
                             <div
                                 className="chatWrap"
                                 style={{ width: "100%", display: "flex" }}
+                                key={index}
                             >
                                 <span
                                     style={{

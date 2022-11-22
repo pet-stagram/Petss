@@ -2,7 +2,7 @@ import React from 'react'
 import ChatRoom from './ChatRoom';
 
 import { useEffect, useState, useRef } from 'react';
-import {joinChat, getSocket, sendSocketMessage } from "../../module/socketio";
+import {joinChat, getSocket, sendSocketMessage, receiveMessage } from "../../module/socketio";
 
 const MessageBox = ({ messages, conversationId }) => {
     const scrollRef = useRef();
@@ -18,10 +18,10 @@ const MessageBox = ({ messages, conversationId }) => {
         setTimeout(()=>{
             scrollRef.current.scrollIntoView({ behavior: 'auto', block: 'end', inline: 'nearest'});
         },10)
-        
         getSocket().on("reqMsg", (data) => {
             setMessageView((prevMsg) => [...prevMsg, data]);
             setTimeout(()=>{
+                console.log(messageView);
                 scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest'});
             }
             ,100)
