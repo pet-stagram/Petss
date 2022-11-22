@@ -1,31 +1,11 @@
 import React from "react";
 import "../../css/side.css";
 import { useEffect, useState, useReducer } from "react";
-import axios from "axios";
-import styled from "styled-components";
-import Modal from "react-modal";
-import Messanger from "../../messanger/Messanger";
 import { Link } from "react-router-dom";
 import * as common from "../../../module/commonFuncion";
 import { getSocket } from '../../../module/socketio';
 
 const Side = () => {
-    const FriendImg = styled.div`
-        background-size: 40px 40px;
-        background-repeat: no-repeat;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
-    `;
-    const ReadNotification = styled.div`
-        width: 10px;
-        height: 10px;
-        background-color: red;
-        border-radius: 50%;
-        position: absolute;
-        right: 20px;
-    `;
 
     const [conversations, setConversations] = useState([]);
     const [messageDto, setMessageDto] = useState({});
@@ -71,12 +51,17 @@ const Side = () => {
                                 key={index}
                                 
                             >
-                                <FriendImg
-                                    style={{
+                                <div style={{
                                         backgroundImage: `url(${friend.image})`,
+                                        backgroundSize: "40px 40px",
+                                        backgroundRepeat: "no-repeat",
+                                        borderRadius: "50%",
+                                        width: "40px",
+                                        height: "40px",
+                                        marginRight: "10px"
                                     }}
                                     alt="친구 프로필사진"
-                                ></FriendImg>
+                                ></div>
                                 <div>
                                     <h4
                                         style={{
@@ -91,7 +76,15 @@ const Side = () => {
                                     </p>
                                 </div>
                                 {/* 안 읽었으면 ReadNotification이 출력되게 ( 빨간색 원 ) */}
-                                {isMessageRead || <ReadNotification />}
+                                {isMessageRead || <div className="readNotification" 
+                                style={{
+                                    width: "10px",
+                                    height: "10px",
+                                    backgroundColor: "red",
+                                    borderRadius: "50%",
+                                    position: "absolute",
+                                    right: "20px"
+                                }} />}
                             </div>
                         </Link>
                     );
