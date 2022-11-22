@@ -35,7 +35,7 @@ module.exports = class Post extends Sequelize.Model{
         /* User와 N(post) : 1(user) 관계 */
         db.Post.belongsTo(db.User),{foreignKey : "user_id",as:"user"};
         /* Hashtags와  N(post) : N(hashtags) 관계 -> N : M 관계의 경우 중간 테이블이 필요함. PostHashtag 테이블로 지정*/
-        db.Post.belongsToMany(db.Hashtag,{through:'post_has_hashtag'});
+        db.Post.belongsToMany(db.Hashtag,{through:'post_has_hashtag',foreignKey:"post_id",timestamps:false});
 
         db.Post.hasMany(db.Heart,{onDelete: "cascade",});
 

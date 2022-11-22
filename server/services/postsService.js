@@ -4,7 +4,9 @@ const {
     Heart,
     PostImage,
     Comment,
+    Hashtag
 } = require("../sequelize/models/index");
+const db = require("../sequelize/models/index");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
 const {uploadProfileImage, uploadPostsImages}= require("../module/firebase");
@@ -152,6 +154,13 @@ module.exports = {
     insertPosts: async (postDto) => {
         let postId;
         let result;
+
+        const hashtags = postDto.content.match(/#[^\s#]*/g);
+        const hashtagContents = [];
+        hashtags.forEach((hashtag)=>{
+            hashtagContents.push(hashtag.replace(/#/g,""));
+        });
+        
         await Post.create({
             content: postDto.content,
             user_id: 1,
@@ -166,6 +175,33 @@ module.exports = {
                         imgUrl: url,
                     });
                 });
+
+                
+
+                const PostHashtag = db.sequelize.models.post_has_hashtag;
+                
+                
+                hashtagContents.forEach(async (hashtagContent)=>{
+                    let existHashtag = await Hashtag.findOne({
+                        title:hashtagContent
+                    });
+                    
+                    if(!existHashtag){
+                        existHashtag = await Hashtag.create({
+                            title: hashtagContent
+                        });
+                    }
+                        await PostHashtag.create({
+                            post_id : postId,
+                            hashtag_id : existHashtag.id
+                        });
+                    
+                    
+                });
+
+
+
+
                 try {
                     await Promise.all(promise);
                     result = "success";
