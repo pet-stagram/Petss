@@ -176,10 +176,7 @@ module.exports = {
                     });
                 });
 
-                
-
                 const PostHashtag = db.sequelize.models.post_has_hashtag;
-                
                 
                 hashtagContents.forEach(async (hashtagContent)=>{
                     let existHashtag = await Hashtag.findOne({
