@@ -1,0 +1,43 @@
+.followerTitle{
+    border-bottom: 1px solid #bbb;
+    font-size: 16px;
+    text-align: center;
+    padding: 12px 0 10px 0;
+}
+.followerList{
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+    width: 90%;
+    margin: 12px auto;
+    align-items: center;
+}
+.profile{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url("../../images/7.jpg");
+    background-size: cover;
+    display: inline-block;
+}
+.profile1{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url("../../images/6.jpg");
+    background-size: cover;
+    display: inline-block;
+}
+.nickname{
+    text-align: left;
+    font-size: 14px;
+}
+.buttonWrap{
+    text-align: right;
+}
+button{
+    background-color: rgba(255, 205, 95, 0.7);
+    border: 0;
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin: 0 2px;
+}

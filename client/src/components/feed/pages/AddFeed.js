@@ -115,17 +115,18 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
   return (
       <div>
           <div className="previewImageWrap">
-            <ImageSlider effectDelay={500} autoPlayDelay={2000} className={styles.imageSlider}>
+            <ImageSlider effectDelay={500} autoPlayDelay={10000} className={styles.imageSlider} width={400} height={400}>
                 {
                     previews.map((preview, index) => {
-                        // console.log(preview);
+                        
                         return(
-                            <Slide key={index}>
-                                <img className="previewImage" src={preview} alt="uploadImagePreview" style={{width: "300px", height: "200px"}}/>
+                            <Slide key={index} >
+                                <img className="previewImage" src={preview} alt="uploadImagePreview" style={{width: "650px", height: "650px"}}/>
+                                
                             </Slide>    
                         )
                     })
-                }
+                }                
             </ImageSlider>
 
             {/* ******************************************************************************* */}
@@ -140,6 +141,7 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
                     </div>
                 )})} 
             </Slide> */}
+            
           </div>
           {/* image preview */}
           <form onSubmit={formHandler} encType="multipart/form-data">

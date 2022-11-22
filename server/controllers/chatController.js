@@ -12,8 +12,8 @@ module.exports ={
     },    
     getMessage : async (req, res)=>{
         const messageDto = {
-            me : 2,// 세션아이디
-            you : 1//req.query.receiver
+            me : 1,// session
+            conversationId : req.query.conversation
         };
         try{
             const selectResult = await service.selectMessages(messageDto);

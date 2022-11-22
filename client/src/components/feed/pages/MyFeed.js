@@ -3,9 +3,13 @@ import "../../css/myFeed.css";
 import image from "../../../images/6.jpg"
 import axios from "axios";
 import { useState } from 'react';
+import Modal from "react-modal";
+import Follower from './Follower';
+import { followerStyle } from "../../css/modalStyles";
 
 const MyFeed = () => {
   const [feedList, setFeedList] = useState([]);
+  const [isOpenFollower, setIsOpenFollower] = useState(false);
 
   const getMyFeeds = async() => {
     const userId = 1;
@@ -27,7 +31,6 @@ const MyFeed = () => {
 
   useEffect(() => {
     getMyFeeds();
-    console.log("rendering%%%%%%%%%%%%");
   }, []);
 
    return (
@@ -42,7 +45,10 @@ const MyFeed = () => {
               </div>
               <ul className='myFeedInfo'>
                 <li>게시물 12 개</li>
-                <li>팔로워 346 명</li>
+                <li onClick={() => setIsOpenFollower(true)}>팔로워 명</li>
+                <Modal isOpen={isOpenFollower} onRequestClose={() => setIsOpenFollower(false)} ariaHideApp={false} style={followerStyle} >
+                  <Follower/>
+                </Modal>
                 <li>팔로잉 352 명</li>
               </ul>
               <p className='introduction'>
@@ -52,7 +58,7 @@ const MyFeed = () => {
         </header>
         <hr></hr>
         <div className='myFeedPostsWrap'>
-          <div className='myFeedPostsTitle'>게시물</div>
+          <h3 className='myFeedPostsTitle'>게시물</h3>
 
           <div className='myFeedPosts'>
             {feedList.length ===0 ? 

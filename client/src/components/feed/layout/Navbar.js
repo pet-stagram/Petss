@@ -5,7 +5,8 @@ import { Link, NavLink } from "react-router-dom";
 import petssLogo from "../../../images/petss_logo.png";
 import Modal from "react-modal";
 import AddFeed from "../pages/AddFeed";
-import modalStyles from "../../css/modalStyles";
+import {addFeedStyle, searchStyle } from "../../css/modalStyles";
+import Search from "../pages/Search";
 
 const Navbar = () => {
   const [searchIsOpen, setSearchIsOpen] = useState(false);
@@ -38,9 +39,9 @@ const Navbar = () => {
             isOpen={searchIsOpen}
             onRequestClose={() => setSearchIsOpen(false)}
             ariaHideApp={false}
-            style={searchStyles}
+            style={searchStyle}
           >
-            <input type="text" name="search" className="searchInput" />
+            <Search/>
           </Modal>
           {/*  <button className="openBtn" onClick={onOpenModal}>Modal open</button> 
                   {modalOn? <Modal/>: ''} */}
@@ -52,9 +53,9 @@ const Navbar = () => {
             isOpen={isOpenAddFeed}
             onRequestClose={() => setIsOpenAddFeed(false)}
             ariaHideApp={false}
-            style={modalStyles}
+            style={addFeedStyle}
           >
-            <AddFeed setIsOpenAddFeed={setIsOpenAddFeed}/>
+            <AddFeed setIsOpenAddFeed={setIsOpenAddFeed}/> 
           </Modal>
           <li>알림</li>
           <li>설정</li>

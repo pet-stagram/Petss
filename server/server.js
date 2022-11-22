@@ -11,6 +11,12 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require("swagger-ui-express");
 const options = require("./swagger");
 const specs = swaggerJsdoc(options);
+const rateLimit = require("express-rate-limit");
+const bcrypt = require("bcrypt");
+const passport = require("passport");
+
+/* multer */
+const multer = require('multer');
 const socket = require("./module/socket");
 const http = require("http");
 
@@ -31,13 +37,13 @@ app.use(
     resave:false,
     saveUninitialized:true,
     secret:process.env.COOKIE_SECRET,
-    store: new fileStore(),
+    store: new fileStore({checkPeriod:1000*60*5}),
     cookie:{
         httpOnly:true,
-        secure:false
+        secure:false,
+        maxAge:1000*60*5,
 }}));
-// app.use(passport.initialize());
-// app.use(passport.session());
+
 
 /* Set Sequelize(DB) */
 sequelize.sync({force:false})
@@ -54,7 +60,6 @@ const authRouter = require("./routes/auth");
 const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
-const passport = require("./sequelize/models/passport");
 const chatRouter = require("./routes/chat");
 
 app.use('/uploads', express.static('uploads'));
@@ -64,4 +69,5 @@ app.use("/users",userRouter);
 app.use("/admin",adminRouter);
 app.use("/chat",chatRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-app.listen(PORT,()=>{console.log("Running...")});
+/* socket 통신을 위해 app이 아닌 http 서버 사용 */
+server.listen(PORT,()=>{console.log("Running...")});

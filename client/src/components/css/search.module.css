@@ -1,0 +1,32 @@
+.search{
+    margin: 0 auto;
+}
+.searchInput{
+    width: 85%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+}
+.searchInput:focus{
+    border: 1px solid #aaa
+}
+.searchBtn{
+    height: 37px;
+    /* height 1px 안줄이면 약간 어긋 */
+    padding: 10px 12px;
+    background-color: white;
+    border: 1px solid #ddd;
+    margin-left: 2px;
+}
+.searchBtn:hover{
+    border: 1px solid rgba(255, 205, 95, 0.7);
+    background-color: rgba(255, 205, 95, 0.7);
+    
+}
+.searchHistory{
+    margin-top: 30px;
+}
+.searchHistory li{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 20px;
+}

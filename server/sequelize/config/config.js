@@ -33,6 +33,7 @@ const test = {
   username: env.DB_USERNAME,
   password: env.DB_PASSWORD,
   database: env.DB_DATABASE,
+  host: env.DB_TEST,
   host: "127.0.0.1",
   timezone:"+09:00",             // 한국 timezone 설정 
   dialectOptions:{
