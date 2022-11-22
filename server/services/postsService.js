@@ -115,8 +115,6 @@ module.exports = {
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
                 group: ["id", "postImages.id"],
                 nest: true,
-                // raw:true
-                // required:false,
             });
         } catch (err) {
             throw err;
@@ -155,9 +153,12 @@ module.exports = {
         let postId;
         let result;
 
+        /* 피드의 내용에서 #을 포함한 문자열 찾아서 새로운 배열로 생성 */
         const hashtags = postDto.content.match(/#[^\s#]*/g);
         const hashtagContents = [];
+        
         hashtags.forEach((hashtag)=>{
+            /* 추출한 해시태그 #을 제거하고 내용만 넣기 */
             hashtagContents.push(hashtag.replace(/#/g,""));
         });
         

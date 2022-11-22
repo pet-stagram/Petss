@@ -21,7 +21,12 @@ module.exports = {
      */
     selectMyInfo : async (currentUser)=>{
         try{
-            const user = await User.findOne({where:{id:currentUser}});
+            const user = await User.findOne({
+                where:{id:currentUser},
+                attributes:{
+                    exclude:["password"]
+                }                
+            });
 
             const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
             const followingCount = following.length;
@@ -53,8 +58,11 @@ module.exports = {
      */
     selectUser: async (userId) => {
         try{
-            const user = await User.findOne({where:{id:userId}});
-
+            const user = await User.findOne({
+                where:{id:userId},
+                attributes: { exclude: ['password'] }
+            });
+            
             const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
             const followingCount = following.length;
             const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
