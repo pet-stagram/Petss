@@ -61,6 +61,7 @@ const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 const chatRouter = require("./routes/chat");
+const searchRouter = require("./routes/search");
 
 app.use('/uploads', express.static('uploads'));
 app.use("/auth",authRouter);
@@ -68,6 +69,7 @@ app.use("/posts",postRouter);
 app.use("/users",userRouter);
 app.use("/admin",adminRouter);
 app.use("/chat",chatRouter);
+app.use("/search",searchRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 /* socket 통신을 위해 app이 아닌 http 서버 사용 */
 server.listen(PORT,()=>{console.log("Running...")});
