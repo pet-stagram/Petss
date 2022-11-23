@@ -6,7 +6,6 @@ module.exports = {
     getHashtag : async (req,res) => {
         const hashtagText = req.query.hashtag; //입력받은 해시태그 hashtagText변수에
         //console.log(hashtagText,"hashtagText");//꺼뭉들어옴
-        
         try{
             postsOfHashtag = await service.findHashtag(hashtagText); //findHashtag로 hashtagText 전달?보냄?
             console.log("postsOfHashtag",postsOfHashtag);
@@ -22,11 +21,54 @@ module.exports = {
             }
     },
     
-    getUsernick : (req,res) => {
-        const userSearch = req.query.search //입력받은 닉넴 
-        console.log(userSearch,"userSearch");
 
-        service.findUserNick(userSearch);
+    /* 닉넴찾기, 유사검색x*/
+    getUserNick : async (req,res) => {
+        const userNick = req.query;
+        //console.log(userNick,"userNick, Controller");
+        try{
+            const findUser = await service.findUserNick(userNick);
+            if(findUser===500){  
+                res.sendStatus(500);
+            }
+            else{
+                if(findUser===400){
+                    res.sendStatus(400);
+                }else{
+                    res.sendStatus(200);
+                }
+            }
+            
+        }catch(err){
+            console.log(err);
+            res.sendStatus(500);
+        }
     },
+
+
+
+
+
+    /* 이름검색 유사검색o*/
+    getUserName : async(req,res) => {
+        const userName = req.query;
+        //console.log(userName,"userName");
+        try{
+            const findUser = await service.findUserName(userName);
+            //console.log(findUser);
+            if(findUser===400){
+                res.sendStatus(400);
+            }
+            else{
+                res.status(200).json(
+                    findUser
+                );  
+            }
+        }catch(err){
+            console.log(err);
+            res.sendStatus(500);
+        }
+        
+    }
 
 }

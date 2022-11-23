@@ -3,10 +3,11 @@ const { Op } = require("sequelize");
 const sequelize = require("sequelize");
 const fs = require("fs");
 const path = require("path");
+const { raw } = require('express');
 
 module.exports = {
+    /* 해시태그 */
     findHashtag : async (hashtagText) => {
-
         if(!hashtagText){//입력받은 hashtagText 가 없다면
             //console.log(hashtagText,"hashtagText");
             result = 400;
@@ -29,21 +30,66 @@ module.exports = {
             return result;
         },
 
-    findUserNick : async (userSearch) => {
-        if(!userSearch){
-            result = 400;
-        }
+    /* 닉넴찾기, 유사검색x*/
+    findUserNick : async (userNick) => {
+        const userNickName = userNick.nick;//{userNick}으로 되어있는걸  .nick을 붙여서 userNick으로 바꿔줌=>userNickName쓰면됨
+        console.log(userNickName);
         try{
-            //or검색: 검색하고자 하는 조건을 여러 개 추가하여 이 중 하나라도 만족하면, 그 데이터를 불러오는 operator
-            //const userNick = await User.findAll({ where : {nick: {[Op.like]: "%" + userNick + "% "}}});
-            const findUserSearch = await User.findAll({where: {[Op.or]:[{nick: { [Op.like]: "%"+userSearch+"%"}}, {name: { [Op.like]: "%"+userSearch+"%"}}]}})
-            if(findUserSearch){
-
+            if(userNickName.length===0||userNickName===null){
+                result = 500;
+            } 
+            else{
+                const findUser = await User.findOne({
+                    where:
+                        {nick : userNickName}, 
+                        attributes: ["nick"], 
+                        raw:true  
+                        });
+                console.log(findUser.nick,"findUser.nick");
+                if(findUser.nick!==userNickName){
+                    result = 400;
+                }
+                else{
+                    result = 200;
+                }
             }
-        }catch(err){
-            throw err;
-        }
-        
+                return result;
+            }
+            catch(err){
+                throw err;
+        }      
     },
 
+    /* 이름검색 유사검색o*/
+    findUserName : async (userName) => {
+        const userRegName = userName.name;
+        //console.log(userRegName,"userRegName");
+        try{    
+            if(!userRegName){
+                result = 400;
+            }else{
+                const findUser = await User.findAll({
+                    //where:{name:userRegName},
+                    where: { name: { [Op.like]: '%' + userRegName + '%' } },
+                    attributes:["name"],
+                    raw:true
+                });
+                const nameData = findUser.map((el) => el.name);
+                console.log(nameData);
+
+                if(nameData.length===0){
+                    result = 400;
+                }else{
+                    result = nameData;
+                }
+            }
+            
+            return result;
+        }catch(err){
+            throw err;
+        } 
+
     }
+   
+    }
+    

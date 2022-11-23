@@ -10,7 +10,7 @@ router.get("/logout",isLogginedIn,controller.getLogout);//로그아웃
 router.post("/register",controller.postRegister);//회원가입 화면에서 회원가입눌렀을 때 처리하는,
 router.post("/email",controller.postEmail);//인증메일 
 router.post("/emailcheck",controller.postEmailCheckNum);//인증확인
-router.get("/nick",controller.postNick);//닉넴확인
+router.post("/nick",controller.postNick);//닉넴확인
 
 
 module.exports = router;

@@ -18,18 +18,15 @@ module.exports = {
 
     /* 로그인 */
     loginUser : async (userEmail,userPassword) => {//isNotLoggendIn
-        console.log("userEmail: ",userEmail," userPassword: ",userPassword); // { email: '1', password: '1' }
-     
+        console.log("userEmail: ",userEmail," userPassword: ",userPassword); // { email: '1', password: '1' }    
         try{
             const userData = await User.findOne({where:{email:userEmail}});
             console.log(userData);
             if(userData!==null){
                 if(userData.email===userEmail){
-
                     const userPasswordData = await bcrypt.compare(userPassword, userData.password);
                     //console.log(userData.password);//postman
-                    //console.log(userPassword);//변수userData에 저장되어있는 값
-                    
+                    //console.log(userPassword);//변수userData에 저장되어있는 값                   
                     if(userPasswordData){
                         result = userData;
                        
@@ -75,7 +72,7 @@ module.exports = {
                         password: hashPw,
                         phone: phone,
                         email: email,
-                        regDate:regDate,
+                        regDate:Date.now(),
                     });
                     console.log("비번맞음");
                     result = 200;
@@ -159,21 +156,23 @@ module.exports = {
             //console.log(result);
             return result;                             
         },
-
+        
+        /* 닉넴중복 체크 */
         checkNick : async (userNick) => {
-            try {
-                const chekNick = await User.findOne({ where: { nick } })//user.nick:nick
-                
-                if(chekNick!==userNick){
-
-                    console.log("닉넴없음");    
-                    console.log(chekNick, "chekNick");              
-                    result = 200;  
+            console.log(userNick,"Service, userNick");//꺼뭉아
+            const nick = userNick;
+         
+            try {      
+                const chekNick = await User.findOne({ where: { nick } })//db에 저장된 nick 
+                //console.log(chekNick, "chekNick");//
+                if(!chekNick){
+                    console.log("닉넴없음");
+                    result = 200;   
                 }else{
                     console.log("닉넴있음");
-                    result =  400;
+                    result = 400;
                 }
-                //console.log(result);//null
+                //console.log(result,"result");
                 return result;
     
             } catch (err) {

@@ -179,12 +179,11 @@ module.exports = {
         } 
     },
 
+    /* 닉넴중복 체크 */
     postNick : async (req,res) => {
-        userNick = req.body;
-        console.log(userNick,"userNick")
-        try{
-            const checkUserNick = await service.checkNick(userNick);
-            console.log(checkUserNick, "checkUserNick");
+        userNick = req.body.nick;
+        const checkUserNick = await service.checkNick(userNick);
+        try{   
             if(checkUserNick===400){
                 res.sendStatus(400);
             }
