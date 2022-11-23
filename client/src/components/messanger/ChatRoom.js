@@ -1,23 +1,16 @@
+import styles from "../../css/messanger.module.css";
+
 function ChatRoom({messages, messageView}) {
   return (
-    <div className="chatRoom" style={{ margin: "90px 0 70px 0", zIndex:"-1" ,position:"static"}} >
+    <div className={styles.chatRoom}>
                 {messages.chats.map((chat, index) => {
                     if (chat.senderId === messages.partner.id) {
                         return (
                             <div
-                                className="chatWrap"
-                                style={{ width: "100%", display: "block" }}
+                                className={styles.messageWrap}
                                 key={chat.id}
                             >
-                                <span
-                                    style={{
-                                        backgroundColor: "white",
-                                        border: "1px solid #eee",
-                                        padding: "12px 15px",
-                                        margin: "12px 20px",
-                                        borderRadius: "20px",
-                                    }}
-                                >
+                                <span className={styles.message}>
                                     {chat.content}
                                 </span>
                             </div>
@@ -25,22 +18,10 @@ function ChatRoom({messages, messageView}) {
                     } else {
                         return (
                             <div
-                                className="chatWrap"
-                                style={{
-                                    width: "100%",
-                                    display: "inline-block",
-                                }}
+                                className={styles.messageWrap}
                                 key={chat.id}
                             >
-                                <span
-                                    style={{
-                                        backgroundColor: "#ccc",
-                                        border: "1px solid #eee",
-                                        padding: "12px 15px",
-                                        margin: "12px 20px",
-                                        float: "right",
-                                        borderRadius: "20px",
-                                    }}
+                                <span className={`${styles.message} ${styles.myMsg}`}
                                 >
                                     {chat.content}
                                 </span>
@@ -52,23 +33,10 @@ function ChatRoom({messages, messageView}) {
                     if (message.sender === "me") {
                         return (
                             <div
-                                className="chatWrap"
-                                style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyContent: "end",
-                                }}
+                                className={`${styles.newMessage} ${styles.myNewMsg}`}
                                 key={index}
                             >
-                                <span
-                                    style={{
-                                        backgroundColor: "#ccc",
-                                        border: "1px solid #eee",
-                                        padding: "12px 15px",
-                                        margin: "12px 20px",
-                                        borderRadius: "20px",
-                                    }}
-                                >
+                                <span className={`${styles.message} ${styles.myMsg}`}>
                                     {message.comment}
                                 </span>
                             </div>
@@ -76,19 +44,11 @@ function ChatRoom({messages, messageView}) {
                     } else {
                         return (
                             <div
-                                className="chatWrap"
+                                className={styles.newMessage}
                                 style={{ width: "100%", display: "flex" }}
                                 key={index}
                             >
-                                <span
-                                    style={{
-                                        backgroundColor: "white",
-                                        border: "1px solid #eee",
-                                        padding: "12px 15px",
-                                        margin: "12px 20px",
-                                        borderRadius: "20px",
-                                    }}
-                                >
+                                <span className={styles.message}>
                                     {message.comment}
                                 </span>
                             </div>

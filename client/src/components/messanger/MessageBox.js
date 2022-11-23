@@ -1,6 +1,6 @@
 import React from 'react'
 import ChatRoom from './ChatRoom';
-
+import styles from "../../css/messanger.module.css";
 import { useEffect, useState, useRef } from 'react';
 import {joinChat, getSocket, sendSocketMessage, receiveMessage } from "../../module/socketio";
 
@@ -16,13 +16,13 @@ const MessageBox = ({ messages, conversationId }) => {
         setRoom(conversationId);
         
         setTimeout(()=>{
-            scrollRef.current.scrollIntoView({ behavior: 'auto', block: 'end', inline: 'nearest'});
+            scrollRef.current.scrollIntoView({ behavior: "auto", block: "end", inline: "nearest"});
         },10)
         getSocket().on("reqMsg", (data) => {
             setMessageView((prevMsg) => [...prevMsg, data]);
             setTimeout(()=>{
                 console.log(messageView);
-                scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest'});
+                scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest"});
             }
             ,100)
             
@@ -55,77 +55,25 @@ const MessageBox = ({ messages, conversationId }) => {
 
     return (
         <div
-            id="chatting"
-            style={{
-                margin: "0 auto",
-                display: "grid",
-                gridTemplateRows: "5% 85% 10%",
-                width: "80%",
-            }}
+            className={styles.chatting}
             ref={scrollRef} 
         >
-            <div
-                style={{
-                    position: "fixed",
-                    width:"50%",
-                    height:"70px",
-                    top: "0",
-                    background: "rgb(245, 245, 245)",
-                    display: "flex",
-                    alignItems: "center",
-                    borderBottom: "1px solid #ccc",
-                    zIndex:"2",
-                    
-                }}
-            >
-                <img
-                    src={messages.partner.image}
-                    alt="상대방 이미지"
-                    style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                        margin: "20px 5px",
-                    }}
-                />
-                <span>{messages.partner.name}</span>
+            <div className={styles.partnerWrap}>
+                    {/* 이미지 클릭 시 상대방 프로필 가기 */}
+                    <img
+                        className={styles.partnerImage}
+                        src={messages.partner.image}
+                        alt="상대방 이미지"/>
+                    <span>{messages.partner.name}</span>
+                
             </div>
             <ChatRoom messages={messages} messageView={messageView}/>
-            <div
-                    className="sendWrap"
-                    style={{
-                        position: "fixed",
-                        bottom: "10px",
-                        border: "1px solid #ccc",
-                        borderRadius: "10px",
-                        background: "white",
-                        padding: "3px 2px",
-                        display: "grid",
-                        gridTemplateColumns: "90% 10%",
-                        margin: "0 auto",
-                        width: "50%",
-                        height:"50px"
-                    }}
-                >
+            <div className={styles.sendWrap}>
                     <input
                         type="text"
                         id="sendInput"
-                        style={{
-                            border: "none",
-                            padding: "10px 0 10px 10px",
-                            fontSize: "15px",
-                        }}
-                    />
-                    <button
-                        style={{
-                            background: "none",
-                            border: "none",
-                            color: "blue",
-                            fontWeight: "700",
-                            paddingRight: "8px",
-                        }}
-                        onClick={() => sendMessage(messages.partner)}
-                    >
+                        className={styles.sendInput}/>
+                    <button className={styles.sendButton} onClick={() => sendMessage(messages.partner)}>
                         보내기
                     </button>
                 </div>

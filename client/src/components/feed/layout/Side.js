@@ -1,5 +1,5 @@
 import React from "react";
-import "../../css/side.css";
+import styles from "../../../css/messanger.module.css";
 import { useEffect, useState, useReducer } from "react";
 import { Link } from "react-router-dom";
 import * as common from "../../../module/commonFuncion";
@@ -31,8 +31,8 @@ const Side = () => {
 
 
     return (
-        <div className="sideConversation" style={{position:"fixed", right:"0", width:"200px"}}>
-            <h2>Message</h2>
+        <div className={styles.sideContainer}>
+            <h2 className={styles.sideTitle}>Message</h2>
             <div>
                 {conversations.map((conversation, index) => {
                     /* conversation의 User1값이 null이면 User2가 상대방인 것임 */
@@ -47,44 +47,25 @@ const Side = () => {
                     return (
                         <Link to={`/message/${conversation.id}`} key={index}>
                             <div
-                                className="messageInfo"
-                                
-                                
-                            >
-                                <div style={{
-                                        backgroundImage: `url(${friend.image})`,
-                                        backgroundSize: "40px 40px",
-                                        backgroundRepeat: "no-repeat",
-                                        borderRadius: "50%",
-                                        width: "40px",
-                                        height: "40px",
-                                        marginRight: "10px"
+                                className={styles.messageInfo}>
+                                <div className={styles.messageImage} 
+                                style={{
+                                        backgroundImage: `url(${friend.image})`
                                     }}
                                     alt="친구 프로필사진"
                                 ></div>
                                 <div>
                                     <h4
-                                        style={{
-                                            fontWeight: 700,
-                                            marginBottom: "5px",
-                                        }}
+                                        className={styles.messagePartnerName}
                                     >
                                         {friend.name}
                                     </h4>
-                                    <p style={{ fontSize: "0.8em" }}>
+                                    <p className={styles.lastChat}>
                                         {conversation.lastChat}
                                     </p>
                                 </div>
                                 {/* 안 읽었으면 ReadNotification이 출력되게 ( 빨간색 원 ) */}
-                                {isMessageRead || <div className="readNotification" 
-                                style={{
-                                    width: "10px",
-                                    height: "10px",
-                                    backgroundColor: "red",
-                                    borderRadius: "50%",
-                                    position: "absolute",
-                                    right: "20px"
-                                }} />}
+                                {isMessageRead || <div className={styles.readNotificationCircle}/>}
                             </div>
                         </Link>
                     );
