@@ -1,6 +1,6 @@
 import React from "react";
-import Navbar from "../feed/layout/Navbar";
 import "../edit/editAccount.css";
+import Navbar from "../feed/layout/Navbar";
 
 function EditProfile() {
   //axios.get()으로 유저 정보 가져와서 input칸에 반영시키고 제출할 때 유저정보 수정될 수 있게(post)
@@ -11,6 +11,9 @@ function EditProfile() {
           프로필 사진 로그인한 정보 가져오기
         */}
         <div className="editContainer">
+          <div className="navbarWrap">
+            <Navbar />
+          </div>
           <div className="editProfileWrap">
             <div className="editProfileBox">
               <div className="rowPhotoChange">

@@ -36,7 +36,7 @@ function App() {
         />
         <Route path="/addFeed" element={<Main component={<AddFeed />} />} />
         <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
-        <Route path="/edit" element={<Main component={<Edit />} />} />
+        <Route path="/edit" element={<Edit />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route
