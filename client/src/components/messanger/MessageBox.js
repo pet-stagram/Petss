@@ -4,28 +4,20 @@ import styles from "../../css/messanger.module.css";
 import { useEffect, useState, useRef } from 'react';
 import {joinChat, getSocket, sendSocketMessage, receiveMessage } from "../../module/socketio";
 
-const MessageBox = ({ messages, conversationId }) => {
+const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLength }) => {
     const scrollRef = useRef();
 
     const [messageView, setMessageView] = useState([]);
     const [conversation, setConversation] = useState(conversationId);
     const [room, setRoom] = useState("");
 
+    
     useEffect(() => {
         joinChat(conversationId);
         setRoom(conversationId);
         
-        setTimeout(()=>{
-            scrollRef.current.scrollIntoView({ behavior: "auto", block: "end", inline: "nearest"});
-        },10)
         getSocket().on("reqMsg", (data) => {
             setMessageView((prevMsg) => [...prevMsg, data]);
-            setTimeout(()=>{
-                console.log(messageView);
-                scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest"});
-            }
-            ,100)
-            
         });
         /* 대화바뀔 때마다 message가 담긴 state 초기화 */
         setMessageView([]);
@@ -67,7 +59,7 @@ const MessageBox = ({ messages, conversationId }) => {
                     <span>{messages.partner.name}</span>
                 
             </div>
-            <ChatRoom messages={messages} messageView={messageView}/>
+            <ChatRoom messages={messages} messageView={messageView} setMessageView={setMessageView} setMessages={setMessages} conversationId ={conversationId} msgLength = {msgLength} setMsgLength = {setMsgLength}/>
             <div className={styles.sendWrap}>
                     <input
                         type="text"

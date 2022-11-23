@@ -1,7 +1,10 @@
-import { useRef , useState, useEffect } from "react";
+import React from "react";
+import { useRef , useState, useEffect, useContext } from "react";
 import * as common from "../../module/commonFuncion";
 import { useLocation, useParams } from "react-router-dom";
 import MessageBox from './MessageBox';
+import { useInView } from 'react-intersection-observer';
+
 
 function Messanger(props) {
     const [loading, setLoading] = useState(true);
@@ -9,12 +12,16 @@ function Messanger(props) {
     
     const { conversationId } = useParams();
     const location = useLocation();
-
+    const [msgLength, setMsgLength] = useState(0);
+    const page = useRef(1);
+    const [ref, inView] = useInView();
+    const PAGE_ITEMS_COUNT = 10;
+    
     useEffect(() => {
         const fetchConversationDetail = async (conversationId) => {
             try {
                 const messageResult = await common.getConversationDetail(
-                    conversationId
+                    conversationId, 1
                 );
                 setMessages({ ...messages, ...messageResult });
                 setLoading(false);
@@ -38,10 +45,13 @@ function Messanger(props) {
             {loading ? (
                 <h1>로딩중</h1>
             ) : (
-                <MessageBox
-                    messages={messages}
-                    conversationId={conversationId}
-                />
+                    <MessageBox
+                        messages={messages}
+                        conversationId={conversationId}
+                        setMessages = {setMessages}
+                        msgLength = {msgLength}
+                        setMsgLength = {setMsgLength}
+                    />
             )}
         </>
     );
