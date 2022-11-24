@@ -117,7 +117,7 @@ function EditProfile() {
                         // onKeyPress="calc()"
                       ></textarea>
                       <div style={{ display: "flex" }}>
-                        <p className="textCount"></p>/
+                        <p className="textCount">0</p>/
                         <p className="textTotal">150</p>
                       </div>
                     </div>
@@ -129,7 +129,7 @@ function EditProfile() {
                   </aside>
                   <div>
                     <input
-                      className=""
+                      className="emailInput"
                       type="text"
                       aria-required="true"
                       placeholder="이메일"
@@ -137,7 +137,7 @@ function EditProfile() {
                     ></input>
                   </div>
                 </div>
-                <div className="editRow">
+                <div className="editRow" id="editEmailCheck">
                   <aside>
                     <label></label>
                   </aside>
