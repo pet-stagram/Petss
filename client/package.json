@@ -16,6 +16,7 @@
     "bootstrap": "^5.2.2",
     "font-awesome": "^4.7.0",
     "http-proxy-middleware": "^2.0.6",
+    "jquery": "^3.6.1",
     "react": "^18.2.0",
     "react-auto-image-slider": "^0.1.7",
     "react-bootstrap": "^2.6.0",
@@ -25,8 +26,8 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
-    "socket.io-client": "^4.5.3",
     "react-slideshow-image": "^4.0.5",
+    "socket.io-client": "^4.5.3",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
