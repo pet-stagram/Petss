@@ -5,49 +5,66 @@ import axios from "axios";
 import * as common from "../../module/commonFuncion";
 
 function ChatRoom({messages, messageView, setMessages, conversationId, msgLength, setMsgLength}) {
-
-    console.log(messages);
     const page = useRef(1);
     const [ref, inView] = useInView();
     
+    const [loading, setLoading] = useState(false);
     const [length,setLength] = useState(0);
     const plusLength = () => {
         setLength(length+10);
-        console.log(length);
     }
-    
-    const fetch = useCallback(async () => {
+    const fetch = async () => {
+        if(length===0){
+            const reverseData = {
+                chats : messages.chats.reverse(),
+                partner : messages.partner,
+                messageLength : messages.messageLength                
+            }
+            // setMessages({...messages,reverseData});
+        }
         try {
+        setLoading(true);
         const data = await common.getConversationDetail(conversationId, length);
- 
-        plusLength();
-        setTimeout(() => {
-            console.log(length);
-        }, 1000);
-        //   setHasNextPage(data.length === 10);
-        //   if (data.length) {
-        //     page.current += 1;
-        //   }
+        if(data.chats.length===0){
+            console.log("없음")
+        }else{
+            const arr = messages.chats.splice(0, 0, ...data.chats.reverse())
+            console.log(...arr);
+            const reverseData = {
+                chats : arr,
+                partner : data.partner,
+                messageLength : data.messageLength                
+            }
+            plusLength();
+            console.log(messages);
+            // setMessages({...reverseData});
+            setTimeout(() => {
+                console.log(messages);    
+            }, (1500));
+            
+            setLoading(false);
+        }
         } catch (err) {
           console.error(err);
         }
-      }, []);
+      };
 
     useEffect(() => {
         if (inView) {
           fetch();
         }
-      }, [fetch, inView]);
+      }, [inView]);
 
   return (
     <div className={styles.chatRoom}>
         <div ref={ref} style={{ position: 'absolute', top: '0px' }} />
+                {loading&&<h6>로딩중</h6>}
                 {messages.chats.map((chat, index) => {
                     if (chat.senderId === messages.partner.id) {
                         return (
                             <div
                                 className={styles.messageWrap}
-                                key={chat.id}
+                                key={index}
                             >
                                 <span className={styles.message}>
                                     {chat.content}
@@ -58,7 +75,7 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
                         return (
                             <div
                                 className={styles.messageWrap}
-                                key={chat.id}
+                                key={index}
                             >
                                 <span className={`${styles.message} ${styles.myMsg}`}
                                 >

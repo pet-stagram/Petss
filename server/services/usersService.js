@@ -32,7 +32,7 @@ module.exports = {
             const followingCount = following.length;
             const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
             const followerCount = follower.length;
-            const posts = await user.getPosts({raw:true, group: ["id","postImages.id"],  nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
+            const posts = await user.getPosts({nest: true, include:[{model : PostImage, attributes: ["img_url"]}]});
             const postsCount = posts.length;
 
             const currentUserData = 

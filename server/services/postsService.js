@@ -157,10 +157,12 @@ module.exports = {
         const hashtags = postDto.content.match(/#[^\s#]*/g);
         const hashtagContents = [];
         
-        hashtags.forEach((hashtag)=>{
-            /* 추출한 해시태그 #을 제거하고 내용만 넣기 */
-            hashtagContents.push(hashtag.replace(/#/g,""));
-        });
+        if(hashtags!==null){
+            hashtags.forEach((hashtag)=>{
+                /* 추출한 해시태그 #을 제거하고 내용만 넣기 */
+                hashtagContents.push(hashtag.replace(/#/g,""));
+            });
+        }
         
         await Post.create({
             content: postDto.content,
@@ -196,9 +198,6 @@ module.exports = {
                     
                     
                 });
-
-
-
 
                 try {
                     await Promise.all(promise);
