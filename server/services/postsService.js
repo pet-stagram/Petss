@@ -37,7 +37,7 @@ class LoadFeed {
         {
             model: PostImage,
             attributes: ["img_url"],
-            plain: true,
+            plain: true
         },
     ];
     attributes = [
@@ -51,7 +51,7 @@ class LoadFeed {
             ),
             "updated_at",
         ],
-        [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
+        // [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
         // [sequelize.fn("COUNT", sequelize.col("hearts.user_id")),{where:{user_id:1}},"count"]
     ];
 
@@ -113,9 +113,10 @@ module.exports = {
                 include: loadFeed.include,
                 attributes: loadFeed.attributes,
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
-                group: ["id", "postImages.id"],
+                group: ["id", "postImages.id","Hearts.id"],
                 nest: true,
             });
+            console.log(result);
         } catch (err) {
             throw err;
         }
