@@ -7,10 +7,10 @@ const service = require("../services/authService.js");
 
 const inputNum = "692438"; //입력한 숫자 대신 임시적으로 사용할 변수
 
-const inputPw = "23"; //입력한 비번 대신 임시적으로 사용할 변수
+const inputPw = "33"; //입력한 비번 대신 임시적으로 사용할 변수
 
 const userData = {
-    email: "1222222222",
+    email: "12",
     password: "12",
     nickname: "1"
 }
@@ -26,21 +26,21 @@ module.exports = {
         const userEmail = userData.email;//원래는exUser 써야하는데 입력받은게 없으니까 임시적으로 userData변수를 적음
         const userPassword = userData.password;
         try{    
-            const loggginUser= await service.loginUser(userEmail,userPassword); //db담은 exUser변수 loginUser로 전달       
+            const loggingUser= await service.loginUser(userEmail,userPassword); //db담은 exUser변수 loginUser로 전달       
             //400 - bad_request - request 실패 ex) 유효성 검사 통과 실패, 잘못된 요청
             //401 - unauthorized - 인증 실패 ex) 세션 없음, 로그인 실패
 
-            if(loggginUser==="400"){
+            if(loggingUser==="400"){
                 console.log("비번틀림");
                 res.sendStatus(400);
             }
-            else if(loggginUser==="409"){
+            else if(loggingUser==="409"){
                 //console.log(err);
                 res.sendStatus(409);
             }   
             else{
                 req.session.isLogined = true;
-                req.session.u_id = loggginUser.id;
+                req.session.u_id = loggingUser.id;
                 console.log(req.session.u_id);
               
                 console.log("성공");
@@ -60,14 +60,24 @@ module.exports = {
             req.session.destroy(function(err){
                 res.sendStatus(200);
             })
-            //세션이 없을때 로그아웃 하려는 시도? 뭐 그런거 있으면 err뜨게 
+            //세션이 없을때 로그아웃 하려는 시도? 뭐 그런거 있으면 err뜨게 //미들웨어로 주었음
+   },
+
+   /* 로그인 되었으면 200(메인), 로그인 안되었으면 400(로그인창) = 로그인 확인 */
+   getLog : (req,res)=>{
+        if(req.session.u_id){
+            res.sendStatus(200);
+        }else{
+            res.sendStatus(400);
+        }
+
    },
 
     /* 회원가입 눌렀을 때 */
     //https://victorydntmd.tistory.com/33
     postRegister : async (req,res)=>{  
-        const {name, nick, password, phone, email, regDate, inputPassword } = req.body;
-        const user = {name, nick, password, phone, email, regDate, inputPassword };  
+        const {regName, nick, password, phone, email, regDate, inputPassword } = req.body;
+        const user = req.body;  
       
         //inputPassword 비밀번호 확인 하기 위해 만든 변수
         // 비밀번호
@@ -88,7 +98,7 @@ module.exports = {
           
         }catch(err){
             console.log(err);
-            res.sendStatus(400);
+            res.sendStatus(500);
         }
           
     },
@@ -168,6 +178,24 @@ module.exports = {
             res.sendStatus(400);
         } 
     },
+
+    /* 닉넴중복 체크 */
+    postNick : async (req,res) => {
+        userNick = req.body.nick;
+        const checkUserNick = await service.checkNick(userNick);
+        try{   
+            if(checkUserNick===400){
+                res.sendStatus(400);
+            }
+            else{
+                res.sendStatus(200);
+            }
+        }catch(err){
+            console.log(err);
+            throw err;
+        }
+        
+    }
    
 }
 
