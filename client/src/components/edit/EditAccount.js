@@ -1,8 +1,8 @@
 import React from "react";
 import "../edit/editAccount.css";
 import Navbar from "../feed/layout/Navbar";
-import Profile from "../../images/1.jpg";
-import $ from "jquery"; //jquery 세팅
+//import Profile from "../../images/1.jpg";
+//import $ from "jquery"; //jquery 세팅
 import { useEffect } from "react";
 
 function EditProfile() {
@@ -35,6 +35,10 @@ function EditProfile() {
   // }
 
   // limitTextarea();
+
+  // const onkeyUp = () => {
+  //   document.getElementById("");
+  // };
 
   return (
     <div>
@@ -211,14 +215,6 @@ function EditProfile() {
             </div>
           </div>
         </div>
-        {/* <script>
-          function calc()
-          {
-            (document.getElementById("textCount").value =
-              document.getElementById("editTextarea").value.length)
-          }
-          calc();
-        </script> */}
       </body>
     </div>
   );
