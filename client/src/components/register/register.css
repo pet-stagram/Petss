@@ -2,20 +2,14 @@
   font-family: "Gothic A1", sans-serif;
   font-weight: 600;
   display: flex;
-  width: 100vw;
-  /* height: 100vh; */
+  width: 100%;
   justify-content: center;
-  align-items: center;
   background-color: #e1f5fe;
-  overflow: auto;
 }
 
 .regContainer .mainBox {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
 }
 
 .regContainer .logo {
@@ -23,7 +17,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 10px;
   padding: 20px;
 }
 
@@ -37,7 +31,7 @@
 .register {
   border: 1px solid none;
   background-color: white;
-  border-radius: 20px;
+  border-radius: 5px;
   width: 500px;
   padding: 80px 30px;
   display: flex;
@@ -51,7 +45,7 @@
   width: 380px;
   height: 48px;
   border: 1px solid rgb(214, 212, 212);
-  border-radius: 5px;
+  /* border-radius: 5px; */
   padding: 10px;
   font-size: 15px;
 }
@@ -113,14 +107,13 @@
 }
 
 .regContainer p {
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 5px;
   color: tomato;
 }
+
 .emailMsg {
   margin-top: 0;
-}
-.emailCheck {
 }
 
 /* 노트북 기준 */
@@ -130,7 +123,7 @@
   }
 
   .regContainer .logo {
-    margin-top: 50px;
+    margin: 20px 0;
     padding: 20px;
   }
 }

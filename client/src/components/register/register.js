@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../../images/regLogo.png";
 import "./register.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const formSchema = yup.object({
@@ -41,15 +41,78 @@ function Register() {
     resolver: yupResolver(formSchema),
   });
 
-  const onSubmit = (data) => console.log(data);
-  //입력값 data에 저장되는 것 확인
+  // const onSubmit = (data) => console.log(data);
 
-  //db 연동
-  useEffect(() => {
-    axios
-      .post("http://localhost:5100/auth/register")
-      .then((res) => console.log(res).catch());
+  const navigate = useNavigate();
+  //db 컬럼명이랑 맞춰야하나..?
+  const [formData, setFormData] = useState({
+    email: "",
+    regName: "",
+    nick: "",
+    password: "",
+    phone: "",
   });
+
+  //입력값 감지
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  //제출할 때
+  const onSubmit = (e) => {
+    // e.preventDefault();
+    console.log(formData);
+
+    //전화번호가 숫자인지 체크하기
+    if (isNaN(formData.phone)) {
+      alert("전화번호는 숫자만 입력해주세요.");
+      setFormData({ ...formData, phone: "" });
+    }
+
+    //input에 값이 있는지 체크하고 입력이 다 돼있으면 post전송
+    else if (
+      formData.regName !== "" &&
+      formData.nick !== "" &&
+      formData.password !== "" &&
+      formData.phone !== "" &&
+      formData.email !== ""
+    ) {
+      addMember();
+    }
+  };
+
+  //db랑 비교해서 중복여부 체크해야 하니 get도 해야 한다.
+  //1.submit할 때 formData를 db랑 비교(axios.get)해서 중복이면 글씨 변경하기
+  function addMember() {
+    axios
+      .post("api/auth/register", formData)
+      .then((res) => {
+        alert("회원가입 성공! ૮ ♡ﻌ♡ა");
+        navigate("/login");
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  //닉네임 중복검사
+  function nickFunc() {
+    axios.post("");
+  }
+  //이메일 중복검사
+
+  //db 연동,중복불가인 내용은 인풋칸에 입력하고 focusout할 때 db랑 조회해서 겹치면 인풋 아래 메시지 띄어주기.
+  //1. db랑 연결이 되는지 확인?
+  // useEffect(() => {
+  //   axios
+  //     .post("http://localhost:5100/auth/register")
+  //     .then((res) => console.log(res).catch());
+  // }, []);
 
   return (
     <>
@@ -62,7 +125,7 @@ function Register() {
             <form
               className="register"
               method="post"
-              action="http://localhost:5100/auth/register"
+              // action="http://localhost:5100/auth/register"
               onSubmit={handleSubmit(onSubmit)}
             >
               {/* maxlength정하고(db랑 맞춰야하겠지?) 모든 입력칸 필수 입력으로 만들고 인풋 칸 밑에 경고글씨 띄우기
@@ -76,6 +139,8 @@ function Register() {
                   id="name"
                   autoComplete="off"
                   {...register("regName")}
+                  value={formData.regName}
+                  onChange={onChange}
                 />
                 {errors.regName && <p>{errors.regName.message}</p>}
               </div>
@@ -89,6 +154,8 @@ function Register() {
                   className="regInput"
                   autoComplete="off"
                   {...register("nick")}
+                  value={formData.nick}
+                  onChange={onChange}
                 />
                 {errors.nick && <p>{errors.nick.message}</p>}
               </div>
@@ -102,6 +169,8 @@ function Register() {
                   name="password"
                   autoComplete="off"
                   {...register("password")}
+                  value={formData.password}
+                  onChange={onChange}
                 />
                 {errors.password && <p>{errors.password.message}</p>}
               </div>
@@ -127,6 +196,8 @@ function Register() {
                   name="phone"
                   autoComplete="off"
                   {...register("phone")}
+                  value={formData.phone}
+                  onChange={onChange}
                 />
                 {errors.phone && <p>{errors.phone.message}</p>}
               </div>
@@ -140,11 +211,13 @@ function Register() {
                     name="email"
                     autoComplete="off"
                     {...register("email")}
+                    value={formData.email}
+                    onChange={onChange}
                   />
                 </div>
                 <div>
                   <input
-                    type="submit"
+                    type="button"
                     value="인증번호 받기"
                     className="regInput"
                     id="certification"
@@ -155,13 +228,12 @@ function Register() {
                   <p className="emailMsg">{errors.email.message}</p>
                 )}
                 {/* 인증번호 받기 눌렀을 때 db에 존재하는 이메일이면 "이미 존재하는 이메일 입니다" 글자 띄우고 
-                          인증가능한 이메일이면 "인증번호가 전송되었습니다 ". 
-                          비활성화된 인증번호 입력칸 활성화 되고 회원가입 버튼 누를때 인증번호 일치하는지 검사 
-                          인증번호 틀렸을 시 띄우는 팝업창도 필요함. 성공하면  "인증에 성공하였습니다. " 하고 넘어가야함.
-                          인증번호는 6자리 이고 한 칸씩 입력하게 만든다. 인증번호 입력하는 창 자체를 팝업으로 띄우는 게 나을듯. 문자인증 처럼..
-                         아니면 처음부터 인증번호 입력 칸 만들고 비활성화에서 인증번호 받으면 -> 활성화 하게 
-                         인증번호 session 폴더에 저장(백앤드),번호 다르면 400에러 띄우게 하심 
-                         다시 시도 요청, 번호 같으면 200띄움. */}
+                    인증가능한 이메일이면 "인증번호가 전송되었습니다 ". 
+                    비활성화된 인증번호 입력칸 활성화 되고 회원가입 버튼 누를때 인증번호 일치하는지 검사 
+                    인증번호 틀렸을 시 띄우는 팝업창도 필요함. 성공하면  "인증에 성공하였습니다. " 하고 넘어가야함.
+                    인증번호 session 폴더에 저장(백앤드),번호 다르면 400에러. 다시 시도 요청, 번호 같으면 200.
+                    
+                    */}
               </div>
 
               <div className="regRowWrap">
@@ -179,7 +251,7 @@ function Register() {
                   value="회원가입"
                   className="regInput"
                   id="regBtn"
-                  disabled={errors || watch()}
+                  // disabled={errors || watch()}
                 />
               </div>
               <div className="mvLog">

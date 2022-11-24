@@ -1,0 +1,88 @@
+.editContainer {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.editAccountWrap {
+  width: 1000px;
+  margin-left: 250px;
+}
+.editAccountBox {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 0 150px;
+  font-weight: 500;
+}
+.editRow {
+  display: flex;
+  margin: 50px 0;
+  align-items: center;
+}
+#rowTop {
+  display: flex;
+  padding-left: 65px;
+}
+
+.editPhotoBtn {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-image: url(../../images/1.jpg);
+  background-size: cover;
+}
+/* .editPhotoBtn img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+} */
+
+.editRow .right {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.editRow .right h1 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.editRow .right button {
+  background-color: transparent;
+  font-size: 16px;
+  color: rgb(251, 196, 77);
+  font-weight: bold;
+}
+.editRow label {
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+  margin-right: 20px;
+}
+
+.editRow input {
+  width: 350px;
+  height: 35px;
+  border: 1px solid rgb(186, 185, 185);
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+#rowIntroduce {
+  align-items: start;
+}
+.editRow textarea {
+  width: 350px;
+  height: 70px;
+  resize: none;
+}
+
+.editRow .emailInput {
+  margin-bottom: 5px;
+}
+
+#editEmailCheck {
+  margin: 0px;
+}
