@@ -87,11 +87,16 @@ function Register() {
 
   //db랑 비교해서 중복여부 체크해야 하니 get도 해야 한다.
   //1.submit할 때 formData를 db랑 비교(axios.get)해서 중복이면 글씨 변경하기
-  function addMember() {
-    axios
-      .post("api/auth/register", formData)
+  async function addMember() {
+    await axios({
+      method: "POST",
+      url: `api/auth/register`,
+      data: formData,
+      withCredentials: true,
+    })
       .then((res) => {
         alert("회원가입 성공! ૮ ♡ﻌ♡ა");
+        console.log("성공!");
         navigate("/login");
         console.log(res);
       })
@@ -101,9 +106,9 @@ function Register() {
   }
 
   //닉네임 중복검사
-  function nickFunc() {
-    axios.post("");
-  }
+  // function nickFunc() {
+  //   axios.post("");
+  // }
   //이메일 중복검사
 
   //db 연동,중복불가인 내용은 인풋칸에 입력하고 focusout할 때 db랑 조회해서 겹치면 인풋 아래 메시지 띄어주기.
@@ -125,7 +130,7 @@ function Register() {
             <form
               className="register"
               method="post"
-              // action="http://localhost:5100/auth/register"
+              // action="api/auth/register"
               onSubmit={handleSubmit(onSubmit)}
             >
               {/* maxlength정하고(db랑 맞춰야하겠지?) 모든 입력칸 필수 입력으로 만들고 인풋 칸 밑에 경고글씨 띄우기
