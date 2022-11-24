@@ -51,7 +51,7 @@ class LoadFeed {
             ),
             "updated_at",
         ],
-        // [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
+        [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
         // [sequelize.fn("COUNT", sequelize.col("hearts.user_id")),{where:{user_id:1}},"count"]
     ];
 
