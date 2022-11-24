@@ -2,9 +2,40 @@ import React from "react";
 import "../edit/editAccount.css";
 import Navbar from "../feed/layout/Navbar";
 import Profile from "../../images/1.jpg";
+import $ from "jquery"; //jquery 세팅
+import { useEffect } from "react";
 
 function EditProfile() {
   //axios.get()으로 유저 정보 가져와서 input칸에 반영시키고 제출할 때 유저정보 수정될 수 있게(post)
+
+  // useEffect(() => {
+  //   const script = document.createElement("script");
+  //   script.src = "https://unpkg.com/lodash";
+  //   script.async = true;
+  //   document.body.appendChild(script);
+  // });
+
+  // async function limitTextarea() {
+  //   $("#editTextarea").onkeyUp(function (e) {
+  //     let content = $(this).val();
+
+  //     //글자수 세기
+  //     if (content.length === 0 || content === "") {
+  //       $(".textCount").text("0");
+  //     } else {
+  //       $(".textCount").text(content.length);
+  //     }
+
+  //     //글자 수 제한
+  //     if (content.length > 150) {
+  //       //150자 부터는 타이핑 되지 않게
+  //       $(this).val($(this).val().substring(0, 200));
+  //     }
+  //   });
+  // }
+
+  // limitTextarea();
+
   return (
     <div>
       <body>
@@ -74,10 +105,17 @@ function EditProfile() {
                   <div>
                     <div>
                       <textarea
+                        id="editTextarea"
                         maxLength="150"
                         placeholder="텍스트를 입력하세요"
+                        // onKeyDown="calc()"
+                        // onkeyUp="calc()"
+                        // onKeyPress="calc()"
                       ></textarea>
-                      <div>글자적으면 숫자 올라가고 텍스트 수 제한걸기</div>
+                      <div style={{ display: "flex" }}>
+                        <p className="textCount"></p>/
+                        <p className="textTotal">150</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -173,6 +211,14 @@ function EditProfile() {
             </div>
           </div>
         </div>
+        {/* <script>
+          function calc()
+          {
+            (document.getElementById("textCount").value =
+              document.getElementById("editTextarea").value.length)
+          }
+          calc();
+        </script> */}
       </body>
     </div>
   );
