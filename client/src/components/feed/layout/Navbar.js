@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../css/reset.css";
 import "../../css/navbar.css";
 import { Link, NavLink } from "react-router-dom";
@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import AddFeed from "../pages/AddFeed";
 import {addFeedStyle, searchStyle } from "../../css/modalStyles";
 import Search from "../pages/Search";
+import axios from "axios";
 
 const Navbar = () => {
   const [searchIsOpen, setSearchIsOpen] = useState(false);
@@ -16,6 +17,33 @@ const Navbar = () => {
   // }
 
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
+  const [data, setData] = useState({});
+
+  const getLoginInfo = async() => {
+    
+    //TODO: 세션한 사람의 아이디를 받아와야함 
+    const SESSION_ID = 1;
+    
+    await axios({
+      method: "GET",
+      url: `api/users/${SESSION_ID}`,
+      withCredentials: true,
+  })
+      .then((result) => {
+          console.log("로그인 유저 조회 성공");
+          console.log(result.data);
+          setData(result.data);
+      })
+      .catch((err) => {
+        // err.response.status === '400' 
+          console.log("로그인 유저 조회 실패");
+          console.log(err);
+      });
+}
+
+  useEffect(() => {
+    getLoginInfo();
+  }, []);
 
   return (
     <div className="navbar">
@@ -25,8 +53,12 @@ const Navbar = () => {
 
       <hr />
       <div className="propileBox">
-        <span className="propileImage"></span>
-        <span className="nickname">츄츄와 예니</span>
+        <span className="propileImage">
+          <img src={data.info.image} alt='세션 로그인 유저 프로필'/>
+        </span>
+        <span className="nickname">
+          {data.info.nick}
+        </span>
       </div>
       <hr />
       <nav>

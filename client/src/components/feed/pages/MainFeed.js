@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import "../../css/mainFeed.css"
 import test7 from "../../../images/7.jpg"
@@ -7,7 +7,26 @@ import reply from "../../../images/reply.png"
 import message from "../../../images/message.png"
 
 const MainFeed = () => {
+    const getFollowersFeed = async() => {
+        await axios({
+          method: "GET",
+          url: `api/posts`,
+          withCredentials: true,
+      })
+          .then((result) => {
+              console.log("팔로워 피드 조회 성공");
+              console.log(result.data);
+          })
+          .catch((err) => {
+            // err.response.status === '400' 
+              console.log("팔로워 피드 조회 실패");
+              console.log(err);
+          });
+    }
     
+      useEffect(() => {
+        getFollowersFeed();
+      }, []);
   return (
       <main className='mainFeedWrap'>
             <div className="postBox">
