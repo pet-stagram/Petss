@@ -16,7 +16,6 @@ module.exports = {
   loginUser: async (userEmail, userPassword) => {
     //isNotLoggendIn
     console.log("userEmail: ", userEmail, " userPassword: ", userPassword); // { email: '1', password: '1' }
-
     try {
       const userData = await User.findOne({ where: { email: userEmail } });
       console.log(userData);
@@ -28,7 +27,6 @@ module.exports = {
           );
           //console.log(userData.password);//postman
           //console.log(userPassword);//변수userData에 저장되어있는 값
-
           if (userPasswordData) {
             result = userData;
           } else {
@@ -48,56 +46,45 @@ module.exports = {
 
   /* 회원가입 */
   insertUser: async (user, inputPw) => {
-    const { name, nick, password, phone, email, regDate, inputPassword } = user;
-    //console.log(user.nick);
-    //동일한 닉네임 있는지 확인
+    const { regName, nick, password, phone, email, regDate, inputPassword } =
+      user;
     try {
-      const chekNick = await User.findOne({ where: { nick } }); //user.nick:nick
-      //console.log(chekNick.nick);
-      if (!chekNick) {
-        console.log("닉넴없음");
-        //비번과 입력한 비번이 맞는지 확인
-        const inputPass = inputPw; //클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
-        const hashPass = password; //db에 저장된 비밀번호
-        const hashPw = bcrypt.hashSync(hashPass, 12); //해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
+      //const chekNick = await User.findOne({ where: { nick } })//user.nick:nick
+      //console.log(chekNick.nick);//
+      //if(!chekNick){
+      //console.log("닉넴없음");
+      //비번과 입력한 비번이 맞는지 확인
+      const inputPass = inputPw; //클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
+      const hashPass = password; //db에 저장된 비밀번호
+      const hashPw = bcrypt.hashSync(hashPass, 12); //해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
 
-        const matchPw = await bcrypt.compare(inputPass, hashPw);
-        if (matchPw) {
-          console.log("비번맞음");
-          result = 200;
-        } else {
-          console.log("비번틀림");
-          result = 400;
-        }
-
+      const matchPw = await bcrypt.compare(inputPass, hashPw);
+      //console.log(matchPw);
+      if (!matchPw) {
+        console.log("비번틀림");
+        result = 400;
+      } else {
         const addUser = await User.create({
           //
-          name: user.name,
-          nick: user.nick,
+          name: regName,
+          nick: nick,
           password: hashPw,
-          phone: user.phone,
-          email: user.email,
-          regDate: user.regDate,
+          phone: phone,
+          email: email,
+          regDate: Date.now(),
         });
-        console.log(chekNick); //null
-      } else {
-        console.log("닉넴있음");
-        result = 400;
+        console.log("비번맞음");
+        result = 200;
       }
-      console.log(result); //null
+      //}else{
+      //console.log("닉넴있음");
+      //result =  400;
+      //}
+      //console.log(result);//null
       return result;
     } catch (err) {
       throw err;
     }
-
-    //----------------
-    // return new Promise((resolve, reject)=>{
-    //     User.create({email:"min@min.com",nick:user.name,password:user.pw,provider:"",snsid:user.id}).then((result)=>{
-    //         resolve("good")
-    //     }).catch((err)=>{
-    //         reject(err);
-    //     })
-    // })
   },
 
   /* 이메일 인증 */
@@ -173,5 +160,27 @@ module.exports = {
     }
     //console.log(result);
     return result;
+  },
+
+  /* 닉넴중복 체크 */
+  checkNick: async (userNick) => {
+    console.log(userNick, "Service, userNick"); //꺼뭉아
+    const nick = userNick;
+
+    try {
+      const chekNick = await User.findOne({ where: { nick } }); //db에 저장된 nick
+      //console.log(chekNick, "chekNick");//
+      if (!chekNick) {
+        console.log("닉넴없음");
+        result = 200;
+      } else {
+        console.log("닉넴있음");
+        result = 400;
+      }
+      //console.log(result,"result");
+      return result;
+    } catch (err) {
+      throw err;
+    }
   },
 };
