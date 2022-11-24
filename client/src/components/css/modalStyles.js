@@ -9,6 +9,17 @@
     },
   };
 
+  const notifStyle = {
+    content: {
+      width: '300px',
+      height: '100px',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      padding: '10px',
+    }
+  }
+
   const searchStyle = {
     content: {
       top: '50%',
@@ -29,4 +40,4 @@
       padding: '0',
     },
   };
-export {addFeedStyle, searchStyle, followerStyle};
+export {addFeedStyle, notifStyle, searchStyle, followerStyle};
