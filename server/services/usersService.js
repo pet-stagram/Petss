@@ -21,13 +21,18 @@ module.exports = {
      */
     selectMyInfo : async (currentUser)=>{
         try{
-            const user = await User.findOne({where:{id:currentUser}});
+            const user = await User.findOne({
+                where:{id:currentUser},
+                attributes:{
+                    exclude:["password"]
+                }                
+            });
 
             const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
             const followingCount = following.length;
             const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
             const followerCount = follower.length;
-            const posts = await user.getPosts({raw:true, group: ["id","postImages.id"],  nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
+            const posts = await user.getPosts({nest: true, include:[{model : PostImage, attributes: ["img_url"]}]});
             const postsCount = posts.length;
 
             const currentUserData = 
@@ -53,8 +58,11 @@ module.exports = {
      */
     selectUser: async (userId) => {
         try{
-            const user = await User.findOne({where:{id:userId}});
-
+            const user = await User.findOne({
+                where:{id:userId},
+                attributes: { exclude: ['password'] }
+            });
+            
             const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
             const followingCount = following.length;
             const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
