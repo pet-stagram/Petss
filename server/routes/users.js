@@ -3,15 +3,123 @@ const router = express.Router();
 const controller = require("../controllers/usersController")
 const upload = require("../module/upload");
 
+/**
+ * @swagger
+ *  /users/me:
+ *   get:
+ *      summary: 현재 유저 정보 조회
+ *      tags:
+ *      - users
+ *      description: 현재 세션 유저(로그인된 유저)의 정보를 조회
+ *      produces:
+ *      - application/json
+ *      responses:
+ *          200:
+ *              description: 현재 유저 조회 성공
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              info :
+ *                                  type: object
+ *                                  properties:
+ *                                     id: 
+ *                                         type: integer
+ *                                         example: 1
+ *                                     email: 
+ *                                         type: string
+ *                                         example: gildong@mail.com
+ *                                     name: 
+ *                                         type: string
+ *                                         example: 홍길동
+ *                                     nick: 
+ *                                         type: string
+ *                                         example: gil_dong
+ *                                     image: 
+ *                                         type: string
+ *                                         example: https://storage...
+ *                                     self_intro:
+ *                                         type: string
+ *                                         example: My Name is Gildong
+ *                                     regDate:
+ *                                         type: date
+ *                                         example: 2022-11-17 00:00:00
+ *                              following: 
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          id:
+ *                                              type: integer
+ *                                              example: 1
+ *                                          name:
+ *                                              type: string
+ *                                              example: 김길동
+ *                                          nick:
+ *                                              type: string
+ *                                              example: gil_kim
+ *                                          image:
+ *                                              type: string
+ *                                              example: https://storage...
+ *                              followingCount:
+ *                                  type: integer
+ *                                  example: 200
+ *                              follower: 
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          id:
+ *                                              type: integer
+ *                                              example: 1
+ *                                          name:
+ *                                              type: string
+ *                                              example: 김길동
+ *                                          nick:
+ *                                              type: string
+ *                                              example: gil_kim
+ *                                          image:
+ *                                              type: string
+ *                                              example: https://storage...
+ *                              followerCount:
+ *                                  type: integer
+ *                                  example: 10
+ *                              posts: 
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          id:
+ *                                              type: integer
+ *                                              example: 1
+ *                                          user_id:
+ *                                              type: integer
+ *                                              example: 1
+ *                                          content:
+ *                                              type: string
+ *                                              example: 첫번째 피드 #안녕
+ *                                          PostImages:
+ *                                              type: object
+ *                                              properties:
+ *                                                  img_url: 
+ *                                                      type: string
+ *                                                      example: https://storage...
+ *                              postsCount:
+ *                                  type: integer
+ *                                  example: 12
+ *          400: 
+ *              description: 잘못된 요청이거나 세션 없음
+*/
 router.get("/me",controller.getMe);
 /**
  * @swagger
  *  /users/{userId}:
- *    get:
- *      summary: 유저 한명의 정보 조회
+ *   get:
+ *      summary: 현재 유저 정보 조회
  *      tags:
  *      - users
- *      description: userId값에 해당하는 유저의 정보를 조회
+ *      description: 현재 세션 유저(로그인된 유저)의 정보를 조회
  *      produces:
  *      - application/json
  *      parameters:
@@ -19,34 +127,103 @@ router.get("/me",controller.getMe);
  *        in : path
  *        description: 해당 유저 idx 값
  *      responses:
- *       200:
- *        description: 유저 조회 성공
- *        content:
- *          application/json:
- *            schema: 
- *              type: object
- *              properties:
- *                  id: 
- *                      type: integer
- *                      example: 1
- *                  email:
- *                      type: string
- *                      example: email@email.com
- *                  name:
- *                      type: string
- *                      example: 홍길동
- *                  nick:
- *                      type: string
- *                      example: gildong_
- *                  image:
- *                      type: string
- *                      example: https://storage.google...
- *                  self_intro:
- *                      type: string
- *                      example: I need a rest
- *       400:
- *        description: 해당 유저가 존재하지 않거나 잘못된 요청
- */
+ *          200:
+ *              description: 현재 유저 조회 성공
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              info :
+ *                                  type: object
+ *                                  properties:
+ *                                     id: 
+ *                                         type: integer
+ *                                         example: 1
+ *                                     email: 
+ *                                         type: string
+ *                                         example: gildong@mail.com
+ *                                     name: 
+ *                                         type: string
+ *                                         example: 홍길동
+ *                                     nick: 
+ *                                         type: string
+ *                                         example: gil_dong
+ *                                     image: 
+ *                                         type: string
+ *                                         example: https://storage...
+ *                                     self_intro:
+ *                                         type: string
+ *                                         example: My Name is Gildong
+ *                                     regData:
+ *                                         type: date
+ *                                         example: 2022-11-17 00:00:00
+ *                              following: 
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          id:
+ *                                              type: integer
+ *                                              example: 1
+ *                                          name:
+ *                                              type: string
+ *                                              example: 김길동
+ *                                          nick:
+ *                                              type: string
+ *                                              example: gil_kim
+ *                                          image:
+ *                                              type: string
+ *                                              example: https://storage...
+ *                              followingCount:
+ *                                  type: integer
+ *                                  example: 200
+ *                              follower: 
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          id:
+ *                                              type: integer
+ *                                              example: 1
+ *                                          name:
+ *                                              type: string
+ *                                              example: 김길동
+ *                                          nick:
+ *                                              type: string
+ *                                              example: gil_kim
+ *                                          image:
+ *                                              type: string
+ *                                              example: https://storage...
+ *                              followerCount:
+ *                                  type: integer
+ *                                  example: 10
+ *                              posts: 
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          id:
+ *                                              type: integer
+ *                                              example: 1
+ *                                          user_id:
+ *                                              type: integer
+ *                                              example: 1
+ *                                          content:
+ *                                              type: string
+ *                                              example: 첫번째 피드 #안녕
+ *                                          PostImages:
+ *                                              type: object
+ *                                              properties:
+ *                                                  img_url: 
+ *                                                      type: string
+ *                                                      example: https://storage...
+ *                              postsCount:
+ *                                  type: integer
+ *                                  example: 12
+ *          400: 
+ *              description: 잘못된 요청이거나 세션 없음
+*/
 router.get("/:userId",controller.getUser);
 
 /**

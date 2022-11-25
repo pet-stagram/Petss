@@ -12,7 +12,6 @@ export const joinChat= (room) => {
 
 export const receiveMessage = () => {  
   socket.on("reqMsg", (data) => {
-    console.log(data);
     return data;
   }
   );
