@@ -31,8 +31,9 @@ const Navbar = () => {
   })
       .then((result) => {
           console.log("로그인 유저 조회 성공");
-          console.log(result.data);
+          console.log(result);
           setData(result.data);
+
       })
       .catch((err) => {
         // err.response.status === '400' 
@@ -54,10 +55,10 @@ const Navbar = () => {
       <hr />
       <div className="propileBox">
         <span className="propileImage">
-          <img src={data.info.image} alt='세션 로그인 유저 프로필'/>
+          <img src={data.info?.image} alt='세션 로그인 유저 프로필'/>
         </span>
         <span className="nickname">
-          {data.info.nick}
+          {data.info?.nick}
         </span>
       </div>
       <hr />

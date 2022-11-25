@@ -12,13 +12,14 @@ const MyFeed = () => {
   const [feedList, setFeedList] = useState([]);
   const [isReceiveData, setIsReceiveData] = useState(false);
   const [isOpenFollower, setIsOpenFollower] = useState(false);
+  axios.defaults.withCredentials = true;
 
   const getMyInfo = async() => {
     const userId = 1;
     await axios({
       method: "GET",
       url: `api/users/me`,
-      withCredentials: true,
+      // withCredentials: true,
   })
       .then((result) => {
           console.log("MyFeed 조회 성공");
@@ -90,7 +91,9 @@ const MyFeed = () => {
           })
         }          
     </div>
-</div> : <h1>loading...</h1>
+</div> 
+
+: <h1>loading...</h1>
       }
       </>
       

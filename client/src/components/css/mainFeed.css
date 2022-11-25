@@ -21,9 +21,12 @@
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    background-image: url("../../images/7.jpg");
     background-size: cover;
     margin-right: 12px;
+}
+.userImage img{
+    width: 40px;
+    height: 40px;
 }
 .postImageBox{
     margin: 5px auto;
