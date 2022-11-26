@@ -15,17 +15,14 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-image: url("../../images/7.jpg");
     background-size: cover;
     display: inline-block;
+    overflow: hidden;
 }
-.profile1{
+
+.profile img{
     width: 50px;
     height: 50px;
-    border-radius: 50%;
-    background-image: url("../../images/6.jpg");
-    background-size: cover;
-    display: inline-block;
 }
 .nickname{
     text-align: left;

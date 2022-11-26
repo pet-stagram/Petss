@@ -6,12 +6,14 @@ import { useState } from 'react';
 import Modal from "react-modal";
 import Follower from './Follower';
 import { followerStyle } from "../../css/modalStyles";
+import Following from './Following';
 
 const MyFeed = () => {
   const [data, setData] = useState({});
   const [feedList, setFeedList] = useState([]);
   const [isReceiveData, setIsReceiveData] = useState(false);
   const [isOpenFollower, setIsOpenFollower] = useState(false);
+  const [isOpenFollowing, setIsOpenFollowing] = useState(false);
   axios.defaults.withCredentials = true;
 
   const getMyInfo = async() => {
@@ -63,9 +65,12 @@ const MyFeed = () => {
                 팔로워 {data.followerCount} 명
               </li>
             <Modal isOpen={isOpenFollower} onRequestClose={() => setIsOpenFollower(false)} ariaHideApp={false} style={followerStyle} >
-              <Follower/>
+              <Follower followers={data.follower}/>
             </Modal>
-            <li>팔로잉 {data.followingCount} 명</li>
+            <li onClick={() => setIsOpenFollowing(true)}>팔로잉 {data.followingCount} 명</li>
+            <Modal isOpen={isOpenFollowing} onRequestClose={() => setIsOpenFollowing(false)} ariaHideApp={false} style={followerStyle} >
+              <Following followings={data.following}/>
+            </Modal>
           </ul>
           <p className='introduction'>
               {data.info.self_intro}
@@ -80,15 +85,17 @@ const MyFeed = () => {
         {feedList.length ===0 ? 
           <div style={{textAlign:"center"}}>게시물이 없어요</div>
         :
-          feedList.map((feed) => {
-          return(
-            <div className='myFeedPosts'>
-              <span key={feed.id} className='myFeedPost'>
-                <img src={feed.PostImages.img_url} alt='thumbnail'/>
-              </span>
-            </div>
+        (
+        <div className='myFeedPosts'>
+          {feedList.map((feed) => {
+          return(            
+              <span key={feed.id} className='myFeedPost' onClick={() => console.log(feed)}>
+                <img src={feed.PostImages[0].img_url} alt='thumbnail'/>
+              </span>            
           )
-          })
+          })}
+        </div>
+          )
         }          
     </div>
 </div> 
