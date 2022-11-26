@@ -1,4 +1,3 @@
-import { useState, useReducer } from "react";
 import axios from "axios";
 
 export function reducer(state,action){
@@ -25,28 +24,25 @@ export function getChanged(bool){
     return !bool;
 }
 
-export async function getConversationDetail(selectedConversation) {
+export async function getConversationDetail(selectedConversation,msgLength) {
+
     try{
-      const result = await axios.get(`/api/chat/message?conversation=${selectedConversation}`);  
-      const messages = result.data;
-      const partnerMessages = [];
-      const myMessages = [];
+        const result = await axios.get(`/api/chat/message?conversation=${selectedConversation}&offset=${msgLength}`);  
+      const messages = result.data.rows;
       let partner;
+
       messages.map((message) => {
           partner =
               message.Receiver.id === null
                   ? message.Sender
                   : message.Receiver;
-          if (partner.id === message.senderId) {
-              partnerMessages.push(message.content);
-          } else {
-              myMessages.push(message.content);
-          }
       });
       const partnerAndMyMessages = {
           partner: partner,
           chats: messages,
+          messageLength : result.data.count
       };
+      
       return partnerAndMyMessages;
     }catch(err){
       throw err;

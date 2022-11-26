@@ -4,12 +4,12 @@ const {
     Heart,
     PostImage,
     Comment,
-    Hashtag
+    Hashtag,
 } = require("../sequelize/models/index");
 const db = require("../sequelize/models/index");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
-const {uploadProfileImage, uploadPostsImages}= require("../module/firebase");
+const { uploadProfileImage, uploadPostsImages } = require("../module/firebase");
 
 const stream = require("stream");
 const fs = require("fs");
@@ -37,7 +37,7 @@ class LoadFeed {
         {
             model: PostImage,
             attributes: ["img_url"],
-            plain: true,
+            plain: true
         },
     ];
     attributes = [
@@ -118,11 +118,10 @@ module.exports = {
                 include: loadFeed.include,
                 // attributes: loadFeed.attributes,
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
-                // group: ["id", "postImages.id"],
+                group: ["id", "postImages.id"],
                 nest: true,
-                // raw:true
-                // required:false,
-            });            
+            });
+            console.log(result);
         } catch (err) {
             throw err;
         }
@@ -160,15 +159,12 @@ module.exports = {
         let postId;
         let result;
 
+        /* 피드의 내용에서 #을 포함한 문자열 찾아서 새로운 배열로 생성 */
         const hashtags = postDto.content.match(/#[^\s#]*/g);
         const hashtagContents = [];
-    
-        if (hashtags !== null) {
-            hashtags.forEach((hashtag)=>{
-                hashtagContents.push(hashtag.replace(/#/g,""));
-            });
-        }
-    
+        hashtags.forEach((hashtag)=>{
+            hashtagContents.push(hashtag.replace(/#/g,""));
+        });
         
         await Post.create({
             content: postDto.content,
@@ -185,84 +181,81 @@ module.exports = {
                     });
                 });
 
+            if (hashtags !== null) {
+                hashtags.forEach((hashtag) => {
+                    /* 추출한 해시태그 #을 제거하고 내용만 넣기 */
+                    hashtagContents.push(hashtag.replace(/#/g, ""));
+                });
                 const PostHashtag = db.sequelize.models.post_has_hashtag;
-                
-                hashtagContents.forEach(async (hashtagContent)=>{
+
+                hashtagContents.forEach(async (hashtagContent) => {
                     let existHashtag = await Hashtag.findOne({
-                        title:hashtagContent
+                        where:{title: hashtagContent}
                     });
-                    
-                    if(!existHashtag){
+
+                    if (!existHashtag) {
                         existHashtag = await Hashtag.create({
-                            title: hashtagContent
+                            title: hashtagContent,
                         });
                     }
-                        await PostHashtag.create({
-                            post_id : postId,
-                            hashtag_id : existHashtag.id
-                        });
-                    
-                    
+                    await PostHashtag.create({
+                        post_id: postId,
+                        hashtag_id: existHashtag.id,
+                    });
                 });
-
-
-
-
-                try {
-                    await Promise.all(promise);
-                    result = "success";
-                } catch (err) {
-                    result = err;
-                }
-            })
-            .catch((err) => {
-                throw err;
-            });
+                await Promise.all(promise);
+                result = "success";
+            }
+        } catch (err) {
+            throw err;
+        }
         return result;
     },
     /**
-     * 
+     *
      * @param {Object} postDto 피드를 수정하기 위한 현재 세션 유저, 피드 idx, 수정할 피드 내용이 담긴 객체
      * @returns 상태코드를 구분하기 위한 문자열
      */
-    updatePosts : async (postDto)=>{
-       
-        try{
-        const result = await Post.update({
-            content : postDto.content,
-            updatedAt : Date.now()
-        },
-        {
-            where:{
-                id: postDto.postId,
-                user_id : postDto.user
-        }});
-        if(result[0] === 0){
-            return "forbidden"
+    updatePosts: async (postDto) => {
+        try {
+            const result = await Post.update(
+                {
+                    content: postDto.content,
+                    updatedAt: Date.now(),
+                },
+                {
+                    where: {
+                        id: postDto.postId,
+                        user_id: postDto.user,
+                    },
+                }
+            );
+            if (result[0] === 0) {
+                return "forbidden";
+            }
+        } catch (err) {
+            return "serverError";
         }
-    }catch(err){
-        return "serverError";
-    }
     },
     /**
-     * 
+     *
      * @param {Object} postDto 피드를 삭제하기 위한 현재 세션유저, 해당 피드 idx가 담긴 객체
      * @returns 상태코드를 구분하기 위한 문자열
      */
-    destroyPosts : async (postDto) => {
-        try{
+    destroyPosts: async (postDto) => {
+        try {
             const result = await Post.destroy({
-            where: {
-                id: postDto.postId,
-                user_id: postDto.user,
+                where: {
+                    id: postDto.postId,
+                    user_id: postDto.user,
+                },
+            });
+            if (result === 0) {
+                return "forbidden";
             }
-        });
-        if(result===0){
-            return "forbidden";
+        } catch (err) {
+            return "serverError";
         }
-    }catch(err){
-        return "serverError"
-    }
     },
     /**
      *
@@ -273,7 +266,7 @@ module.exports = {
         const loadFeed = new LoadFeed();
         /* 새로운 피드 번호 가져와야함 */
         const newPostNum = await loadFeed.getNewPostNum();
-        const urlArr = await uploadPostsImages(newPostNum,files);
+        const urlArr = await uploadPostsImages(newPostNum, files);
         return urlArr;
     },
     /**
@@ -386,25 +379,23 @@ module.exports = {
         }
     },
     /**
-     * 
+     *
      * @param {Number} postId 댓글 조회를 위한 해당 피드의 idx
      * @returns DB findAll 결과 or err
      */
-    selectComment : async (postId) => {
-        try{
+    selectComment: async (postId) => {
+        try {
             const findResult = await Comment.findAll({
-                order:[["created_at","ASC"]],
-                where :{
-                    post_id : postId
+                order: [["created_at", "ASC"]],
+                where: {
+                    post_id: postId,
                 },
-                raw:true
+                raw: true,
             });
             console.log(findResult);
             return findResult;
+        } catch (err) {
+            throw err;
         }
-        catch(err){
-            throw err
-        }
-        
-    }
+    },
 };
