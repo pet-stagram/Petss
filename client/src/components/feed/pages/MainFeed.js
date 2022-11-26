@@ -12,6 +12,7 @@ const MainFeed = () => {
     const SESSION_ID = 1;
     const [posts, setPosts] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    // const [isLiked, setIsLiked] = useState()
         const getFollowersFeed = async() => {
         await axios({
           method: "GET",
@@ -46,8 +47,7 @@ const MainFeed = () => {
         })
         .then((likeResult) => {
             console.log(likeResult);
-
-            getFollowersFeed();
+            
           })
           .catch((err) => {
               console.log(err);
@@ -60,7 +60,7 @@ const MainFeed = () => {
             isLoading &&
             posts.map((post)=>{
                 return(
-                    <div className="postBox">
+                    <div className="postBox" key={post.id}>
                     <div className="userInfo">
                         <span className="userImage">
                             <img src={post.User.image} alt="팔로잉 유저 프로필" />
@@ -77,7 +77,11 @@ const MainFeed = () => {
                             })}  */}
                         </div>
                         <div className="postReaction">
-                            <button onClick={()=>handleLikeClick(post.id)}><img src={paw} alt="like" className="like"/></button>
+                            <button onClick={()=>handleLikeClick(post.id)}>
+                                <img src={
+                                    post.Hearts.length===0 ? emptyPaw : paw
+                                } alt="like" className="like"/>
+                            </button>
                             <button><img src={reply} alt="like" className="like"/></button>
                             <button><img src={message} alt="like" className="like"/></button>
                         </div>
