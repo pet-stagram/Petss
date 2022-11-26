@@ -103,11 +103,6 @@ module.exports = {
         let result;
         try {
             const followingsId = await loadFeed.findFollowUser(userId);
-            console.log(`hhhh`);
-            for(let id of followingsId) {
-                console.log(id);
-            }
-            
             result = await Post.findAll({
                 order: [["updatedAt", "DESC"]],
                 where: {
@@ -116,9 +111,9 @@ module.exports = {
                     },
                 },
                 include: loadFeed.include,
-                // attributes: loadFeed.attributes,
+                attributes: loadFeed.attributes,
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
-                group: ["id", "postImages.id"],
+                group: ["id", "postImages.id","Hearts.id"],
                 nest: true,
             });
             console.log(result);
@@ -162,24 +157,21 @@ module.exports = {
         /* 피드의 내용에서 #을 포함한 문자열 찾아서 새로운 배열로 생성 */
         const hashtags = postDto.content.match(/#[^\s#]*/g);
         const hashtagContents = [];
-        hashtags.forEach((hashtag)=>{
-            hashtagContents.push(hashtag.replace(/#/g,""));
-        });
-        
-        await Post.create({
-            content: postDto.content,
-            user_id: 1,
-            created_at: Date.now(),
-            updated_at: Date.now(),
-        })
-            .then(async (postCreateResult) => {
-                postId = postCreateResult.get({ plain: true }).id;
-                const promise = postDto.fileUrl.map(async (url) => {
-                    await PostImage.create({
-                        postId: postId,
-                        imgUrl: url,
-                    });
+
+        try {
+            const postCreateResult = await Post.create({
+                content: postDto.content,
+                user_id: 1,
+                created_at: Date.now(),
+                updated_at: Date.now(),
+            });
+            postId = postCreateResult.get({ plain: true }).id;
+            const promise = postDto.fileUrl.map(async (url) => {
+                await PostImage.create({
+                    postId: postId,
+                    imgUrl: url,
                 });
+            });
 
             if (hashtags !== null) {
                 hashtags.forEach((hashtag) => {
