@@ -26,9 +26,7 @@ module.exports = {
                 }
                 /* parameter로 현재 세션의 idx값 */
             } catch (err) {
-                
                 res.sendStatus(500);
-                throw err;
             }
         }
     },

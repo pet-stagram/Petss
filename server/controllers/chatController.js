@@ -13,8 +13,7 @@ module.exports ={
     getMessage : async (req, res)=>{
         const messageDto = {
             me : 1,// session
-            conversationId : req.query.conversation,
-            offset : parseInt(req.query.offset)
+            conversationId : req.query.conversation
         };
         try{
             const selectResult = await service.selectMessages(messageDto);
