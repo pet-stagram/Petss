@@ -67,8 +67,8 @@ module.exports = {
             const followingCount = following.length;
             const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
             const followerCount = follower.length;
-            const posts = await user.getPosts({raw:true, group: ["id","postImages.id"],  nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
-            const postsCount = posts.length;
+            // const posts = await user.getPosts({raw:true, group: ["id"],nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
+            // const postsCount = posts.length;
 
             const userData = 
             {
@@ -77,8 +77,8 @@ module.exports = {
                 followingCount,
                 follower,
                 followerCount,
-                posts,
-                postsCount
+                // posts,
+                // postsCount
             }
 
             return userData;
@@ -140,6 +140,7 @@ module.exports = {
      */
     updateUserImage: async (userDto) => {
         const imgUrl = await uploadProfileImage(userDto);
+        console.log(imgUrl);
         try {
             await User.update({ image: imgUrl }, { where: { id: userDto.id } });
         } catch (err) {
