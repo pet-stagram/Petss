@@ -114,7 +114,7 @@ module.exports = {
           req.session.count = 0;
         }
         //console.log("랜덤번호 : " + req.session.randomNumber);
-        res.sendStatus(200).send(req.session.randomNumber); //랜덤번호 보내기
+        res.sendStatus(200); //랜덤번호 보내기
       } else {
         res.sendstatus(409); //이메일 중복 에러
         // 이미 생성된 유저의 id 리소스와 회원가입하려는 유저의 id가 충돌한 경우라고 볼 수 있기 때문에 409코드를 사용했다.

@@ -89,7 +89,6 @@ const MainFeed = () => {
                         <div className="postContent"> 
                             {post.content}
                         </div>
-                        
                     </div>
                 </div>
                 );

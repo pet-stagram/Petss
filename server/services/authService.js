@@ -120,13 +120,13 @@ module.exports = {
         };
         const sendmessage = {
           //랜덤숫자 발송하기 위한 메세지를 담은 변수
-          from: "vvvminll@naver.com",
-          to: "b08c00d3ca-35b52b@inbox.mailtrap.io",
+          from: "min@min.com",
+          to: "b08c00d3ca-35b52b@inbox.mailtrap.io", 
           subject: "[petss]인증 관련 이메일 입니다.",
           text: "오른쪽 숫자 6자리를 입력해주세요 : " + randomNumber,
         };
         send(sendmessage); //메세지 담은 sendmessage를 메일보냄
-
+        console.log(sendmessage);
         return [randomNumber, randomNumber];
       } catch (err) {
         return [-1, -1];

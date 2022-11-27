@@ -3,6 +3,24 @@ const { Hashtag } = require("../sequelize/models/index.js");
 const service = require("../services/searchService.js");
 
 module.exports = {
+    //해시태그랑 닉넴검색 result를 하나의 배열이나 객체로 담기
+    //결과값을 돌려줘야함 (지금빠져있음)
+
+    // getSearch : async (req,res)=>{참조
+    //     const searchData = req.body
+    //     const postsOfHashtag = await service.findHashtag(searchData);
+    //     const findUser = await service.findUserNick(searchData);
+    //     const result = [...postsOfHashtag,...findUser];
+    //     res.send(result)
+    // },
+    getSearch : async(req,res)=>{
+        const searchData = req.query;
+        const postsOfHashtag = await service.findSearch(searchData);
+        const findUser = await service.findSearch(searchData);
+        const result = [];
+
+    },
+
     getHashtag : async (req,res) => {
         const hashtagText = req.query.hashtag; //입력받은 해시태그 hashtagText변수에
         //console.log(hashtagText,"hashtagText");//꺼뭉들어옴
