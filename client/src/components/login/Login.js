@@ -13,12 +13,19 @@ function Login() {
   const [Password, setPassword] = useState("");
 
   const onSubmit = (e) => {
-    e.preventDefault();
-    console.log(Email, Password);
+    //e.preventDefault();
+    //console.log(Email, Password);
+
+    if (Email !== "" && Password !== "") {
+      Log();
+    } else if (Email === "" && Password === "") {
+      alert("이메일과 비밀번호를 입력바랍니다.");
+    }
   };
 
   //2.서버에 전송한다. 전송할 때 이메일,비밀번호 값이 db값과 같은지 확인한다.(get)
   //다르면 로그인 안되고 비번 틀리면 비번 틀렸다 하고, 이메일 틀리면 없는 아이디 입니다 띄우기
+
   async function Log() {
     await axios({
       method: "POST",
@@ -28,8 +35,8 @@ function Login() {
       withCredentials: true,
     })
       .then((res) => {
-        navigator("/MyFeed");
         console.log(res);
+        console.log(Email);
       })
       .catch((e) => {
         alert("비밀번호가 틀렸거나 계정이 존재하지 않습니다.");
@@ -54,7 +61,7 @@ function Login() {
               <form
                 className={Logincss.login}
                 method="post"
-                //action="http://localhost:5100/auth/login"
+                onSubmit={onSubmit}
               >
                 <h1 className={Logincss.loginIcon}>
                   <FontAwesomeIcon icon={faPaw} />
@@ -68,6 +75,7 @@ function Login() {
                     name="email"
                     autoComplete="off"
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                 </div>
                 <div>
@@ -79,6 +87,7 @@ function Login() {
                     name="password"
                     autoComplete="off"
                     onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
                 </div>
                 <input
@@ -91,7 +100,9 @@ function Login() {
                         아이디가 틀렸을 시 -> "존재하지 않는 아이디 입니다."
                         비밀번호가 틀렸을 시  -> "비밀번호가 일치하지 않습니다."  */}
                 <div className={Logincss.findPw}>
-                  <a href="/modal">아이디 혹은 비밀번호를 잊으셨나요?</a>
+                  <a className="openModalBtn" href="/modal">
+                    아이디 혹은 비밀번호를 잊으셨나요?
+                  </a>
                   {/* `<Modal />` */}
                 </div>
                 <div className={Logincss.mvReg}>

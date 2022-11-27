@@ -73,8 +73,7 @@ module.exports = {
   /* 회원가입 눌렀을 때 */
   //https://victorydntmd.tistory.com/33
   postRegister: async (req, res) => {
-    const { regName, nick, password, phone, email, regDate, inputPassword } =
-      req.body;
+    const { regName, nick, password, phone, email, regDate } = req.body;
     const user = req.body;
 
     //inputPassword 비밀번호 확인 하기 위해 만든 변수
@@ -166,7 +165,8 @@ module.exports = {
 
   /* 닉넴중복 체크 */
   postNick: async (req, res) => {
-    userNick = req.body.nick;
+    const userNick = req.body.nick;
+    console.log(req.body.nick);
     const checkUserNick = await service.checkNick(userNick);
     try {
       if (checkUserNick === 400) {
@@ -176,7 +176,6 @@ module.exports = {
       }
     } catch (err) {
       console.log(err);
-      throw err;
     }
   },
 };

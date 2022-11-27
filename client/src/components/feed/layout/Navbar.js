@@ -5,7 +5,7 @@ import { Link, NavLink } from "react-router-dom";
 import petssLogo from "../../../images/petss_logo.png";
 import Modal from "react-modal";
 import AddFeed from "../pages/AddFeed";
-import {addFeedStyle, searchStyle } from "../../css/modalStyles";
+import { addFeedStyle, searchStyle } from "../../css/modalStyles";
 import Search from "../pages/Search";
 import axios from "axios";
 
@@ -19,28 +19,26 @@ const Navbar = () => {
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
   const [data, setData] = useState({});
 
-  const getLoginInfo = async() => {
-    
-    //TODO: 세션한 사람의 아이디를 받아와야함 
+  const getLoginInfo = async () => {
+    //TODO: 세션한 사람의 아이디를 받아와야함
     const SESSION_ID = 1;
-    
+
     await axios({
       method: "GET",
       url: `api/users/${SESSION_ID}`,
       withCredentials: true,
-  })
+    })
       .then((result) => {
-          console.log("로그인 유저 조회 성공");
-          console.log(result);
-          setData(result.data);
-
+        console.log("로그인 유저 조회 성공");
+        console.log(result);
+        setData(result.data);
       })
       .catch((err) => {
-        // err.response.status === '400' 
-          console.log("로그인 유저 조회 실패");
-          console.log(err);
+        // err.response.status === '400'
+        console.log("로그인 유저 조회 실패");
+        console.log(err);
       });
-}
+  };
 
   useEffect(() => {
     getLoginInfo();
@@ -55,11 +53,9 @@ const Navbar = () => {
       <hr />
       <div className="propileBox">
         <span className="propileImage">
-          <img src={data.info?.image} alt='세션 로그인 유저 프로필'/>
+          <img src={data.info?.image} alt="세션 로그인 유저 프로필" />
         </span>
-        <span className="nickname">
-          {data.info?.nick}
-        </span>
+        <span className="nickname">{data.info?.nick}</span>
       </div>
       <hr />
       <nav>
@@ -74,7 +70,7 @@ const Navbar = () => {
             ariaHideApp={false}
             style={searchStyle}
           >
-            <Search/>
+            <Search />
           </Modal>
           {/*  <button className="openBtn" onClick={onOpenModal}>Modal open</button> 
                   {modalOn? <Modal/>: ''} */}
@@ -88,7 +84,7 @@ const Navbar = () => {
             ariaHideApp={false}
             style={addFeedStyle}
           >
-            <AddFeed setIsOpenAddFeed={setIsOpenAddFeed}/> 
+            <AddFeed setIsOpenAddFeed={setIsOpenAddFeed} />
           </Modal>
           <li>알림</li>
           <li>설정</li>

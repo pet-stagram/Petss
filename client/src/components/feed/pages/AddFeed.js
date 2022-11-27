@@ -2,19 +2,15 @@ import React from "react";
 import Modal from "react-modal";
 import { useState } from "react";
 import axios from "axios";
+import "../../css/reset.css";
 import { notifStyle } from "../../css/modalStyles";
 import styles from "../../css/addFeed.module.css";
 import ImageSlider, { Slide } from "react-auto-image-slider";
 // import { Slide } from 'react-slideshow-image';
+import ChatRoom from "../../messanger/ChatRoom";
 
-<<<<<<< HEAD
 const AddFeed = ({ setIsOpenAddFeed }) => {
-  /* 사진 선택 컴포넌트와 피드 게시(Submit form) 컴포넌트를 나누기 위해 사용 */
   const [step, setStep] = useState(1);
-=======
-const AddFeed = ({setIsOpenAddFeed}) => {
-    const [step, setStep] = useState(1);
->>>>>>> 0a927c66c0a2288d7755d1fd2aeb10b8c00e51af
 
   /* 서버에 보내주는 실제 이미지 파일 */
   const [imageFile, setImageFile] = useState([]);
@@ -43,12 +39,7 @@ const AddFeed = ({setIsOpenAddFeed}) => {
 
 /**
  * AddFeed 컴포넌트의 step state가 1일 때 렌더링하는 컴포넌트
-<<<<<<< HEAD
- * 이미지 파일을 여러 장 선택할 수 있음
  * @param {Object} param0
-=======
- * @param {Object} param0 
->>>>>>> 0a927c66c0a2288d7755d1fd2aeb10b8c00e51af
  */
 const SelectImage = ({ setStep, setImageFile, setPreviewImage }) => {
   return (
@@ -101,7 +92,7 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
       formData.append("files", file);
     });
 
-    formData.append("content", JSON.stringify(content));
+    formData.append("content", content);
 
     //   console.log(formData);
     //   for ( let key of formData.keys()) {
@@ -126,19 +117,23 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
   };
 
   return (
-<<<<<<< HEAD
     <div>
-      <div className="previewImageWrap">
-        <ImageSlider effectDelay={500} autoPlayDelay={2000}>
+      <div className={styles.previewImageWrap}>
+        <ImageSlider
+          effectDelay={500}
+          autoPlayDelay={10000}
+          className={styles.imageSlider}
+          width={400}
+          height={400}
+        >
           {previews.map((preview, index) => {
-            // console.log(preview);
             return (
               <Slide key={index}>
                 <img
                   className="previewImage"
                   src={preview}
                   alt="uploadImagePreview"
-                  style={{ width: "300px", height: "200px" }}
+                  style={{ width: "650px", height: "650px" }}
                 />
               </Slide>
             );
@@ -148,27 +143,6 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
         {/* ******************************************************************************* */}
 
         {/* <Slide>
-=======
-      <div>
-          <div className="previewImageWrap">
-            <ImageSlider effectDelay={500} autoPlayDelay={10000} className={styles.imageSlider} width={400} height={400}>
-                {
-                    previews.map((preview, index) => {
-                        
-                        return(
-                            <Slide key={index} >
-                                <img className="previewImage" src={preview} alt="uploadImagePreview" style={{width: "650px", height: "650px"}}/>
-                                
-                            </Slide>    
-                        )
-                    })
-                }                
-            </ImageSlider>
-
-            {/* ******************************************************************************* */}
-
-            {/* <Slide>
->>>>>>> 0a927c66c0a2288d7755d1fd2aeb10b8c00e51af
             {previews.map((preview, index)=> {
                 return(
                     <div className="each-slide" key={index}>
@@ -178,58 +152,26 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
                     </div>
                 )})} 
             </Slide> */}
-<<<<<<< HEAD
-=======
-            
-          </div>
-          {/* image preview */}
-          <form onSubmit={formHandler} encType="multipart/form-data">
-              <div>
-                  <input
-                      type="text"
-                      name="content"
-                      placeholder="글내용"
-                      onChange={(e) => setContent(e.target.value)}
-                      required
-                  />
-              </div>
-              <div>
-                  <input type="submit" value="SUBMIT" style={{width:"100px"}}/>
-              </div>
-          </form>
-           {
-            isOpenErr&&
-            <Modal
-            isOpen={isOpenErr}
-            onRequestClose={() => setIsOpenErr(false)}
-            ariaHideApp={false}
-            style={notifStyle}
-            >
-                <div style={{width:'100%', textAlign:"center", margin:"10px auto"}}>
-                    <div>게시물 업로드에 실패했습니다.</div>
-                    <button onClick={() => {isCloseErr(); isCloseAddFeed();}} style={{marginTop:"10px"}} >닫기</button>
-                </div>
-            </Modal>
-           
-           }
-            
-          
->>>>>>> 0a927c66c0a2288d7755d1fd2aeb10b8c00e51af
       </div>
       {/* image preview */}
-      <form onSubmit={formHandler} encType="multipart/form-data">
-        <div>
-          <input
-            type="text"
-            name="content"
-            placeholder="글내용"
-            onChange={(e) => setContent(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <input type="submit" value="SUBMIT" style={{ width: "100px" }} />
-        </div>
+      <form
+        onSubmit={formHandler}
+        encType="multipart/form-data"
+        className={styles.addFeedForm}
+      >
+        <textarea
+          name="content"
+          placeholder="글내용"
+          className={styles.addFeedContent}
+          onChange={(e) => setContent(e.target.value)}
+          required
+        />
+        <input
+          type="submit"
+          value="SUBMIT"
+          style={{ width: "100px" }}
+          className={styles.addFeedButton}
+        />
       </form>
       {isOpenErr && (
         <Modal
@@ -238,16 +180,20 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
           ariaHideApp={false}
           style={notifStyle}
         >
-          <div>게시물 업로드를 실패했습니다.</div>
-          {/* <button onClick={() => setIsOpenErr(false)} >닫기</button> */}
-          <button
-            onClick={() => {
-              isCloseErr();
-              isCloseAddFeed();
-            }}
+          <div
+            style={{ width: "100%", textAlign: "center", margin: "10px auto" }}
           >
-            닫기
-          </button>
+            <div>게시물 업로드에 실패했습니다.</div>
+            <button
+              onClick={() => {
+                isCloseErr();
+                isCloseAddFeed();
+              }}
+              style={{ marginTop: "10px" }}
+            >
+              닫기
+            </button>
+          </div>
         </Modal>
       )}
     </div>
