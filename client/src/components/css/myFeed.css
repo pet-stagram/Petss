@@ -1,9 +1,10 @@
 .myFeedWrap{
     background-color: rgb(250, 250, 250);
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
+    border: 1px solid #ddd;
+    border-top: 0;
     height: 100%;
     margin: 0 190px;
+    padding-bottom: 50px;
 }
 .myFeedWrap header{
     display: flex;
@@ -25,8 +26,12 @@
     overflow: hidden;
     background-color: lightgoldenrodyellow;
     margin: 50px 0 0 100px;
-    background-image: url("../../images/7.jpg");
+    /* background-image: url("../../images/7.jpg"); */
     background-size: cover;
+}
+.myFeedProfileImage img{
+    width: 150px;
+    height: 150px;
 }
 .myFeedWrap section{
     margin-left: 60px;
