@@ -7,54 +7,17 @@ const {
     Hashtag,
 } = require("../sequelize/models/index");
 const db = require("../sequelize/models/index");
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const sequelize = require("sequelize");
 const { uploadProfileImage, uploadPostsImages } = require("../module/firebase");
-
 const stream = require("stream");
 const fs = require("fs");
 const path = require("path");
+const { post } = require('../routes/users');
 
 // firebase Admin 초기화
 
 class LoadFeed {
-    include = [
-        {
-            model: User,
-            attributes: ["id", "name", "nick", "image"],
-        },
-        /* Heart.length가 0인 경우 로그인한 유저가 좋아요안함 */
-        {
-            model: Heart,
-            attributes: ["id"],
-            where: {
-                /* 세션유저 idx값 */
-                user_id: 1,
-            },
-            plain: true,
-            required: false,
-        },
-        {
-            model: PostImage,
-            attributes: ["img_url"],
-            plain: true
-        },
-    ];
-    attributes = [
-        "id",
-        "content",
-        [
-            sequelize.fn(
-                "DATE_FORMAT",
-                sequelize.col("updated_at"),
-                "%Y-%m-%d %H:%i:%s"
-            ),
-            "updated_at",
-        ],
-        [sequelize.fn("COUNT", sequelize.col("hearts.user_id")), "heart_count"],
-        // [sequelize.fn("COUNT", sequelize.col("hearts.user_id")),{where:{user_id:1}},"count"]
-    ];
-
     async findFollowUser(userId) {
         /* 현재 user가 follow한 사용자의 id값을 모두 가져옴 */
         const followingsResult = await User.findAll({
@@ -101,6 +64,7 @@ module.exports = {
     selectPostsAll: async (userId) => {
         const loadFeed = new LoadFeed();
         let result;
+        let r = [];
         try {
             const followingsId = await loadFeed.findFollowUser(userId);
             result = await Post.findAll({
@@ -108,19 +72,65 @@ module.exports = {
                 where: {
                     user_id: {
                         [Op.in]: followingsId,
-                    },
+                    }
                 },
-                include: loadFeed.include,
-                attributes: loadFeed.attributes,
+                include: [
+                    {
+                        model: User,
+                        attributes: ["id", "name", "nick", "image"],
+                    },
+                    /* Heart.length가 0인 경우 로그인한 유저가 좋아요안함 */
+                    {
+                        model: Heart,
+                        attributes: ["id","user_id"],
+                        plain: true,
+                        required: false,
+                    },
+                    {
+                        model: PostImage,
+                        attributes: ["img_url"],
+                        plain: true
+                    },
+                ],
+                attributes: [
+                    "id",
+                    "content",
+                    [
+                        sequelize.fn(
+                            "DATE_FORMAT",
+                            sequelize.col("updated_at"),
+                            "%Y-%m-%d %H:%i:%s"
+                        ),
+                        "updated_at",
+                    ]
+                ],
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
-                group: ["id", "postImages.id","Hearts.id"],
-                nest: true,
+                group: ["id", "Hearts.id","PostImages.id"],
+                nest: true
             });
-            console.log(result);
+            
+             await Promise.all(result.map(async (post)=>{
+                const heartCount = await Heart.findAndCountAll({
+                    where:{
+                        post_id : post.id,
+                        user_id : 1
+                    },
+                    attributes:["id"],
+                    raw:true
+                });
+                if(heartCount.count>0){
+                    post.setDataValue('myHeart',true);
+                    
+                }else{
+                    post.setDataValue('myHeart',false);
+                }
+            }));
+            
+            return result;
         } catch (err) {
             throw err;
         }
-        return result;
+        
     },
     /**
      *
@@ -135,10 +145,11 @@ module.exports = {
                     id: postId,
                 },
                 attributes: loadFeed.attributes,
-                include: loadFeed.include,
-                group: ["postImages.id"],
+                include: loadFeed.include,  
+                // group: ["postImages.id"],
                 nest: true,
             });
+            
             return result;
         } catch (err) {
             throw new Error(err);
@@ -384,7 +395,6 @@ module.exports = {
                 },
                 raw: true,
             });
-            console.log(findResult);
             return findResult;
         } catch (err) {
             throw err;

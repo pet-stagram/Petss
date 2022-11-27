@@ -1,6 +1,7 @@
 const { Cookie } = require("express-session");
 const { session } = require("passport");
 const service = require("../services/authService.js");
+const userService = require("../services/usersService.js");
 
 //controller에서는 req, res관련 작업만 하기!!! 다른거는 다 service에서 하면됨!! 기억하셈!!!
 
@@ -73,13 +74,22 @@ module.exports = {
   /* 회원가입 눌렀을 때 */
   //https://victorydntmd.tistory.com/33
   postRegister: async (req, res) => {
-    const { regName, nick, password, phone, email, regDate } = req.body;
+    const { regName, nick, password, phone, email, regDate, inputPassword } =
+      req.body;
     const user = req.body;
 
     //inputPassword 비밀번호 확인 하기 위해 만든 변수
     // 비밀번호
     const insertUserInfo = await service.insertUser(user);
     //console.log(insertUserInfo);
+
+    const setImageDto = {
+      id: 1, // 현재 세션 유저
+      file: "public/images/basic_profile.jpeg",
+      isBasic: true,
+    };
+    // await service.
+    await userService.updateUserImage(setImageDto);
     try {
       if (insertUserInfo === 400) {
         res.sendStatus(400);
@@ -113,7 +123,7 @@ module.exports = {
           req.session.count = 0;
         }
         //console.log("랜덤번호 : " + req.session.randomNumber);
-        res.sendStatus(200).send(req.session.randomNumber); //랜덤번호 보내기
+        res.sendStatus(200); //랜덤번호 보내기
       } else {
         res.sendstatus(409); //이메일 중복 에러
         // 이미 생성된 유저의 id 리소스와 회원가입하려는 유저의 id가 충돌한 경우라고 볼 수 있기 때문에 409코드를 사용했다.
