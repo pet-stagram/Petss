@@ -6,6 +6,10 @@ const path = require("path");
 const { raw } = require('express');
 
 module.exports = {
+    findSearch : async(searchData)=>{
+        
+
+    },
     /* 해시태그 */
     findHashtag : async (hashtagText) => {
         if(!hashtagText){//입력받은 hashtagText 가 없다면
