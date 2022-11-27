@@ -26,9 +26,6 @@ const MyFeed = () => {
           // data = 객체 
           // 동기안되나봄. 
           setFeedList(result.data.posts);
-          console.log(result.data);
-          console.log(data);
-          console.log(data.info);
       })
       .catch((err) => {
         // err.response.status === '400' 

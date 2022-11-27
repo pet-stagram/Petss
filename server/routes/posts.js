@@ -391,7 +391,7 @@ router.get("/comment/:postId",controller.getComment);
 
 /**
  * @swagger
- *  /like/{id}:
+ *  /posts/like/{id}:
  *    put:
  *     summary: 좋아요 추가 및 제거
  *     tags:
