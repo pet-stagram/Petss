@@ -10,7 +10,7 @@ function Modal() {
           <p>이름과 휴대폰 번호를 입력해 주세요</p>
         </div>
         <div className="body">
-          <div>
+          <div className="">
             <label>이름</label>
             <input></input>
           </div>

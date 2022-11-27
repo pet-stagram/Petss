@@ -45,7 +45,7 @@ module.exports = {
   logoutUser: () => {},
 
   /* 회원가입 */
-  insertUser: async (user, inputPw) => {
+  insertUser: async (user) => {
     const { regName, nick, password, phone, email, regDate, inputPassword } =
       user;
     try {

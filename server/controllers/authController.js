@@ -79,7 +79,7 @@ module.exports = {
 
     //inputPassword 비밀번호 확인 하기 위해 만든 변수
     // 비밀번호
-    const insertUserInfo = await service.insertUser(user, inputPw);
+    const insertUserInfo = await service.insertUser(user);
     //console.log(insertUserInfo);
     try {
       if (insertUserInfo === 400) {
