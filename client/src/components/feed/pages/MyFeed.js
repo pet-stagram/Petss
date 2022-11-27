@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react'
 import "../../css/myFeed.css";
-import image from "../../../images/6.jpg";
+import "../../css/reset.css";
 import axios from "axios";
-import { useState } from "react";
+import { useState } from 'react';
 import Modal from "react-modal";
-import Follower from "./Follower";
+import Follower from './Follower';
 import { followerStyle } from "../../css/modalStyles";
 import Following from './Following';
 
@@ -16,8 +16,8 @@ const MyFeed = () => {
   const [isOpenFollowing, setIsOpenFollowing] = useState(false);
   axios.defaults.withCredentials = true;
 
-  const getMyInfo = async () => {
-    const userId = 1;
+  const getMyInfo = async() => {
+    const SESSION_ID = 1;
     await axios({
       method: "GET",
       url: `api/users/me`,
@@ -38,7 +38,7 @@ const MyFeed = () => {
           console.log("MyFeed 조회 실패");
           console.log(err);
       });
-  };
+}
 
   useEffect(() => {
     getMyInfo();
@@ -100,11 +100,11 @@ const MyFeed = () => {
     </div>
 </div> 
 
-: <h1>loading...</h1>
+: <h1>loading…</h1>
       }
       </>
       
     )
 }
 
-export default MyFeed;
+export default MyFeed

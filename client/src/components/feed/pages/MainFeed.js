@@ -56,8 +56,14 @@ const MainFeed = () => {
       }
     
   return (
+    
+        
+           
+        
+    
       <main className='mainFeedWrap'>
-            {
+        {posts === ""? <div>No Data</div> : 
+            
             isLoading &&
             posts.map((post)=>{
                 return(
@@ -86,7 +92,7 @@ const MainFeed = () => {
                             <button><img src={reply} alt="like" className="like"/></button>
                             <button><img src={message} alt="like" className="like"/></button>
                         </div>
-                        <p className='likeCount'>좋아요 {post.heart_count} 개  </p>
+                        <p className='likeCount'>좋아요 {post.Hearts.length} 개  </p>
                         <div className="postContent"> 
                             {post.content}
                         </div>
@@ -95,7 +101,8 @@ const MainFeed = () => {
                 </div>
                 );
             })
-            }
+          }
+        
            
         </main>
   )
