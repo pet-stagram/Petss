@@ -73,7 +73,7 @@ module.exports = {
   /* 회원가입 눌렀을 때 */
   //https://victorydntmd.tistory.com/33
   postRegister: async (req, res) => {
-    const { regName, nick, password, phone, email, regDate, inputPassword } =
+    const { regName, nick, password, phone, email, regDate } =
       req.body;
     const user = req.body;
 
