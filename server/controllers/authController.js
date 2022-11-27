@@ -74,7 +74,7 @@ module.exports = {
   /* 회원가입 눌렀을 때 */
   //https://victorydntmd.tistory.com/33
   postRegister: async (req, res) => {
-    const { regName, nick, password, phone, email, regDate } =
+    const { regName, nick, password, phone, email, regDate, inputPassword } =
       req.body;
     const user = req.body;
 
@@ -82,14 +82,14 @@ module.exports = {
     // 비밀번호
     const insertUserInfo = await service.insertUser(user);
     //console.log(insertUserInfo);
-    
+
     const setImageDto = {
-      id : 1, // 현재 세션 유저
+      id: 1, // 현재 세션 유저
       file: "public/images/basic_profile.jpeg",
-      isBasic: true
-    }
-      // await service.
-      await userService.updateUserImage(setImageDto);
+      isBasic: true,
+    };
+    // await service.
+    await userService.updateUserImage(setImageDto);
     try {
       if (insertUserInfo === 400) {
         res.sendStatus(400);
@@ -103,8 +103,6 @@ module.exports = {
       console.log(err);
       res.sendStatus(500);
     }
-
-     
   },
 
   /* 이메일 인증 */
@@ -177,7 +175,8 @@ module.exports = {
 
   /* 닉넴중복 체크 */
   postNick: async (req, res) => {
-    userNick = req.body.nick;
+    const userNick = req.body.nick;
+    console.log(req.body.nick);
     const checkUserNick = await service.checkNick(userNick);
     try {
       if (checkUserNick === 400) {
@@ -187,7 +186,6 @@ module.exports = {
       }
     } catch (err) {
       console.log(err);
-      throw err;
     }
   },
 };

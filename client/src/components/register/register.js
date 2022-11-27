@@ -61,6 +61,26 @@ function Register() {
     });
   };
 
+  //nick 중복검사
+  //const [nickChk, setNickChk] = useState(false);
+
+  function chkNick() {
+    axios({
+      method: "POST",
+      url: `api/auth/nick`,
+      data: formData.nick,
+    })
+      .then((res) => console.log(res))
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  // async function checkNick(e) {
+  //   //e.preventDefault();
+  //   const data = formData.nick;
+  // }
+
   //제출할 때
   const onSubmit = (e) => {
     //e.preventDefault();
@@ -103,20 +123,6 @@ function Register() {
       });
   }
 
-  //닉네임 중복검사
-  // function nickFunc() {
-  //   axios.post("");
-  // }
-  //이메일 중복검사
-
-  //db 연동,중복불가인 내용은 인풋칸에 입력하고 focusout할 때 db랑 조회해서 겹치면 인풋 아래 메시지 띄어주기.
-  //1. db랑 연결이 되는지 확인?
-  // useEffect(() => {
-  //   axios
-  //     .post("http://localhost:5100/auth/register")
-  //     .then((res) => console.log(res).catch());
-  // }, []);
-
   return (
     <>
       <body>
@@ -129,11 +135,8 @@ function Register() {
               <form
                 className="register"
                 method="post"
-                // action="api/auth/register"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                {/* maxlength정하고(db랑 맞춰야하겠지?) 모든 입력칸 필수 입력으로 만들고 인풋 칸 밑에 경고글씨 띄우기
-                      해당 인풋칸을 눌렀다가 벗어날 때 입력확인, 중복검사 되도록, 그에 맞춰서 경고글씨 바뀜 */}
                 <div className="regRowWrap">
                   <input
                     type="text"
@@ -160,10 +163,10 @@ function Register() {
                     {...register("nick")}
                     value={formData.nick}
                     onChange={onChange}
+                    onBlur={chkNick}
                   />
                   {errors.nick && <p>{errors.nick.message}</p>}
                 </div>
-                {/* 비밀번호 규칙 db에 맞춰서 넣기  */}
                 <div className="regRowWrap">
                   <input
                     type="password"
@@ -191,7 +194,6 @@ function Register() {
                     <p>{errors.passwordConfirm.message}</p>
                   )}
                 </div>
-                {/* 재입력 할 때 위에 입력한 값과 비교하기  */}
                 <div className="regRowWrap">
                   <input
                     type="text"
@@ -234,13 +236,6 @@ function Register() {
                   {errors.email && (
                     <p className="emailMsg">{errors.email.message}</p>
                   )}
-                  {/* 인증번호 받기 눌렀을 때 db에 존재하는 이메일이면 "이미 존재하는 이메일 입니다" 글자 띄우고 
-                    인증가능한 이메일이면 "인증번호가 전송되었습니다 ". 
-                    비활성화된 인증번호 입력칸 활성화 되고 회원가입 버튼 누를때 인증번호 일치하는지 검사 
-                    인증번호 틀렸을 시 띄우는 팝업창도 필요함. 성공하면  "인증에 성공하였습니다. " 하고 넘어가야함.
-                    인증번호 session 폴더에 저장(백앤드),번호 다르면 400에러. 다시 시도 요청, 번호 같으면 200.
-                    
-                    */}
                 </div>
 
                 <div className="regRowWrap">

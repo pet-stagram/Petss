@@ -1,20 +1,25 @@
-const Sequelize = require('sequelize');
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
+const Sequelize = require("sequelize");
+const env = process.env.NODE_ENV || "development";
+const config = require(__dirname + "/../config/config.js")[env];
 const db = {};
 
-const User = require('./user');
-const Post = require('./post');
-const Hashtag = require('./hashtag');
-const Invoice = require('./invoice');
-const Message = require('./Message');
-const Heart = require('./heart');
-const Comment = require('./comment');
-const PostImage = require('./postImage');
+const User = require("./user");
+const Post = require("./post");
+const Hashtag = require("./hashtag");
+const Invoice = require("./invoice");
+const Message = require("./Message");
+const Heart = require("./heart");
+const Comment = require("./comment");
+const PostImage = require("./postImage");
 const Follow = require("./follow");
 const Conversation = require("./conversation");
 
-let sequelize = new Sequelize( config.database, config.username, config.password, config );
+let sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config
+);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
@@ -40,7 +45,6 @@ Comment.init(sequelize);
 PostImage.init(sequelize);
 Follow.init(sequelize);
 Conversation.init(sequelize);
-
 
 User.associate(db);
 Post.associate(db);

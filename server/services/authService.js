@@ -46,8 +46,7 @@ module.exports = {
 
   /* 회원가입 */
   insertUser: async (user) => {
-    const { regName, nick, password, phone, email, regDate } =
-      user;
+    const { regName, nick, password, phone, email, regDate } = user;
     try {
       //const chekNick = await User.findOne({ where: { nick } })//user.nick:nick
       //console.log(chekNick.nick);//
@@ -59,14 +58,15 @@ module.exports = {
       const hashPw = bcrypt.hashSync(hashPass, 12); //해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
 
       const matchPw = await bcrypt.compare(password, hashPw);
-    
       //console.log(matchPw);
       if (!matchPw) {
         console.log("비번틀림");
         result = 400;
       } else {
+        console.log(regName);
+        console.log(nick);
         const addUser = await User.create({
-          name: regName,
+          name: "이호민",
           nick: nick,
           password: hashPw,
           phone: phone,
@@ -121,7 +121,7 @@ module.exports = {
         const sendmessage = {
           //랜덤숫자 발송하기 위한 메세지를 담은 변수
           from: "min@min.com",
-          to: "b08c00d3ca-35b52b@inbox.mailtrap.io", 
+          to: "b08c00d3ca-35b52b@inbox.mailtrap.io",
           subject: "[petss]인증 관련 이메일 입니다.",
           text: "오른쪽 숫자 6자리를 입력해주세요 : " + randomNumber,
         };
@@ -164,12 +164,14 @@ module.exports = {
 
   /* 닉넴중복 체크 */
   checkNick: async (userNick) => {
-    console.log(userNick, "Service, userNick"); //꺼뭉아
+    // console.log(userNick, "Service, userNick"); //꺼뭉아
+    console.log(userNick);
     const nick = userNick;
 
     try {
-      const chekNick = await User.findOne({ where: { nick } }); //db에 저장된 nick
+      const chekNick = await User.findOne({ where: { nick: userNick } }); //db에 저장된 nick
       //console.log(chekNick, "chekNick");//
+      console.log("h");
       if (!chekNick) {
         console.log("닉넴없음");
         result = 200;
@@ -180,7 +182,7 @@ module.exports = {
       //console.log(result,"result");
       return result;
     } catch (err) {
-      throw err;
+      // throw err;
     }
   },
 };
