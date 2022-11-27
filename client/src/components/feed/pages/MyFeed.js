@@ -17,7 +17,9 @@ const MyFeed = () => {
   axios.defaults.withCredentials = true;
 
   const getMyInfo = async() => {
-    const userId = 1;
+
+    const SESSION_ID = 1;
+
     await axios({
       method: "GET",
       url: `api/users/me`,

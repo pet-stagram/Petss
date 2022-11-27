@@ -1,6 +1,7 @@
 const { Cookie } = require("express-session");
 const { session } = require("passport");
 const service = require("../services/authService.js");
+const userService = require("../services/usersService.js");
 
 //controller에서는 req, res관련 작업만 하기!!! 다른거는 다 service에서 하면됨!! 기억하셈!!!
 
@@ -81,6 +82,14 @@ module.exports = {
     // 비밀번호
     const insertUserInfo = await service.insertUser(user);
     //console.log(insertUserInfo);
+    
+    const setImageDto = {
+      id : 1, // 현재 세션 유저
+      file: "public/images/basic_profile.jpeg",
+      isBasic: true
+    }
+      // await service.
+      await userService.updateUserImage(setImageDto);
     try {
       if (insertUserInfo === 400) {
         res.sendStatus(400);
@@ -94,6 +103,8 @@ module.exports = {
       console.log(err);
       res.sendStatus(500);
     }
+
+     
   },
 
   /* 이메일 인증 */

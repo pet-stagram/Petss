@@ -91,7 +91,9 @@ const Navbar = () => {
             <AddFeed setIsOpenAddFeed={setIsOpenAddFeed}/> 
           </Modal>
           <li>알림</li>
-          <li>설정</li>
+          <li>
+            <NavLink to="/edit">설정</NavLink>
+            </li>
           <li>
             <NavLink to="/logout">로그아웃</NavLink>
           </li>
