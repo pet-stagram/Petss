@@ -6,7 +6,7 @@ const service = require("../services/authService.js");
 
 const inputNum = "692438"; //입력한 숫자 대신 임시적으로 사용할 변수
 
-const inputPw = "33"; //입력한 비번 대신 임시적으로 사용할 변수
+//const inputPw = "33"; //입력한 비번 대신 임시적으로 사용할 변수
 
 const userData = {
   email: "12",
@@ -79,7 +79,7 @@ module.exports = {
 
     //inputPassword 비밀번호 확인 하기 위해 만든 변수
     // 비밀번호
-    const insertUserInfo = await service.insertUser(user, inputPw);
+    const insertUserInfo = await service.insertUser(user);
     //console.log(insertUserInfo);
     try {
       if (insertUserInfo === 400) {

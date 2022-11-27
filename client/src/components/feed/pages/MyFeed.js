@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import "../../css/myFeed.css";
-import image from "../../../images/7.jpg"
+import "../../css/reset.css";
 import axios from "axios";
 import { useState } from 'react';
 import Modal from "react-modal";
@@ -100,7 +100,7 @@ const MyFeed = () => {
     </div>
 </div> 
 
-: <h1>loading...</h1>
+: <h1>loading…</h1>
       }
       </>
       

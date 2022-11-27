@@ -45,7 +45,7 @@ module.exports = {
   logoutUser: () => {},
 
   /* 회원가입 */
-  insertUser: async (user, inputPw) => {
+  insertUser: async (user) => {
     const { regName, nick, password, phone, email, regDate, inputPassword } =
       user;
     try {
@@ -54,7 +54,7 @@ module.exports = {
       //if(!chekNick){
       //console.log("닉넴없음");
       //비번과 입력한 비번이 맞는지 확인
-      const inputPass = inputPw; //클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
+      const inputPass = inputPassword; //클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
       const hashPass = password; //db에 저장된 비밀번호
       const hashPw = bcrypt.hashSync(hashPass, 12); //해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
 

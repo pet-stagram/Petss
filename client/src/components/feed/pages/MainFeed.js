@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import "../../css/mainFeed.css"
+import "../../css/reset.css";
 import test7 from "../../../images/7.jpg"
 import paw from "../../../images/paw.png"
 import emptyPaw from "../../../images/empty_paw.png"
@@ -85,7 +86,7 @@ const MainFeed = () => {
                             <button><img src={reply} alt="like" className="like"/></button>
                             <button><img src={message} alt="like" className="like"/></button>
                         </div>
-                        <p className='likeCount'>좋아요 {post.Hearts.length} 개  </p>
+                        <p className='likeCount'>좋아요 {post.heart_count} 개  </p>
                         <div className="postContent"> 
                             {post.content}
                         </div>

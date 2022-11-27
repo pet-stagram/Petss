@@ -1,0 +1,21 @@
+.editFooter {
+  position: relative;
+  left: 488px;
+  margin-bottom: 50px;
+  color: rgb(115, 115, 115);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.editFooter ul {
+  display: flex;
+}
+
+.editFooter ul li {
+  margin-right: 40px;
+}
+
+.editFooter p {
+  margin-left: 300px;
+  margin-top: 20px;
+}

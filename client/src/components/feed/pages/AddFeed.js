@@ -2,10 +2,12 @@ import React from "react";
 import Modal from "react-modal";
 import { useState } from "react";
 import axios from "axios";
+import "../../css/reset.css";
 import { notifStyle } from "../../css/modalStyles";
 import styles from "../../css/addFeed.module.css";
 import ImageSlider, { Slide } from "react-auto-image-slider";
 // import { Slide } from 'react-slideshow-image';
+import ChatRoom from '../../messanger/ChatRoom';
 
 const AddFeed = ({setIsOpenAddFeed}) => {
     const [step, setStep] = useState(1);
@@ -111,7 +113,7 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
   
   return (
       <div>
-          <div className="previewImageWrap">
+          <div className={styles.previewImageWrap}>
             <ImageSlider effectDelay={500} autoPlayDelay={10000} className={styles.imageSlider} width={400} height={400}>
                 {
                     previews.map((preview, index) => {
@@ -141,19 +143,15 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
             
           </div>
           {/* image preview */}
-          <form onSubmit={formHandler} encType="multipart/form-data">
-              <div>
-                  <input
-                      type="text"
+          <form onSubmit={formHandler} encType="multipart/form-data" className={styles.addFeedForm}>
+                <textarea
                       name="content"
                       placeholder="글내용"
+                      className={styles.addFeedContent}
                       onChange={(e) => setContent(e.target.value)}
                       required
-                  />
-              </div>
-              <div>
-                  <input type="submit" value="SUBMIT" style={{width:"100px"}}/>
-              </div>
+                />
+              <input type="submit" value="SUBMIT" style={{width:"100px"}} className={styles.addFeedButton}/>
           </form>
            {
             isOpenErr&&
