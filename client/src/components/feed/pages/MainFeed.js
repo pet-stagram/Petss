@@ -56,6 +56,11 @@ const MainFeed = () => {
       }
     
   return (
+    
+        
+            // {(posts === null? <div>1</div> : <div>2</div>)}
+        
+    
       <main className='mainFeedWrap'>
             {
             isLoading &&
@@ -90,7 +95,6 @@ const MainFeed = () => {
                         <div className="postContent"> 
                             {post.content}
                         </div>
-                        
                     </div>
                 </div>
                 );
