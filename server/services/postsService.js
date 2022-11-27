@@ -105,11 +105,11 @@ module.exports = {
                     ]
                 ],
                 /* group으로 묶어주니 1:N이 모두 출력됨 */
-                group: ["id", "postImages.id","Hearts.id"],
+                group: ["id", "Hearts.id","PostImages.id"],
                 nest: true
             });
+            
              await Promise.all(result.map(async (post)=>{
-                const newPost = {};
                 const heartCount = await Heart.findAndCountAll({
                     where:{
                         post_id : post.id,
@@ -125,6 +125,7 @@ module.exports = {
                     post.setDataValue('myHeart',false);
                 }
             }));
+            
             return result;
         } catch (err) {
             throw err;
@@ -145,9 +146,10 @@ module.exports = {
                 },
                 attributes: loadFeed.attributes,
                 include: loadFeed.include,  
-                group: ["postImages.id"],
+                // group: ["postImages.id"],
                 nest: true,
             });
+            
             return result;
         } catch (err) {
             throw new Error(err);

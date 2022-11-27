@@ -84,7 +84,7 @@ module.exports = {
     postUserImageBasic : async (req, res)=>{
         
         const userDto = {
-            id : 3, // 현재 세션 유저
+            id : 1, // 현재 세션 유저
             file: "public/images/basic_profile.jpeg",
             isBasic: true
         }

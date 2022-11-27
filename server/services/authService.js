@@ -46,7 +46,7 @@ module.exports = {
 
   /* 회원가입 */
   insertUser: async (user) => {
-    const { regName, nick, password, phone, email, regDate, inputPassword } =
+    const { regName, nick, password, phone, email, regDate } =
       user;
     try {
       //const chekNick = await User.findOne({ where: { nick } })//user.nick:nick
@@ -54,18 +54,18 @@ module.exports = {
       //if(!chekNick){
       //console.log("닉넴없음");
       //비번과 입력한 비번이 맞는지 확인
-      const inputPass = inputPassword; //클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
+      //const inputPass = inputPassword; //클라이언트에서 입력한 비밀번호 가져옴 9 //지금은 임시로inputPw을 썼지만 inputPassword로 바꿔야됨
       const hashPass = password; //db에 저장된 비밀번호
       const hashPw = bcrypt.hashSync(hashPass, 12); //해쉬암호화된 비번 //$2b$12$nRLEWckXHJarOAj6S80DMuZT1J86bOfIZQd10VsE9xvg8lgSsvsaW
 
-      const matchPw = await bcrypt.compare(inputPass, hashPw);
+      const matchPw = await bcrypt.compare(password, hashPw);
+    
       //console.log(matchPw);
       if (!matchPw) {
         console.log("비번틀림");
         result = 400;
       } else {
         const addUser = await User.create({
-          //
           name: regName,
           nick: nick,
           password: hashPw,
@@ -120,13 +120,13 @@ module.exports = {
         };
         const sendmessage = {
           //랜덤숫자 발송하기 위한 메세지를 담은 변수
-          from: "vvvminll@naver.com",
-          to: "b08c00d3ca-35b52b@inbox.mailtrap.io",
+          from: "min@min.com",
+          to: "b08c00d3ca-35b52b@inbox.mailtrap.io", 
           subject: "[petss]인증 관련 이메일 입니다.",
           text: "오른쪽 숫자 6자리를 입력해주세요 : " + randomNumber,
         };
         send(sendmessage); //메세지 담은 sendmessage를 메일보냄
-
+        console.log(sendmessage);
         return [randomNumber, randomNumber];
       } catch (err) {
         return [-1, -1];
