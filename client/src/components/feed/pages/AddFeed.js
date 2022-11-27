@@ -84,7 +84,7 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
           formData.append("files", file);
       });
       
-      formData.append("content", JSON.stringify(content));
+      formData.append("content", content);
 
     //   console.log(formData);
     //   for ( let key of formData.keys()) {
