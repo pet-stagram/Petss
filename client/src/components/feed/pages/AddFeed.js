@@ -2,14 +2,12 @@ import React from "react";
 import Modal from "react-modal";
 import { useState } from "react";
 import axios from "axios";
-import notifStyle from "../../css/notifStyle";
+import { notifStyle } from "../../css/modalStyles";
 import styles from "../../css/addFeed.module.css";
 import ImageSlider, { Slide } from "react-auto-image-slider";
 // import { Slide } from 'react-slideshow-image';
 
 const AddFeed = ({setIsOpenAddFeed}) => {
-
-  /* 사진 선택 컴포넌트와 피드 게시(Submit form) 컴포넌트를 나누기 위해 사용 */
     const [step, setStep] = useState(1);
 
     /* 서버에 보내주는 실제 이미지 파일 */
@@ -35,7 +33,6 @@ const AddFeed = ({setIsOpenAddFeed}) => {
 
 /**
  * AddFeed 컴포넌트의 step state가 1일 때 렌더링하는 컴포넌트
- * 이미지 파일을 여러 장 선택할 수 있음
  * @param {Object} param0 
  */
 const SelectImage = ({ setStep, setImageFile, setPreviewImage }) => {
@@ -115,17 +112,18 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
   return (
       <div>
           <div className="previewImageWrap">
-            <ImageSlider effectDelay={500} autoPlayDelay={2000}>
+            <ImageSlider effectDelay={500} autoPlayDelay={10000} className={styles.imageSlider} width={400} height={400}>
                 {
                     previews.map((preview, index) => {
-                        // console.log(preview);
+                        
                         return(
-                            <Slide key={index}>
-                                <img className="previewImage" src={preview} alt="uploadImagePreview" style={{width: "300px", height: "200px"}}/>
+                            <Slide key={index} >
+                                <img className="previewImage" src={preview} alt="uploadImagePreview" style={{width: "650px", height: "650px"}}/>
+                                
                             </Slide>    
                         )
                     })
-                }
+                }                
             </ImageSlider>
 
             {/* ******************************************************************************* */}
@@ -140,6 +138,7 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
                     </div>
                 )})} 
             </Slide> */}
+            
           </div>
           {/* image preview */}
           <form onSubmit={formHandler} encType="multipart/form-data">
@@ -164,10 +163,10 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
             ariaHideApp={false}
             style={notifStyle}
             >
-                <div>게시물 업로드를 실패했습니다.</div>
-                {/* <button onClick={() => setIsOpenErr(false)} >닫기</button> */}
-                <button onClick={() => {isCloseErr(); isCloseAddFeed();}} >닫기</button>
-                
+                <div style={{width:'100%', textAlign:"center", margin:"10px auto"}}>
+                    <div>게시물 업로드에 실패했습니다.</div>
+                    <button onClick={() => {isCloseErr(); isCloseAddFeed();}} style={{marginTop:"10px"}} >닫기</button>
+                </div>
             </Modal>
            
            }
