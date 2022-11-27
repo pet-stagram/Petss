@@ -6,7 +6,7 @@ const service = require("../services/authService.js");
 
 const inputNum = "692438"; //입력한 숫자 대신 임시적으로 사용할 변수
 
-const inputPw = "33"; //입력한 비번 대신 임시적으로 사용할 변수
+//const inputPw = "33"; //입력한 비번 대신 임시적으로 사용할 변수
 
 const userData = {
   email: "12",

@@ -4,6 +4,7 @@ import Navbar from "../feed/layout/Navbar";
 //import Profile from "../../images/1.jpg";
 //import $ from "jquery"; //jquery 세팅
 import { useEffect, useState } from "react";
+import Footer from "../footer/Footer";
 
 function EditProfile() {
   //axios.get()으로 유저 정보 가져와서 input칸에 반영시키고 제출할 때 유저정보 수정될 수 있게(post)
@@ -182,21 +183,7 @@ function EditProfile() {
             </div>
           </div>
         </div>
-        <footer>
-          <ul>
-            <li>petss</li>
-            <li>소개</li>
-            <li>채용 정보</li>
-            <li>도움말</li>
-            <li>개인정보처리방침</li>
-            <li>약관</li>
-            <li>해시태그</li>
-            <li>연락처 업로드 & 비사용자</li>
-          </ul>
-          <div>
-            <p>©2022 PETSS</p>
-          </div>
-        </footer>
+        <Footer />
       </body>
     </div>
   );
