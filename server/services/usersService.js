@@ -45,7 +45,7 @@ module.exports = {
                 posts,
                 postsCount
             }
-
+            console.log(currentUserData);
             return currentUserData;
         }catch(err){
             console.error(err);

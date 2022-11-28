@@ -32,7 +32,7 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
                 content,
                 sender: "me",
                 partner: partner.id,
-                me: 1, //세션
+                me: 29, //세션
             };
             sendSocketMessage(messageInfo);
             setTimeout(() => {
@@ -52,7 +52,7 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
         >
             <div className={styles.partnerWrap}>
                     {/* 이미지 클릭 시 상대방 프로필 가기 */}
-                    
+            {console.log(messages)}           
                     <img
                         className={styles.partnerImage}
                         src={messages.partner.image}

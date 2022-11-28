@@ -4,15 +4,15 @@ const File = require("file-class");
 
 module.exports = {
     getPosts: async (req, res) => {
-        if (false) {
-            /* session이 없으면 401. 나중에 수정하기 */
+        const currentUser = req.session.u_id;
+        if (!currentUser) {
             res.sendStatus(401);
         } else {
             try {
                 const postId = req.params.id;
                 let result;
                 if (postId === undefined) {
-                    result = await service.selectPostsAll(1);
+                    result = await service.selectPostsAll(currentUser);
                     if (result.length === 0) {
                         res.sendStatus(204);
                     } else {
@@ -25,36 +25,33 @@ module.exports = {
                 }
                 /* parameter로 현재 세션의 idx값 */
             } catch (err) {
-                
                 res.sendStatus(500);
                 console.error(err);
             }
         }
     },
     postPosts: async (req, res) => {
-        const requestDto = {
-            files : req.files,
-            content : req.body.content,
-            user : req.session.u_id // 세션유저
-        }
-        if (requestDto.files.length===0) {
+        const currentUser = req.session.u_id;
+        if(!currentUser){
+            res.sendStatus(401);
+        }else if (requestDto.files.length===0) {
             /* 클라이언트에서 파일 첨부를 하지 않았을 시 */
             res.sendStatus(400);
-        } else if (false) {
-            /* 세션 없을 때 */
-            res.sendStatus(401);
-        }
-        /* 세션 없으면 401 보내주기 */
-        // else if(!req.session.user){res.sendStatus(401);}
-        else {
+        }else{
+            const requestDto = {
+                files : req.files,
+                content : req.body.content,
+                user : currentUser // 세션유저
+            }
             try {
                 let fileUrl = await service.uploadFile(requestDto.files);
                 
                 const postDto = {
-                    user: req.session.u_id, // 현재 로그인 중인 유저의 idx
+                    user: currentUser, // 현재 로그인 중인 유저의 idx
                     content: req.body.content,
                     fileUrl: fileUrl,
                 };
+             
                 await service.insertPosts(postDto);
                 res.sendStatus(201);
             } catch (err) {
@@ -63,16 +60,19 @@ module.exports = {
                 res.sendStatus(500);
             }
         }
+
+
     },
     putPosts: async (req, res) => {
-        if (isNaN(req.params.postId)) {
-            res.sendStatus(404);
-        } else if (false) {
-            /* 세션 없을 때 */
+
+        const currentUser = req.session.u_id;
+        if(!currentUser){
             res.sendStatus(401);
-        } else {
+        }else if (isNaN(req.params.postId)) {
+            res.sendStatus(404);
+        }else {
             const postDto = {
-                user: req.session.u_id, // 현재 세션 유저
+                user: currentUser, // 현재 세션 유저
                 postId: req.params.postId,
                 content: req.body.content,
             };
@@ -88,14 +88,14 @@ module.exports = {
         }
     },
     deletePosts: async (req, res) => {
-        if (isNaN(req.params.postId)) {
-            res.sendStatus(404);
-        } else if (false) {
-            /* 세션 없을 때 */
+        const currentUser = req.session.u_id;
+        if(!currentUser){
             res.sendStatus(401);
-        } else {
+        }else if (isNaN(req.params.postId)) {
+            res.sendStatus(404);
+        }else {
             const postDto = {
-                user: req.session.u_id, //현재 세션 유저
+                user: currentUser, //현재 세션 유저
                 postId: req.params.postId,
             };
             try {
@@ -106,19 +106,19 @@ module.exports = {
             } catch (err) {
                 res.sendStatus(400);
             }
-        }
+        } 
     },
     putLike: async (req, res) => {
         /* 세션 없으면 401 보내주기 */
         // if(!req.session.user){res.sendStatus(401);}
-        if (false) {
-            // 세션없음
+        const currentUser = req.session.u_id;
+        if(!currentUser){
             res.sendStatus(401);
-        } else {
+        }else {
             // 세션 아이디 -> 피드하나에 좋아요 클릭
             const likeDto = {
                 postId: req.params.id,
-                user: req.session.u_id, //후에 세션 유저로 변경
+                user: currentUser, //후에 세션 유저로 변경
             };
 
             try {
@@ -131,13 +131,13 @@ module.exports = {
         }
     },
     postComment: async (req, res) => {
-        if (false) {
-            /* 세션없을때 */
-            res.sendStaus(401);
+        const currentUser = req.session.u_id;
+        if(!currentUser){
+            res.sendStatus(401);
         }else{
             const commentDto = {
                 postId: parseInt(req.body.postId),
-                user: req.session.u_id, // 현재 세션 유저
+                user: currentUser, // 현재 세션 유저
                 content: req.body.content,
             };
             try {
@@ -149,17 +149,14 @@ module.exports = {
         }
     },
     putComment: async (req, res) => {
-        if (isNaN(req.params.commentId)) {
-            res.sendStatus(404);
-        } else if (false) {
-            /* 세션 없을 때 */
+        const currentUser = req.session.u_id;
+        if(!currentUser){
             res.sendStatus(401);
-        }
-        /* 세션 없으면 401 보내주기 */
-        // else if(!req.session.user){res.sendStatus(401);}
-        else {
+        }else if (isNaN(req.params.commentId)) {
+            res.sendStatus(404);
+        }else {
             const commentDto = {
-                user: req.session.u_id, // 현재 세션 유저
+                user: currentUser, // 현재 세션 유저
                 commentId: parseInt(req.params.commentId),
                 content: req.body.content,
             };
@@ -174,14 +171,15 @@ module.exports = {
         }
     },
     deleteComment: async (req, res) => {
-        if (isNaN(req.params.commentId)) {
+        
+        const currentUser = req.session.u_id;
+        if(!currentUser){
+            res.sendStatus(401);
+        }else if (isNaN(req.params.commentId)) {
             res.sendStatus(404);
-        }
-        /* 세션 없으면 401 보내주기 */
-        // else if(!req.session.user){res.sendStatus(401);}
-        else {
+        }else {
             const commentDto = {
-                user: req.session.u_id, // 현재 세션 유저
+                user: currentUser, // 현재 세션 유저
                 commentId: parseInt(req.params.commentId),
             };
             try {
@@ -195,12 +193,12 @@ module.exports = {
         }
     },
     getComment : async (req, res)=>{
+        const currentUser = req.session.u_id;
         const postId = req.params.postId;
-        if (isNaN(req.params.postId)) {
-            res.sendStatus(404);
-        }else if(false){
-            /* 세션 없으면 401 */
+        if(!currentUser){
             res.sendStatus(401);
+        }else if (isNaN(req.params.postId)) {
+            res.sendStatus(404);
         }else{
             try{
                 const selectResult = await service.selectComment(postId);

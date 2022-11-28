@@ -61,19 +61,18 @@ module.exports = {
      * @param {Number} userId 현재 세션(로그인 된) 유저의 idx 값
      * @returns {Array} [{게시물 id, 내용, 사진, 수정시간, 좋아요 개수, 글쓴이 정보{유저 idx, 이름, 활동명, 프로필사진}}]
      */
-    selectPostsAll: async (userId) => {
+    selectPostsAll: async (currentUser) => {
         const loadFeed = new LoadFeed();
         let result;
-        let r = [];
         try {
-            const followingsId = await loadFeed.findFollowUser(userId);
+            const followingsId = await loadFeed.findFollowUser(currentUser);
             result = await Post.findAll({
                 order: [["updatedAt", "DESC"]],
                 where: {
                     user_id: {
                         [Op.or] :{
                             [Op.in]: followingsId,
-                            [Op.eq]: 1 // 세션으로 변경하기
+                            [Op.eq]: currentUser // 세션으로 변경하기
                         }
                     }
                 },
@@ -116,7 +115,7 @@ module.exports = {
                 const heartCount = await Heart.findAndCountAll({
                     where:{
                         post_id : post.id,
-                        user_id : 1
+                        user_id : currentUser
                     },
                     attributes:["id"],
                     raw:true
