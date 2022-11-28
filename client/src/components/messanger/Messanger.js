@@ -21,10 +21,13 @@ function Messanger(props) {
         const fetchConversationDetail = async (conversationId) => {
             try {
                 const messageResult = await common.getConversationDetail(
-                    conversationId, 1
+                    conversationId, 0
                 );
                 setMessages({ ...messages, ...messageResult });
                 setLoading(false);
+                setTimeout(()=>{
+                    console.log(messages);
+                },1000)
             } catch (err) {
                 if (err.response.status === 504) {
                     setLoading(true);

@@ -13,6 +13,7 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
     const plusLength = () => {
         setLength(length+10);
     }
+    
     const fetch = async () => {
         if(length===0){
             const reverseData = {
@@ -36,12 +37,6 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
                 messageLength : data.messageLength                
             }
             plusLength();
-            console.log(messages);
-            // setMessages({...reverseData});
-            setTimeout(() => {
-                console.log(messages);    
-            }, (1500));
-            
             setLoading(false);
         }
         } catch (err) {

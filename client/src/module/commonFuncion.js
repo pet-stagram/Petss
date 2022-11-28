@@ -30,7 +30,6 @@ export async function getConversationDetail(selectedConversation,msgLength) {
         const result = await axios.get(`/api/chat/message?conversation=${selectedConversation}&offset=${msgLength}`);  
       const messages = result.data.rows;
       let partner;
-
       messages.map((message) => {
           partner =
               message.Receiver.id === null
