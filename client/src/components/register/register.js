@@ -8,17 +8,21 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const [isNickDup, setIsNickDup] = useState(false);
   //blur : 요소의 포커스가 해제되었을 때 발생..
-  const formSchema = yup.object({
-    regName: yup.string().required("이름을 입력해주세요"),
-    nick: yup.string().required("활동명을 입력해주세요"),
-    phone: yup.string().required("전화번호를 입력해주세요"),
+  //trim()을 해주어야 space(공백)을 string으로 인식 안 함!! 필수!
+  const formSchema = yup.object().shape({
+    regName: yup.string().trim().required("이름을 입력해주세요"),
+    nick: yup.string().trim().required("활동명을 입력해주세요"),
+    phone: yup.string().trim().required("휴대폰 번호를 입력해주세요"),
     email: yup
       .string()
+      .trim()
       .required("이메일을 입력해주세요")
       .email("이메일 형식이 아닙니다."),
     password: yup
       .string()
+      .trim()
       .required("영문, 숫자포함 8자리를 입력해주세요")
       .min(8, "최소 8자 이상 가능합니다.")
       .max(30, "최대 30자 까지만 가능합니다")
@@ -28,6 +32,7 @@ function Register() {
       ),
     passwordConfirm: yup
       .string()
+      .trim()
       .oneOf([yup.ref("password")], "비밀번호가 다릅니다."),
   });
 
@@ -35,84 +40,73 @@ function Register() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
+    //onTouched랑 resolver 둘 다 있어야 error message뜬다.
     mode: "onTouched",
-    reValidateMode: "onBlur",
+    // validationSchema: formSchema,
     resolver: yupResolver(formSchema),
   });
 
   // const onSubmit = (data) => console.log(data);
 
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    regName: "",
-    nick: "",
-    password: "",
-    phone: "",
-  });
 
-  //입력값 감지
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  // //입력값 감지
+  // const onChange = (e) => {
+  //   const { name, value } = e.target;
+  // };
 
-  //nick 중복검사
-  //const [nickChk, setNickChk] = useState(false);
-
-  function chkNick() {
+  const onBlur = (e) => {
     axios({
       method: "POST",
       url: `api/auth/nick`,
-      data: formData.nick,
+      data: e.target.value,
     })
-      .then((res) => console.log(res), console.log(formData.nick))
+      .then((res) => {
+        console.log(res);
+        setIsNickDup(false);
+      })
       .catch((e) => {
         console.log(e);
+        setIsNickDup(true);
       });
-  }
-
-  // async function checkNick(e) {
-  //   //e.preventDefault();
-  //   const data = formData.nick;
-  // }
+  };
 
   //제출할 때
-  const onSubmit = (e) => {
-    //e.preventDefault();
-    console.log(formData);
+  const onSubmit = (data) => {
+    console.log(data);
 
     //전화번호가 숫자인지 체크하기
-    if (isNaN(formData.phone)) {
+    if (isNaN(data.phone)) {
       alert("전화번호는 숫자만 입력해주세요.");
-      setFormData({ ...formData, phone: "" });
+      document.querySelector("#regPhone").value = "";
+      //잘못적으면 빈칸
     }
 
     //input에 값이 있는지 체크하고 입력이 다 돼있으면 post전송
     else if (
-      formData.regName !== "" &&
-      formData.nick !== "" &&
-      formData.password !== "" &&
-      formData.phone !== "" &&
-      formData.email !== ""
+      data.regName !== "" &&
+      data.nick !== "" &&
+      data.password !== "" &&
+      data.phone !== "" &&
+      data.email !== ""
     ) {
-      addMember();
+      addMember(data);
     }
   };
 
+  // const onClick = () => {
+  //   console.log(data);
+  // };
+
   //db랑 비교해서 중복여부 체크해야 하니 get도 해야 한다.
-  //1.submit할 때 formData를 db랑 비교(axios.get)해서 중복이면 글씨 변경하기
-  async function addMember() {
+  //1.submit할 때 data를 db랑 비교(axios.get)해서 중복이면 글씨 변경하기
+  async function addMember(data) {
     await axios({
       method: "POST",
       url: `api/auth/register`,
-      data: formData,
+      data: data,
       withCredentials: true,
     })
       .then((res) => {
@@ -148,8 +142,6 @@ function Register() {
                     id="name"
                     autoComplete="off"
                     {...register("regName")}
-                    value={formData.regName}
-                    onChange={onChange}
                   />
                   {errors.regName && <p>{errors.regName.message}</p>}
                 </div>
@@ -163,11 +155,10 @@ function Register() {
                     className="regInput"
                     autoComplete="off"
                     {...register("nick")}
-                    value={formData.nick}
-                    //onBlur={chkNick}
-                    onChange={onChange}
+                    onBlur={onBlur}
                   />
                   {errors.nick && <p>{errors.nick.message}</p>}
+                  {isNickDup && <p>이미 사용중인 활동명 입니다.</p>}
                 </div>
                 <div className="regRowWrap">
                   <input
@@ -178,8 +169,6 @@ function Register() {
                     name="password"
                     autoComplete="off"
                     {...register("password")}
-                    value={formData.password}
-                    onChange={onChange}
                   />
                   {errors.password && <p>{errors.password.message}</p>}
                 </div>
@@ -201,11 +190,10 @@ function Register() {
                     type="text"
                     placeholder="전화번호"
                     className="regInput"
+                    id="regPhone"
                     name="phone"
                     autoComplete="off"
                     {...register("phone")}
-                    value={formData.phone}
-                    onChange={onChange}
                   />
                   <div style={{ fontSize: "12px", color: "grey" }}>
                     * 특수기호 없이 010부터 숫자만 입력해 주세요.
@@ -222,8 +210,6 @@ function Register() {
                       name="email"
                       autoComplete="off"
                       {...register("email")}
-                      value={formData.email}
-                      onChange={onChange}
                     />
                   </div>
                   <div>

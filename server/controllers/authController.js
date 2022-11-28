@@ -23,9 +23,9 @@ module.exports = {
   //next(); //다음 미들웨어 실행
   postLogin: async (req, res, next) => {
     //isNotLoggendIn
-    //const exUser = req.body; //form에서 입력받은 정보 exUser에 담기
-    const userEmail = userData.email; //원래는exUser 써야하는데 입력받은게 없으니까 임시적으로 userData변수를 적음
-    const userPassword = userData.password;
+    const exUser = req.body; //form에서 입력받은 정보 exUser에 담기
+    const userEmail = exUser.email; //원래는exUser 써야하는데 입력받은게 없으니까 임시적으로 userData변수를 적음
+    const userPassword = exUser.password;
     try {
       const loggingUser = await service.loginUser(userEmail, userPassword); //db담은 exUser변수 loginUser로 전달
       //400 - bad_request - request 실패 ex) 유효성 검사 통과 실패, 잘못된 요청
