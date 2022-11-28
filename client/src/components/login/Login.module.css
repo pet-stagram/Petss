@@ -53,7 +53,7 @@
 .logInput {
   font-weight: 500;
   width: 300px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   margin-left: 20px;
   height: 45px;
   border: 1px solid rgb(213, 211, 211);
@@ -115,4 +115,16 @@
 
 .logFooter {
   background-color: #e1f5fe;
+}
+
+.inputwrap {
+  margin-bottom: 20px;
+}
+
+.inputwrap p {
+  font-size: 12px;
+  margin-top: 5px;
+  color: tomato;
+  font-weight: 600;
+  margin-left: 20px;
 }

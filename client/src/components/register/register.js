@@ -8,6 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+  //blur : 요소의 포커스가 해제되었을 때 발생..
   const formSchema = yup.object({
     regName: yup.string().required("이름을 입력해주세요"),
     nick: yup.string().required("활동명을 입력해주세요"),
@@ -38,6 +39,7 @@ function Register() {
     formState: { errors },
   } = useForm({
     mode: "onTouched",
+    reValidateMode: "onBlur",
     resolver: yupResolver(formSchema),
   });
 
@@ -70,7 +72,7 @@ function Register() {
       url: `api/auth/nick`,
       data: formData.nick,
     })
-      .then((res) => console.log(res))
+      .then((res) => console.log(res), console.log(formData.nick))
       .catch((e) => {
         console.log(e);
       });
@@ -162,8 +164,8 @@ function Register() {
                     autoComplete="off"
                     {...register("nick")}
                     value={formData.nick}
+                    //onBlur={chkNick}
                     onChange={onChange}
-                    onBlur={chkNick}
                   />
                   {errors.nick && <p>{errors.nick.message}</p>}
                 </div>
