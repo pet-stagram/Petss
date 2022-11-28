@@ -1,9 +1,9 @@
-const { Post, User, Hashtag } = require('../sequelize/models');
+const { Post, User, Hashtag } = require("../sequelize/models");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
 const fs = require("fs");
 const path = require("path");
-const { raw } = require('express');
+const { raw } = require("express");
 
 module.exports = {
     findSearch : async({hashtagData,userNickData})=>{
@@ -116,8 +116,6 @@ module.exports = {
         }catch(err){
             throw err;
         } 
+    },
 
-    }
-   
-    }
-    
+}
