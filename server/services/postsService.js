@@ -71,7 +71,10 @@ module.exports = {
                 order: [["updatedAt", "DESC"]],
                 where: {
                     user_id: {
-                        [Op.in]: followingsId,
+                        [Op.or] :{
+                            [Op.in]: followingsId,
+                            [Op.eq]: 1 // 세션으로 변경하기
+                        }
                     }
                 },
                 include: [

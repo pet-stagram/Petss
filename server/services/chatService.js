@@ -49,7 +49,6 @@ module.exports = {
     },
     selectMessages: async (messageDto) => {
         const { me, conversationId, offset } = messageDto;
-        console.log(messageDto);
         try{
         const messages = await Message.findAndCountAll({
             limit : 15,
@@ -82,7 +81,6 @@ module.exports = {
                 }
             ]
         });
-        console.log(messages);
         
         /* 내가 누군지에 따라 읽음표시 */
       await Conversation.update(
