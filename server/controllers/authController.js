@@ -177,7 +177,7 @@ module.exports = {
   postNick: async (req, res) => {
     const userNick = req.body.nick;
     console.log(userNick,"req.body.nick에서 들어온 nick값")
-    const checkUserNick = await service.checkNick(userNick);
+    
     try {
       const checkUserNick = await service.checkNick(userNick);
       console.log(checkUserNick,"userNick에서 받아온 nick값");
