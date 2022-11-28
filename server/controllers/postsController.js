@@ -36,7 +36,7 @@ module.exports = {
         const requestDto = {
             files : req.files,
             content : req.body.content,
-            user : 1 // 세션유저
+            user : req.session.u_id // 세션유저
         }
         if (requestDto.files.length===0) {
             /* 클라이언트에서 파일 첨부를 하지 않았을 시 */
@@ -52,7 +52,7 @@ module.exports = {
                 let fileUrl = await service.uploadFile(requestDto.files);
                 
                 const postDto = {
-                    user: 1, // 현재 로그인 중인 유저의 idx
+                    user: req.session.u_id, // 현재 로그인 중인 유저의 idx
                     content: req.body.content,
                     fileUrl: fileUrl,
                 };
@@ -73,7 +73,7 @@ module.exports = {
             res.sendStatus(401);
         } else {
             const postDto = {
-                user: 1, // 현재 세션 유저
+                user: req.session.u_id, // 현재 세션 유저
                 postId: req.params.postId,
                 content: req.body.content,
             };
@@ -96,7 +96,7 @@ module.exports = {
             res.sendStatus(401);
         } else {
             const postDto = {
-                user: 1, //현재 세션 유저
+                user: req.session.u_id, //현재 세션 유저
                 postId: req.params.postId,
             };
             try {
@@ -119,7 +119,7 @@ module.exports = {
             // 세션 아이디 -> 피드하나에 좋아요 클릭
             const likeDto = {
                 postId: req.params.id,
-                user: 1, //후에 세션 유저로 변경
+                user: req.session.u_id, //후에 세션 유저로 변경
             };
 
             try {
@@ -138,7 +138,7 @@ module.exports = {
         }else{
             const commentDto = {
                 postId: parseInt(req.body.postId),
-                user: 1, // 현재 세션 유저
+                user: req.session.u_id, // 현재 세션 유저
                 content: req.body.content,
             };
             try {
@@ -160,7 +160,7 @@ module.exports = {
         // else if(!req.session.user){res.sendStatus(401);}
         else {
             const commentDto = {
-                user: 1, // 현재 세션 유저
+                user: req.session.u_id, // 현재 세션 유저
                 commentId: parseInt(req.params.commentId),
                 content: req.body.content,
             };
@@ -182,7 +182,7 @@ module.exports = {
         // else if(!req.session.user){res.sendStatus(401);}
         else {
             const commentDto = {
-                user: 1, // 현재 세션 유저
+                user: req.session.u_id, // 현재 세션 유저
                 commentId: parseInt(req.params.commentId),
             };
             try {

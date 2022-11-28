@@ -2,8 +2,8 @@ const service = require("../services/usersService");
 
 module.exports = {
     getMe : async (req, res)=>{
-        // const currentUser = req.session.u_id;
-        const currentUser = 1;
+        const currentUser = req.session.u_id;
+        // const currentUser = 1;
         try{
             const result = await service.selectMyInfo(currentUser);
             res.json(result);
@@ -24,7 +24,6 @@ module.exports = {
     },
     getUserPosts : async (req, res) => {
         
-        console.log(req.params.userId);
         const userId = req.params.userId;
         try{
             const result = await service.selectUserPosts(userId);
@@ -40,7 +39,7 @@ module.exports = {
             res.sendStatus(401);
         }else{
             const userDto = {
-                id : 1, // 현재 세션 유저
+                id : req.session.u_id, // 현재 세션 유저
                 name : req.body.name,
                 nick : req.body.nick,
                 password : req.body.pw,
@@ -58,7 +57,7 @@ module.exports = {
     },
     postUserImage : async (req, res)=>{
         const userDto = {
-            id : 5, // 현재 세션 유저
+            id : req.session.u_id, // 현재 세션 유저
             file: req.file.path,
             isBasic: false
         }
@@ -84,7 +83,7 @@ module.exports = {
     postUserImageBasic : async (req, res)=>{
         
         const userDto = {
-            id : 1, // 현재 세션 유저
+            id : req.session.u_id, // 현재 세션 유저
             file: "public/images/basic_profile.jpeg",
             isBasic: true
         }
@@ -107,7 +106,7 @@ module.exports = {
     },
     putFollow : async (req, res) => {
         const followDto = {
-            currentUser : 2,//현재 세션 유저 idx
+            currentUser : req.session.u_id,//현재 세션 유저 idx
             profileUser : isNaN(req.body.userId)?req.body.userId:parseInt(req.body.userId)
         };
         try{
@@ -132,7 +131,7 @@ module.exports = {
             const invoiceDto = {
                 title : req.body.title,
                 content : req.body.content,
-                userId : 1//세션 유저
+                userId : req.session.u_id//세션 유저
             };
             try{
                 await service.insertInvoice(invoiceDto);

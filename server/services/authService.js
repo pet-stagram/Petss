@@ -171,7 +171,7 @@ module.exports = {
     try {
       const chekNick = await User.findOne({ where: { nick: userNick } }); //db에 저장된 nick
       //console.log(chekNick, "chekNick");//
-      console.log("h");
+      
       if (!chekNick) {
         console.log("닉넴없음");
         result = 200;
