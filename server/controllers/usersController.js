@@ -9,7 +9,7 @@ module.exports = {
             res.json(result);
         }catch(err){
             res.sendStatus(400);
-            throw err;
+            console.error(err);
         }
     },
     getUser: async (req, res)=>{
@@ -19,7 +19,7 @@ module.exports = {
             res.status(200).json(result);
         }catch(err){
             res.sendStatus(400);
-            throw err;
+            console.error(err);
         }
     },
     getUserPosts : async (req, res) => {
@@ -30,7 +30,7 @@ module.exports = {
             res.status(200).json(result);
         }catch(err){
             res.sendStatus(400);
-            throw err;
+            console.error(err);
         }
     },
     putUserInfo : async (req, res)=>{
@@ -50,7 +50,7 @@ module.exports = {
                     res.sendStatus(201);
                 }catch(err){
                     res.sendStatus(400);
-                    throw err;
+                    console.error(err);
                 }
         }
         
@@ -75,7 +75,7 @@ module.exports = {
                     res.sendStatus(201);
                 }catch(err){
                     res.sendStatus(400);
-                    throw err;
+                    console.error(err);
                 }
             
         }
@@ -99,7 +99,7 @@ module.exports = {
                     res.sendStatus(201);
                 }catch(err){
                     res.sendStatus(400);
-                    throw err;
+                    console.error(err);
                 }
             
         }
@@ -120,7 +120,7 @@ module.exports = {
             }
         }catch(err){
             res.sendStatus(400);
-            throw err;
+            console.error(err);
         }
     },
     postInvoice : async (req, res) => {
@@ -138,7 +138,7 @@ module.exports = {
                 res.sendStatus(201);
             }catch(err){
                 res.sendStatus(400);
-                throw err;
+                console.error(err);
             }
         }
     }

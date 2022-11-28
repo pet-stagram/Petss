@@ -48,7 +48,7 @@ module.exports = {
 
             return currentUserData;
         }catch(err){
-            throw err;
+            console.error(err);
         }
     },
     /**
@@ -83,7 +83,7 @@ module.exports = {
 
             return userData;
         }catch(err){
-            throw err;
+            console.error(err);
         }
     },
     /**
@@ -108,7 +108,7 @@ module.exports = {
             });
             return findResult;
         } catch (err) {
-            throw err;
+            console.error(err);
         }
     },
     /**
@@ -131,7 +131,7 @@ module.exports = {
                 }
             );
         } catch (err) {
-            throw err;
+            console.error(err);
         }
     },
     /**
@@ -144,7 +144,7 @@ module.exports = {
         try {
             await User.update({ image: imgUrl }, { where: { id: userDto.id } });
         } catch (err) {
-            throw err;
+            console.error(err);
         }
     },
     /**
@@ -191,7 +191,7 @@ module.exports = {
                     return "Created";
                 }
             } catch (err) {
-                throw err;
+                console.error(err);
             }
         }
     },
@@ -209,7 +209,7 @@ module.exports = {
             user_id: invoiceDto.userId
         });
     }catch(err){
-        throw err;
+        console.error(err);
     }
     }
 };

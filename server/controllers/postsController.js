@@ -27,7 +27,7 @@ module.exports = {
             } catch (err) {
                 
                 res.sendStatus(500);
-                throw err;
+                console.error(err);
             }
         }
     },
@@ -83,7 +83,7 @@ module.exports = {
                 else res.sendStatus(201);
             } catch (err) {
                 res.sendStatus(400);
-                throw err;
+                console.error(err);
             }
         }
     },
@@ -169,7 +169,7 @@ module.exports = {
                 else res.sendStatus(201);
             } catch (err) {
                 res.sendStatus(400);
-                throw err;
+                console.error(err);
             }
         }
     },
@@ -190,7 +190,7 @@ module.exports = {
                 else res.sendStatus(204);
             } catch (err) {
                 res.sendStatus(403);
-                throw err;
+                console.error(err);
             }
         }
     },
@@ -210,5 +210,4 @@ module.exports = {
             }
         }
     }
-  },
 };

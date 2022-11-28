@@ -50,7 +50,7 @@ class LoadFeed {
             const result = findResult[0].max + 1;
             return result;
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     }
 }
@@ -131,7 +131,7 @@ module.exports = {
             
             return result;
         } catch (err) {
-            throw err;
+            console.error(err);
         }
         
     },
@@ -155,7 +155,7 @@ module.exports = {
             
             return result;
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     },
 
@@ -213,7 +213,7 @@ module.exports = {
                 result = "success";
             }
         } catch (err) {
-            throw err;
+            console.error(err);
         }
         return result;
     },
@@ -294,7 +294,7 @@ module.exports = {
                 await Heart.create(dtoObject);
                 return "created";
             } catch (err) {
-                throw err;
+                console.error(err);
             }
         } else {
             try {
@@ -303,7 +303,7 @@ module.exports = {
                 });
                 return "destroy";
             } catch (err) {
-                throw err;
+                console.error(err);
             }
         }
     },
@@ -322,7 +322,7 @@ module.exports = {
                 updatedAt: Date.now(),
             });
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     },
     /**
@@ -361,7 +361,7 @@ module.exports = {
                 return "forbidden";
             }
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     },
     /**
@@ -381,7 +381,7 @@ module.exports = {
                 return "notFound";
             }
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     },
     /**
@@ -400,7 +400,7 @@ module.exports = {
             });
             return findResult;
         } catch (err) {
-            throw err;
+            console.error(err);
         }
     },
 };

@@ -83,13 +83,6 @@ module.exports = {
     const insertUserInfo = await service.insertUser(user);
     //console.log(insertUserInfo);
 
-    const setImageDto = {
-      id: 1, // 현재 세션 유저
-      file: "public/images/basic_profile.jpeg",
-      isBasic: true,
-    };
-    // await service.
-    await userService.updateUserImage(setImageDto);
     try {
       if (insertUserInfo === 400) {
         res.sendStatus(400);
