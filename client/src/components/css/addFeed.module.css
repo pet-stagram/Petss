@@ -9,14 +9,33 @@
     padding: 12px 24px;
     background-color: rgb(255, 205, 95);
     border-radius: 3px;
-    cursor: pointer;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 15px;
 }
-
+.previewImageWrap{
+    z-index: 0;
+}
 .imageSlider{
     background-color: red;
+}
+.addFeedForm{
+    text-align: center;
+    margin-bottom: 30px;
+}
+.addFeedContent{
+    margin-top: -120px;
+    z-index: 1;
+    padding: 20px;
+    width: 100%;
+    height: 160px;
+    border: 1px solid #ccc;
+}
+.addFeedButton{
+    padding: 12px 24px;
+    background-color: rgb(255, 205, 95);
+    border-radius: 3px;
+    border: 0;
 }

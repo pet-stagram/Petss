@@ -14,10 +14,17 @@ module.exports = {
     //     res.send(result)
     // },
     getSearch : async(req,res)=>{
-        const searchData = req.query;
-        const postsOfHashtag = await service.findSearch(searchData);
-        const findUser = await service.findSearch(searchData);
-        const result = [];
+        const hashtagData = req.query.hashtag;
+        const userNickData = req.query.nick;
+        //console.log(searchData);
+        try{
+            const findSearchData = await service.findSearch({hashtagData,userNickData});
+        //const result = [];
+        //console.log(findHash);
+        }catch(err){
+            res.sendStatus(500);
+        }
+        
 
     },
 
@@ -26,7 +33,7 @@ module.exports = {
         //console.log(hashtagText,"hashtagText");//꺼뭉들어옴
         try{
             postsOfHashtag = await service.findHashtag(hashtagText); //findHashtag로 hashtagText 전달?보냄?
-            console.log("postsOfHashtag",postsOfHashtag);
+            //console.log("postsOfHashtag",postsOfHashtag);
             if(postsOfHashtag===400){//해시태그가 없을 경우, 400에러 보내줌
                 res.sendStatus(400)
             }

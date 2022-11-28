@@ -1,6 +1,7 @@
 const { Cookie } = require("express-session");
 const { session } = require("passport");
 const service = require("../services/authService.js");
+const userService = require("../services/usersService.js");
 
 //controller에서는 req, res관련 작업만 하기!!! 다른거는 다 service에서 하면됨!! 기억하셈!!!
 
@@ -22,9 +23,9 @@ module.exports = {
   //next(); //다음 미들웨어 실행
   postLogin: async (req, res, next) => {
     //isNotLoggendIn
-    //const exUser = req.body; //form에서 입력받은 정보 exUser에 담기
-    const userEmail = userData.email; //원래는exUser 써야하는데 입력받은게 없으니까 임시적으로 userData변수를 적음
-    const userPassword = userData.password;
+    const exUser = req.body; //form에서 입력받은 정보 exUser에 담기
+    const userEmail = exUser.email; //원래는exUser 써야하는데 입력받은게 없으니까 임시적으로 userData변수를 적음
+    const userPassword = exUser.password;
     try {
       const loggingUser = await service.loginUser(userEmail, userPassword); //db담은 exUser변수 loginUser로 전달
       //400 - bad_request - request 실패 ex) 유효성 검사 통과 실패, 잘못된 요청
@@ -81,6 +82,14 @@ module.exports = {
     // 비밀번호
     const insertUserInfo = await service.insertUser(user);
     //console.log(insertUserInfo);
+    
+    const setImageDto = {
+      id : 1, // 현재 세션 유저
+      file: "public/images/basic_profile.jpeg",
+      isBasic: true
+    }
+      // await service.
+      await userService.updateUserImage(setImageDto);
     try {
       if (insertUserInfo === 400) {
         res.sendStatus(400);
@@ -94,6 +103,8 @@ module.exports = {
       console.log(err);
       res.sendStatus(500);
     }
+
+     
   },
 
   /* 이메일 인증 */

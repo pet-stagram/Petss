@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import "../../css/mainFeed.css"
+import "../../css/reset.css";
 import test7 from "../../../images/7.jpg"
 import paw from "../../../images/paw.png"
 import emptyPaw from "../../../images/empty_paw.png"
@@ -55,8 +56,14 @@ const MainFeed = () => {
       }
     
   return (
+    
+        
+           
+        
+    
       <main className='mainFeedWrap'>
-            {
+        {posts === ""? <div>No Data</div> : 
+            
             isLoading &&
             posts.map((post)=>{
                 return(
@@ -89,11 +96,13 @@ const MainFeed = () => {
                         <div className="postContent"> 
                             {post.content}
                         </div>
+                        
                     </div>
                 </div>
                 );
             })
-            }
+          }
+        
            
         </main>
   )

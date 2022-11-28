@@ -6,8 +6,32 @@ const path = require("path");
 const { raw } = require('express');
 
 module.exports = {
-    findSearch : async(searchData)=>{
+    findSearch : async({hashtagData,userNickData})=>{
+        //console.log("z"); 
+        if(!hashtagData){//입력된 데이터가 없으면 400으로, 
+            result = 400; 
+        }
+        try{
+            //데이터가 있으면,
+            //해시태그 검색
+            const hashtag = await Hashtag.findOne( {where : {title: hashtagData} } );
+            
+            let posts = [];
+            if(hashtag){
+                posts = await hashtag.getPosts({ include : [{ model:User}]});
+                console.log(hashtag);
+                result = hashtag;
+                }else{
+                    result = 400;
+                }
+            
+        }
+        catch(err){
+            throw err;
+        }
         
+        return result;
+
 
     },
     /* 해시태그 */
@@ -18,7 +42,7 @@ module.exports = {
         }   
         try{
             const hashtag = await Hashtag.findOne( {where : {title: hashtagText} } ); //입력받은 해시태그를 찾는다
-            //console.log(hashtag,"hashtag"); 정보뜸
+            //-console.log(hashtag,"hashtag"); 정보뜸
             let posts = [];
             if(hashtag){
                 posts = await hashtag.getPosts({ include : [{ model:User}]});
