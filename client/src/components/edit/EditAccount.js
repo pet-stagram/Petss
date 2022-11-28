@@ -5,15 +5,43 @@ import Navbar from "../feed/layout/Navbar";
 //import $ from "jquery"; //jquery 세팅
 import { useEffect, useState } from "react";
 import Footer from "../footer/Footer";
+import axios from "axios";
 
 function EditProfile() {
   //axios.get()으로 유저 정보 가져와서 input칸에 반영시키고 제출할 때 유저정보 수정될 수 있게(post)
 
   //textarea 입력값 감지
   const [textValue, setTextValue] = useState("");
+  const [data, setData] = useState({});
+
   const handlesetValue = (e) => {
     setTextValue(e.target.value);
   };
+
+  const getLoginInfo = async () => {
+    const SESSION_ID = 1;
+
+    await axios({
+      method: "GET",
+      url: `api/users/${SESSION_ID}`,
+      withCredentials: true,
+    })
+      .then((result) => {
+        console.log("로그인 유저 조회 성공");
+        console.log(result);
+        setData(result.data);
+      })
+      .catch((err) => {
+        // err.response.status === '400'
+        console.log("로그인 유저 조회 실패");
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getLoginInfo();
+  }, []);
+
   return (
     <div>
       <body>
@@ -29,19 +57,21 @@ function EditProfile() {
               <div className="editRow" id="rowTop">
                 <div className="left">
                   <div>
-                    <button className="editPhotoBtn">
-                      {/* <img
-                        alt="본인 프로필 사진"
-                        className=""
-                        src={Profile}
-                      ></img> */}
+                    <button className="editPhotoBtn" id="edPhBtn">
+                      <div className="editImgWrap">
+                        <img
+                          alt="본인 프로필 사진"
+                          className=""
+                          src={data.info?.image}
+                        ></img>
+                      </div>
                     </button>
                   </div>
                 </div>
                 <div className="right">
-                  <h1>닉네임자리</h1>
-                  <button className="" type="button">
-                    프로필 사진 바꾸기(누르면 모달 띄우기)
+                  <h1>{data.info?.nick}</h1>
+                  <button className="" type="button" id="profileChnBtn">
+                    프로필 사진 바꾸기
                   </button>
                 </div>
               </div>
@@ -55,9 +85,8 @@ function EditProfile() {
                       className=""
                       type="text"
                       aria-required="true"
-                      placeholder="이름"
+                      placeholder={data.info?.name}
                       name=""
-                      value=""
                     ></input>
                   </div>
                 </div>
@@ -72,7 +101,7 @@ function EditProfile() {
                       aria-required="true"
                       name=""
                       value=""
-                      placeholder="활동명"
+                      placeholder={data.info?.nick}
                     ></input>
                   </div>
                 </div>
@@ -85,7 +114,7 @@ function EditProfile() {
                       <textarea
                         id="editTextarea"
                         maxLength="149"
-                        placeholder="텍스트를 입력하세요"
+                        placeholder={data.info?.self_intro}
                         value={textValue}
                         onChange={(e) => handlesetValue(e)}
                       ></textarea>
@@ -103,7 +132,7 @@ function EditProfile() {
                     <input
                       type="text"
                       aria-required="true"
-                      placeholder="이메일"
+                      placeholder={data.info?.email}
                     ></input>
                   </div>
                 </div>
@@ -123,7 +152,7 @@ function EditProfile() {
                     <input
                       type="text"
                       aria-required="true"
-                      placeholder="전화번호"
+                      placeholder={data.info?.phone}
                       value=""
                     ></input>
                   </div>
@@ -137,9 +166,10 @@ function EditProfile() {
                       className=""
                       type="text"
                       aria-required="true"
-                      placeholder="기존 비밀번호 띄울 예정"
+                      placeholder="*******************"
                       name=""
                       value=""
+                      disabled
                     ></input>
                   </div>
                 </div>

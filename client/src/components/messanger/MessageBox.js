@@ -52,6 +52,7 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
         >
             <div className={styles.partnerWrap}>
                     {/* 이미지 클릭 시 상대방 프로필 가기 */}
+                    
                     <img
                         className={styles.partnerImage}
                         src={messages.partner.image}

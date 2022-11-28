@@ -66,7 +66,7 @@ module.exports = {
         console.log(regName);
         console.log(nick);
         const addUser = await User.create({
-          name: "이호민",
+          name: regName,
           nick: nick,
           password: hashPw,
           phone: phone,
