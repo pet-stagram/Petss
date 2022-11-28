@@ -6,37 +6,47 @@ import { faPaw } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Footer from "../footer/Footer";
 import Modal from "./Modal";
+import email from "../../../../server/config/email";
 
 function Login() {
   //1. 이메일 ,비밀번호 저장할 변수를 만든다.
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [user, setUser] = useState({ email: "", password: "" });
 
+  //입력값 감지
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
+  };
+
+  //제출
   const onSubmit = (e) => {
     //e.preventDefault();
     //console.log(Email, Password);
 
-    if (Email !== "" && Password !== "") {
+    if (user !== "") {
+      //값이 다 입력됐다면
       Log();
-    } else if (Email === "" && Password === "") {
+    } else if (user === "") {
       alert("이메일과 비밀번호를 입력바랍니다.");
     }
   };
 
-  //2.서버에 전송한다. 전송할 때 이메일,비밀번호 값이 db값과 같은지 확인한다.(get)
+  //2.서버에 전송한다. 전송할 때 이메일,비밀번호 값이 db값과 같은지 확인한다.(post)
   //다르면 로그인 안되고 비번 틀리면 비번 틀렸다 하고, 이메일 틀리면 없는 아이디 입니다 띄우기
 
+  //db전달 함수
   async function Log() {
     await axios({
       method: "POST",
       url: `api/auth/login`,
-      data: Email,
-      Password,
+      data: user,
       withCredentials: true,
     })
       .then((res) => {
         console.log(res);
-        console.log(Email);
       })
       .catch((e) => {
         alert("비밀번호가 틀렸거나 계정이 존재하지 않습니다.");
@@ -74,8 +84,9 @@ function Login() {
                     id={Logincss.logEmail}
                     name="email"
                     autoComplete="off"
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={user.email}
                     required
+                    onChange={onChange}
                   />
                 </div>
                 <div>
@@ -86,7 +97,8 @@ function Login() {
                     id={Logincss.pw}
                     name="password"
                     autoComplete="off"
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={user.password}
+                    onChange={onChange}
                     required
                   />
                 </div>
