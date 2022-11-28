@@ -1,10 +1,13 @@
 .editFooter {
-  position: relative;
-  left: 488px;
+  display: flex;
+  justify-content: center;
   margin-bottom: 50px;
   color: rgb(115, 115, 115);
   font-size: 12px;
   font-weight: 500;
+}
+.footerwrap {
+  margin-left: 300px;
 }
 
 .editFooter ul {

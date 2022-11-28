@@ -1,5 +1,4 @@
-
-const { post } = require('../routes/users');
+const { post } = require("../routes/users");
 const service = require("../services/postsService");
 const File = require("file-class");
 
@@ -211,4 +210,5 @@ module.exports = {
             }
         }
     }
+  },
 };
