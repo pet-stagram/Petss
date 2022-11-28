@@ -172,24 +172,27 @@ module.exports = {
 
   /* 닉넴중복 체크 */
   checkNick: async (userNick) => {
-    // console.log(userNick, "Service, userNick"); //꺼뭉아
-    console.log(userNick);
-    const nick = userNick;
-
+    console.log(userNick,"컨트롤러에서 서비스로 들어온 nick값");//aa라고뜸
+    
     try {
-      const chekNick = await User.findOne({ where: { nick: userNick } }); //db에 저장된 nick
-      //console.log(chekNick, "chekNick");//
-      if (!chekNick) {
-        console.log("닉넴없음");
-        result = 200;
-      } else {
-        console.log("닉넴있음");
+        const chekNick = await User.findOne({
+                    where:
+                        {nick : userNick}, 
+                        attributes: ["nick"], 
+                        raw:true  
+                        });
+      console.log(chekNick.nick, "findOne으로 찾아온 nick값");//{ nick: 'aa' }
+      if(chekNick.nick===userNick){
+        console.log("닉넴있음, 400보냄")
         result = 400;
       }
-      //console.log(result,"result");
-      return result;
+      else{
+        console.log("닉넴없음, 200보냄")
+        result = 200;
+      }
+       return result;
     } catch (err) {
-      // throw err;
+        throw err;
     }
   },
 };
