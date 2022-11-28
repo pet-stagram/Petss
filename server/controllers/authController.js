@@ -176,11 +176,13 @@ module.exports = {
   /* 닉넴중복 체크 */
   postNick: async (req, res) => {
     const userNick = req.body.nick;
-    
+    console.log(userNick,"req.body.nick에서 들어온 nick값")
+    const checkUserNick = await service.checkNick(userNick);
     try {
       const checkUserNick = await service.checkNick(userNick);
-      console.log(checkUserNick,"컨트롤러");
+      console.log(checkUserNick,"userNick에서 받아온 nick값");
       if (checkUserNick === 400) {
+        
         res.sendStatus(400);
       } else {
         res.sendStatus(200);
