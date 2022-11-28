@@ -176,9 +176,10 @@ module.exports = {
   /* 닉넴중복 체크 */
   postNick: async (req, res) => {
     const userNick = req.body.nick;
-    console.log(req.body.nick);
-    const checkUserNick = await service.checkNick(userNick);
+    
     try {
+      const checkUserNick = await service.checkNick(userNick);
+      console.log(checkUserNick,"컨트롤러");
       if (checkUserNick === 400) {
         res.sendStatus(400);
       } else {
@@ -186,6 +187,7 @@ module.exports = {
       }
     } catch (err) {
       console.log(err);
+      res.sendStatus(500);
     }
   },
 };

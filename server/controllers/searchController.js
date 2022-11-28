@@ -18,19 +18,19 @@ module.exports = {
         const userData = req.query;
         try{//0,-1:409err / 값값 / 1,1:400err/ -1-1:catchErr
             const findHashhData = await service.findSearch(userData);
-            console.log(findHashhData[0],findHashhData[1]);//[] 값 넘어옴
-            if(findHashhData[0]===-1 && findHashhData[1]===-1){
-                throw "Error sendEmail()";
-            }
-            else if(findHashhData[0]===0 && findHashhData[1]===-1){
-                res.status(409).send("입력된 데이터가 없습니다.");
-            }
-            else if(findHashhData[0]===findHashhData[1]){
-                res.status(200).json({findHashhData});
-            }
-            else if(findHashhData[0]===1 && findHashhData[1]===1){
-                res.status(400).send("검색 결과가 없습니다.")
-            }
+            //console.log(findHashhData[0],findHashhData[1]);//[] 값 넘어옴
+            // if(findHashhData[0]===-1 && findHashhData[1]===-1){
+            //     throw "Error sendEmail()";
+            // }
+            // else if(findHashhData[0]===0 && findHashhData[1]===-1){
+            //     res.status(409).send("입력된 데이터가 없습니다.");
+            // }
+            // else if(findHashhData[0]===findHashhData[1]){
+            //     res.status(200).json({findHashhData});
+            // }
+            // else if(findHashhData[0]===1 && findHashhData[1]===1){
+            //     res.status(400).send("검색 결과가 없습니다.")
+            // }
         }catch(err){
             res.sendStatus(500);
         }

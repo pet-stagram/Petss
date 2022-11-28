@@ -10,64 +10,64 @@ module.exports = {
         //console.log(userData,"userData");
         const userHashtag = userData.hashtag;
         const usernNick = userData.nick;
-        //console.log(userHashtag,"userHashtag");//값없음 맞음
-        //console.log(usernNick,"usernNick");
-        try{
-            // return 값
-                // 0, -1: 입력된 데이터가 없을 때
-                // 값, 값: 정상
-                // 1, 1: 입력된 값이 없을 때
-                // -1, -1: error 시(catch)
-            if(!userData){//입력된 데이터가 없으면 409로, 
-                return [0,-1]; //충돌
-            }
-            else{
-                //입력된 데이터가 있으면,
-                //해시태그 검색
-                const hashtag = await Hashtag.findOne( {where : {title: userHashtag} } );
-                let posts = [];
-                if(hashtag){
-                    posts = await hashtag.getPosts({ include : [{ model:User}]});
+        console.log(userHashtag,"userHashtag");//값없음 맞음
+        console.log(usernNick,"usernNick");
+        // try{
+        //     // return 값
+        //         // 0, -1: 입력된 데이터가 없을 때
+        //         // 값, 값: 정상
+        //         // 1, 1: 입력된 값이 없을 때
+        //         // -1, -1: error 시(catch)
+        //     if(!userData){//입력된 데이터가 없으면 409로, 
+        //         return [0,-1]; //충돌
+        //     }
+        //     else{
+        //         //입력된 데이터가 있으면,
+        //         //해시태그 검색
+        //         const hashtag = await Hashtag.findOne( {where : {title: userHashtag} } );
+        //         let posts = [];
+        //         if(hashtag){
+        //             posts = await hashtag.getPosts({ include : [{ model:User}]});
 
-                    //유저닉넴 검색
-                    const usernickname = await User.findAll({
-                    where: {nick: {[Op.like]:"%"+usernNick+"%"}},
-                    attributes:["nick"],
-                    raw:true,
-                    });
-                    const nickData = usernickname.map((el)=>el.nick);
-                    //console.log(nickData,"nickData");
-                    if(nickData===""||nickData.length===0||nickData===null){
-                    //console.log([1,1]);
-                        return [1,1];
-                    }else{
-                    // console.log([nickData,nickData]);
-                    return [hashtag,nickData];
-                    }
-                //    return [hashtag,hashtag];
-                    }else{
-                        return [1,1];
-                    }
-                // //유저닉넴 검색
-                // const usernickname = await User.findAll({
-                //     where: {nick: {[Op.like]:"%"+usernNick+"%"}},
-                //     attributes:["nick"],
-                //     raw:true,
-                // });
-                // const nickData = usernickname.map((el)=>el.nick);
-                // //console.log(nickData,"nickData");
-                // if(nickData===""||nickData.length===0||nickData===null){
-                //     //console.log([1,1]);
-                //     return [1,1];
-                // }else{
-                //     // console.log([nickData,nickData]);
-                //     return [nickData,nickData];
-                // }
-            }
-        }
-        catch(err){
-            return[-1,-1];
-        }
+        //             //유저닉넴 검색
+        //             const usernickname = await User.findAll({
+        //             where: {nick: {[Op.like]:"%"+usernNick+"%"}},
+        //             attributes:["nick"],
+        //             raw:true,
+        //             });
+        //             const nickData = usernickname.map((el)=>el.nick);
+        //             //console.log(nickData,"nickData");
+        //             if(nickData===""||nickData.length===0||nickData===null){
+        //             //console.log([1,1]);
+        //                 return [1,1];
+        //             }else{
+        //             // console.log([nickData,nickData]);
+        //             return [hashtag,nickData];
+        //             }
+        //         //    return [hashtag,hashtag];
+        //             }else{
+        //                 return [1,1];
+        //             }
+        //         // //유저닉넴 검색
+        //         // const usernickname = await User.findAll({
+        //         //     where: {nick: {[Op.like]:"%"+usernNick+"%"}},
+        //         //     attributes:["nick"],
+        //         //     raw:true,
+        //         // });
+        //         // const nickData = usernickname.map((el)=>el.nick);
+        //         // //console.log(nickData,"nickData");
+        //         // if(nickData===""||nickData.length===0||nickData===null){
+        //         //     //console.log([1,1]);
+        //         //     return [1,1];
+        //         // }else{
+        //         //     // console.log([nickData,nickData]);
+        //         //     return [nickData,nickData];
+        //         // }
+        //     }
+        // }
+        // catch(err){
+        //     return[-1,-1];
+        // }
         
         
 
