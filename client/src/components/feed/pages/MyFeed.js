@@ -8,6 +8,7 @@ import Follower from './Follower';
 import { followerStyle } from "../../css/modalStyles";
 import Following from './Following';
 import { Link } from 'react-router-dom';
+import Loading from './Loading';
 
 const MyFeed = () => {
   const [data, setData] = useState({});
@@ -101,7 +102,7 @@ const MyFeed = () => {
     </div>
 </div> 
 
-: <h1>loading…</h1>
+: <div><Loading/></div>
       }
       </>
       
