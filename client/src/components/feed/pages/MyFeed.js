@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import Follower from './Follower';
 import { followerStyle } from "../../css/modalStyles";
 import Following from './Following';
+import { Link } from 'react-router-dom';
 
 const MyFeed = () => {
   const [data, setData] = useState({});
@@ -56,7 +57,7 @@ const MyFeed = () => {
           <div className='myFeedProfile'>
             {/* data.info.image 가 프로필사진 */}
             <span className='myFeedNickname'>{data.info.nick}</span>
-            <button className='editPropile'>프로필 편집</button>
+            <button className='editPropile'><Link to="/edit">프로필 편집</Link></button>
             {/* <span>설정아이콘 -> 설정으로 연결</span> */}
           </div>
           <ul className='myFeedInfo'>

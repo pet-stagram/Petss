@@ -14,7 +14,7 @@ import Messanger from "./components/messanger/Messanger";
 import Edit from "./components/edit/EditAccount";
 
 function App() {
-  const [isLogined, setIsLogined] = useState(false);
+  const [isLogined, setIsLogined] = useState(true);
 
   //저장된 값 확인하는 용
   // useEffect(() => {
