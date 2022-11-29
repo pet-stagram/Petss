@@ -33,6 +33,19 @@
     height: 400px;
     margin: 10px 0px;
 }
+
+.FeedUl{
+    width: 100%; 
+    /* white-space: noWrap; */
+}
+/* 
+.FeedLi{
+    width: 80vw;
+    margin: 0 10vw;
+    display: inline-block;
+    position: relative;
+} */
+
 .postImage{
  width: 100%;
  height: 100%;

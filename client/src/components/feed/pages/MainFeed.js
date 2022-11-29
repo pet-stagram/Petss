@@ -13,6 +13,8 @@ const MainFeed = () => {
     const SESSION_ID = 1;
     const [posts, setPosts] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    const [feedImageList, setFeedImageList] = useState([]);
+    const [scrollState, setScrollState] = useState(0);
     // const [isLiked, setIsLiked] = useState()
         const getFollowersFeed = async() => {
         await axios({
@@ -26,6 +28,7 @@ const MainFeed = () => {
               console.log(result.data);
               setPosts(result.data);
               setIsLoading(true);
+              setFeedImageList(posts.PostImages);
           })
           .catch((err) => {
             // err.response.status === '400' 
@@ -55,12 +58,18 @@ const MainFeed = () => {
           });
       }
     
+      let count = 0;
+      const nextButton = () => {
+        count = feedImageList.length-1 === count ? 0 : count+1;
+        setScrollState("-"+count*100+"%")
+      }
+      const prevButton = () => {
+        count = count === 0 ? feedImageList.length-1 : count-1
+        setScrollState("-"+count*100+"%")
+      }
+
+
   return (
-    
-        
-           
-        
-    
       <main className='mainFeedWrap'>
         {posts === ""? <div>No Data</div> : 
             
@@ -76,12 +85,23 @@ const MainFeed = () => {
                     </div>
                     <div className="post">
                         <div className="postImageBox">
-                            <img src={post.PostImages[0].img_url} alt="postImages" className="postImage"/>
-                            {/* {post.PostImages.map((postImage)=>{
+                            <ul className='FeedUl'>
+                                {post.PostImages.map((postImage)=>{
                                 return(
-                                <img src={postImage.img_url} alt="postImages" className="postImage"/>
+                                    <li className='FeedLi'>
+                                        <img src={postImage.img_url} alt="postImages" className="postImage" 
+                                        style={{backgroundImage: "url('"+scrollState+"')"}}/>
+                                    </li>
                                 )
-                            })}  */}
+                                })} 
+                            </ul>
+                            
+                            {/* <img src={post.PostImages[0].img_url} alt="postImages" className="postImage"/> */}
+                            
+                        </div>
+                        <div>
+                            <button onClick={prevButton}>left</button>
+                            <button onClick={nextButton}>right</button>
                         </div>
                         <div className="postReaction">
                             <button onClick={()=>handleLikeClick(post.id)}>
