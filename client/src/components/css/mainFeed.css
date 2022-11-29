@@ -3,9 +3,9 @@
 }
 
 .postBox{
-    width: 80%;
+    width: 85%;
     margin: 20px auto;
-    padding: 24px 40px;
+    padding: 24px 20px;
     background-color: white;
     border: 1px solid #ddd;
 }
@@ -28,14 +28,27 @@
     width: 40px;
     height: 40px;
 }
+.post{
+    display: grid;
+    grid-template-columns: 1fr 12fr 1fr;
+    align-items: center;
+}
 .postImageBox{
-    margin: 5px auto;
+    /* margin: 5px auto; */
     height: 400px;
     margin: 10px 0px;
+    background-size: cover;
 }
+
 .postImage{
  width: 100%;
  height: 100%;
+}
+
+.imageButton{
+    width: 35px;
+    height: 50px;
+    margin: 0 5px;
 }
 .postReaction{
     text-align: left;
