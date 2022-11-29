@@ -3,6 +3,7 @@ const email = require("../config/email");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+const userService = require("./usersService");
 
 /* min ~ max까지 랜덤으로 숫자를 생성하는 함수 */
 const generateRandom = function (min, max) {
@@ -75,6 +76,13 @@ module.exports = {
         });
         console.log("비번맞음");
         result = 200;
+        // 기본이미지 설정
+        const setImageDto = {
+          id : addUser.id,
+          file: "public/images/basic_profile.jpeg",
+          isBasic : true
+        }
+      await userService.updateUserImage(setImageDto);
       }
       //}else{
       //console.log("닉넴있음");

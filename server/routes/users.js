@@ -226,57 +226,6 @@ router.get("/me",controller.getMe);
 */
 router.get("/:userId",controller.getUser);
 
-/**
- * @swagger
- *  /users/{userId}/posts:
- *    get:
- *      summary: 해당 유저의 모든 피드 조회
- *      tags:
- *      - users
- *      description: userId에 해당하는 유저의 모든 피드(게시글) 조회
- *      produces:
- *      - application/json
- *      parameters:
- *      - name : userId
- *        in : path
- *        description: 해당 유저 idx 값
- *      responses:
- *       200:
- *        description: 해당 유저의 전체 피드 조회 성공
- *        content:
- *          application/json:
- *            schema: 
- *              type: array
- *              items:
- *                  type: object
- *                  properties:
- *                      id:
- *                          type: integer
- *                          description: 피드 idx
- *                          example: 1
- *                      user_id:
- *                          type: integer
- *                          example: 1
- *                      content:
- *                          type: string
- *                          example: 안녕하세요
- *                      created_at:
- *                          type: date
- *                          example : 2022-11-11 10:40:20
- *                      updated_at:
- *                          type: date
- *                          example: 2022-11-10 10:29:10
- *                      PostImages:
- *                        type: object
- *                        properties:
- *                          img_url: 
- *                            type: string
- *                            example: https://storage.go...                                  
- *       400:
- *        description: 해당 유저가 존재하지 않거나 잘못된 요청
- */
-router.get("/:userId/posts",controller.getUserPosts);
-
 /* html form에 PUT Method가 존재하지 않음
     추후 수정 필요 (ex. PUT -> POST ) */
 /**
