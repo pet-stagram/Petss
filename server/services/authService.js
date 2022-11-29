@@ -38,7 +38,7 @@ module.exports = {
       }
       return result;
     } catch (err) {
-      throw err;
+      console.error(err);;
     }
   },
 
@@ -83,7 +83,7 @@ module.exports = {
       //console.log(result);//null
       return result;
     } catch (err) {
-      throw err;
+      console.error(err);
     }
   },
 
@@ -94,13 +94,19 @@ module.exports = {
     // 0, -1: 이메일 중복 시
     // randomnumber, randomnumber: 정상
     // -1, -1: error 시(catch)
-    const checkEmailUser = await User.findOne({ where: { email: userEmail } });
-
-    if (checkEmailUser) {
+    //const checkEmailUser = await User.findOne({ where: { email: userEmail } });
+                const checkEmailUser = await User.findOne({
+                    where:
+                        {email : userEmail}, 
+                        attributes: ["email"], 
+                        raw:true  
+                        });
+    console.log(checkEmailUser.email);
+    if (checkEmailUser.email) {
       //이메일이 존재한다면,
       //console.log(checkEmailUser);
       return [0, -1];
-    } else if (!checkEmailUser) {
+    } else if (!checkEmailUser.email) {
       //존재하지 않으면 인증번호 발송
       try {
         // throw 'test';
@@ -184,7 +190,7 @@ module.exports = {
       }
        return result;
     } catch (err) {
-        throw err;
+      console.error(err);;
     }
   },
 };
