@@ -38,7 +38,7 @@ module.exports = {
       }
       return result;
     } catch (err) {
-      throw err;
+      console.error(err);;
     }
   },
 
@@ -190,7 +190,7 @@ module.exports = {
       }
        return result;
     } catch (err) {
-        throw err;
+      console.error(err);;
     }
   },
 };
