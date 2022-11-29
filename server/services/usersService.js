@@ -62,26 +62,48 @@ module.exports = {
                 where:{id:userId},
                 attributes: { exclude: ['password'] }
             });
-            
-            const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
-            const followingCount = following.length;
-            const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
-            const followerCount = follower.length;
-            // const posts = await user.getPosts({raw:true, group: ["id"],nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
-            // const postsCount = posts.length;
 
-            const userData = 
-            {
-                info : user.dataValues,
-                following,
-                followingCount,
-                follower,
-                followerCount,
-                // posts,
-                // postsCount
+            const findUserPost = async (user) =>{
+                const posts = await user.getPosts({raw:true, group: ["id"],nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
+                const postsCount = posts.length;
+                return {
+                    posts,
+                    postsCount
+                }   
             }
 
-            return userData;
+            const getFollowBack = (follower, following) => {
+                follower.map((followerUser)=>{
+                    following.map((followingUser)=>{
+                        const followBack = followerUser.id === followingUser.id ? true : false;
+                        followerUser.setDataValue("followBack",followBack);
+                    })
+                });
+                return follower;
+            }
+
+            const findUserFollow = async (user) =>{
+                const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
+                const followingCount = following.length;
+                let follower = await user.getFollowers({attributes:["id","name","nick","image"]});
+                const followerCount = follower.length;
+                follower = getFollowBack(follower, following);
+                return {
+                    following,
+                    followingCount,
+                    follower,
+                    followerCount
+                }
+            }
+
+            const userPosts = await findUserPost(user);
+            const userFollow = await findUserFollow(user);
+
+            return {
+                info : user.dataValues,
+                ...userFollow,
+                ...userPosts
+            };
         }catch(err){
             console.error(err);
         }

@@ -7,7 +7,7 @@ module.exports = {
             res.sendStatus(401);
         }else{
             try{
-                const result = await service.selectMyInfo(currentUser);
+                const result = await service.selectUser(currentUser);
                 res.json(result);
             }catch(err){
                 res.sendStatus(400);
@@ -17,7 +17,7 @@ module.exports = {
     },
     getUser: async (req, res)=>{
         const currentUser = req.session.u_id;
-        if(!currentUser){
+        if(false){
             res.sendStatus(401);
         }else{
            const userId = req.params.userId;
@@ -25,8 +25,8 @@ module.exports = {
             const result = await service.selectUser(userId);
             res.status(200).json(result);
         }catch(err){
-            res.sendStatus(400);
             console.error(err);
+            res.sendStatus(400);
         }  
         }
        
@@ -41,8 +41,8 @@ module.exports = {
             const result = await service.selectUserPosts(userId);
             res.status(200).json(result);
         }catch(err){
-            res.sendStatus(400);
             console.error(err);
+            res.sendStatus(400);
         }
         }
         
