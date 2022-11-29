@@ -2,12 +2,8 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import "../../css/mainFeed.css"
 import "../../css/reset.css";
-import test7 from "../../../images/7.jpg"
-import paw from "../../../images/paw.png"
-import emptyPaw from "../../../images/empty_paw.png"
-import reply from "../../../images/reply.png"
-import message from "../../../images/message.png"
 import { useState } from 'react';
+import Post from './Post';
 
 const MainFeed = () => {
     const SESSION_ID = 1;
@@ -38,73 +34,20 @@ const MainFeed = () => {
         getFollowersFeed();
       }, []);
 
-      const handleLikeClick = async(postId) => {
-        console.log(postId);
-        
-        await axios({
-            method: "PUT",
-            url: `api/posts/like/${postId}`,
-            withCredentials: true,
-        })
-        .then((likeResult) => {
-            console.log(likeResult);
-            
-          })
-          .catch((err) => {
-              console.log(err);
-          });
-      }
-    
+      
+
   return (
-    
-        
-           
-        
-    
       <main className='mainFeedWrap'>
         {posts === ""? <div>No Data</div> : 
             
             isLoading &&
             posts.map((post)=>{
                 return(
-                    <div className="postBox" key={post.id}>
-                    <div className="userInfo">
-                        <span className="userImage">
-                            <img src={post.User.image} alt="팔로잉 유저 프로필" />
-                        </span>
-                        <span className="nickname">{post.User.nick}</span>
-                    </div>
-                    <div className="post">
-                        <div className="postImageBox">
-                            <img src={post.PostImages[0].img_url} alt="postImages" className="postImage"/>
-                            {/* {post.PostImages.map((postImage)=>{
-                                return(
-                                <img src={postImage.img_url} alt="postImages" className="postImage"/>
-                                )
-                            })}  */}
-                        </div>
-                        <div className="postReaction">
-                            <button onClick={()=>handleLikeClick(post.id)}>
-                                <img src={
-                                    post.Hearts.length===0 ? emptyPaw : paw
-                                } alt="like" className="like"/>
-                            </button>
-                            <button><img src={reply} alt="like" className="like"/></button>
-                            <button><img src={message} alt="like" className="like"/></button>
-                        </div>
-                        <p className='likeCount'>좋아요 {post.Hearts.length} 개  </p>
-                        <div className="postContent"> 
-                            {post.content}
-                        </div>
-                        
-                    </div>
-                </div>
+                    <Post post={post}/>
                 );
             })
-          }
-        
-           
-        </main>
+          } 
+      </main>
   )
 }
 
