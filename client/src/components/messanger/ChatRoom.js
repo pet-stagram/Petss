@@ -21,7 +21,6 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
                 partner : messages.partner,
                 messageLength : messages.messageLength                
             }
-            // setMessages({...messages,reverseData});
         }
         try {
         setLoading(true);
@@ -30,7 +29,6 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
             console.log("없음")
         }else{
             const arr = messages.chats.splice(0, 0, ...data.chats.reverse())
-            console.log(...arr);
             const reverseData = {
                 chats : arr,
                 partner : data.partner,
