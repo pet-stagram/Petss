@@ -31,36 +31,20 @@ module.exports = {
         }
        
     },
-    getUserPosts : async (req, res) => {
-        const currentUser = req.session.u_id;
-        if(!currentUser){
-            res.sendStatus(401);
-        }else{
-            const userId = req.params.userId;
-        try{
-            const result = await service.selectUserPosts(userId);
-            res.status(200).json(result);
-        }catch(err){
-            console.error(err);
-            res.sendStatus(400);
-        }
-        }
-        
-    },
     putUserInfo : async (req, res)=>{
         const currentUser = req.session.u_id;
         if(!currentUser){
             res.sendStatus(401);
         }else{
             const userDto = {
-                id : currentUser, // 현재 세션 유저
+                id : currentUser,
                 name : req.body.name,
                 nick : req.body.nick,
                 password : req.body.pw,
                 selfIntro : req.body.selfIntro
             }
                 try{
-                    await service.updateUser(userDto);
+                    await service.updateUserInfo(userDto);
                     res.sendStatus(201);
                 }catch(err){
                     res.sendStatus(400);
@@ -88,8 +72,8 @@ module.exports = {
                     await service.updateUserImage(userDto);
                     res.sendStatus(201);
                 }catch(err){
-                    res.sendStatus(400);
                     console.error(err);
+                    res.sendStatus(400);
                 }
             
         }
@@ -97,7 +81,6 @@ module.exports = {
 
     },
     postUserImageBasic : async (req, res)=>{
-        
         const currentUser = req.session.u_id;
         if(!currentUser){
             res.sendStatus(401);
@@ -105,30 +88,26 @@ module.exports = {
             res.sendStatus(404);
         }else{
             const userDto = {
-                id : currentUser, // 현재 세션 유저
+                id : currentUser,
                 file: "public/images/basic_profile.jpeg",
                 isBasic: true
             }
             try{
-                // await service.
                 await service.updateUserImage(userDto);
                 res.sendStatus(201);
             }catch(err){
-                res.sendStatus(400);
                 console.error(err);
+                res.sendStatus(400);
             }
-        
-    }
-        
+        }
     },
     putFollow : async (req, res) => {
-        
         const currentUser = req.session.u_id;
         if(!currentUser){
             res.sendStatus(401);
         }else{
             const followDto = {
-            currentUser,//현재 세션 유저 idx
+            currentUser,
             profileUser : isNaN(req.body.userId)?req.body.userId:parseInt(req.body.userId)
         };
         try{
@@ -145,7 +124,6 @@ module.exports = {
             console.error(err);
         }
         }
-        
     },
     postInvoice : async (req, res) => {
         const currentUser = req.session.u_id;
@@ -155,14 +133,14 @@ module.exports = {
             const invoiceDto = {
                 title : req.body.title,
                 content : req.body.content,
-                userId : currentUser//세션 유저
+                userId : currentUser
             };
             try{
                 await service.insertInvoice(invoiceDto);
                 res.sendStatus(201);
             }catch(err){
-                res.sendStatus(400);
                 console.error(err);
+                res.sendStatus(400);
             }
         }
     }

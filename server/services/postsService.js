@@ -7,15 +7,10 @@ const {
     Hashtag,
 } = require("../sequelize/models/index");
 const db = require("../sequelize/models/index");
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 const sequelize = require("sequelize");
-const { uploadProfileImage, uploadPostsImages } = require("../module/firebase");
-const stream = require("stream");
-const fs = require("fs");
-const path = require("path");
-const { post } = require('../routes/users');
+const { uploadPostsImages } = require("../module/firebase");
 
-// firebase Admin 초기화
 
 class LoadFeed {
     async findFollowUser(userId) {
@@ -81,7 +76,6 @@ module.exports = {
                         model: User,
                         attributes: ["id", "name", "nick", "image"],
                     },
-                    /* Heart.length가 0인 경우 로그인한 유저가 좋아요안함 */
                     {
                         model: Heart,
                         attributes: ["id","user_id"],
@@ -110,24 +104,30 @@ module.exports = {
                 group: ["id", "Hearts.id","PostImages.id"],
                 nest: true
             });
-            
-             await Promise.all(result.map(async (post)=>{
-                const heartCount = await Heart.findAndCountAll({
-                    where:{
-                        post_id : post.id,
-                        user_id : currentUser
-                    },
-                    attributes:["id"],
-                    raw:true
-                });
-                if(heartCount.count>0){
-                    post.setDataValue('myHeart',true);
-                    
-                }else{
-                    post.setDataValue('myHeart',false);
-                }
-            }));
-            
+
+
+            const addMyHeartInPosts = async (result) => {
+                await Promise.all(result.map(async (post)=>{
+                    const heartCount = await Heart.findAndCountAll({
+                        where:{
+                            post_id : post.id,
+                            user_id : currentUser
+                        },
+                        attributes:["id"],
+                        raw:true
+                    });
+                    if(heartCount.count>0){
+                        post.setDataValue('myHeart',true);
+                        
+                    }else{
+                        post.setDataValue('myHeart',false);
+                    }
+                }));
+                return result;
+            };
+
+            result = await addMyHeartInPosts(result);
+
             return result;
         } catch (err) {
             console.error(err);
@@ -174,7 +174,7 @@ module.exports = {
         try {
             const postCreateResult = await Post.create({
                 content: postDto.content,
-                user_id: 1,
+                user_id: postDto.user,
                 created_at: Date.now(),
                 updated_at: Date.now(),
             });

@@ -57,7 +57,7 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
                         className={styles.partnerImage}
                         src={messages.partner.image}
                         alt="상대방 이미지"/>
-                    <span>{messages.partner.name}</span>
+                    <span>{messages.partner.nick}</span>
                 
             </div>
             <ChatRoom messages={messages} messageView={messageView} setMessageView={setMessageView} setMessages={setMessages} conversationId ={conversationId} msgLength = {msgLength} setMsgLength = {setMsgLength}/>

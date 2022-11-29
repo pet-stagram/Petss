@@ -1,56 +1,12 @@
 const {
     User,
-    Post,
-    Heart,
     PostImage,
-    Comment,
-    Follow,
     Invoice,
 } = require("../sequelize/models/index");
-const { Op } = require("sequelize");
-const sequelize = require("sequelize");
 const { uploadProfileImage } = require("../module/firebase");
 const db = require("../sequelize/models/index");
-const usersController = require("../controllers/usersController");
 
 module.exports = {
-    /**
-     * 
-     * @param {Number} currentUser 현재 세션의 id값
-     * @returns {Object} 세션 유저 정보(info), 팔로잉 중인 유저 목록(following), 팔로워 중인 유저 목록(follower), 팔로잉 수(followingCount), 팔로워 수(followerCount), 포스트, 포스트 개수
-     */
-    selectMyInfo : async (currentUser)=>{
-        try{
-            const user = await User.findOne({
-                where:{id:currentUser},
-                attributes:{
-                    exclude:["password"]
-                }                
-            });
-
-            const following = await user.getFollowings({raw:true,attributes:["id","name","nick","image"]});
-            const followingCount = following.length;
-            const follower = await user.getFollowers({raw:true,attributes:["id","name","nick","image"]});
-            const followerCount = follower.length;
-            const posts = await user.getPosts({nest: true, include:[{model : PostImage, attributes: ["img_url"]}]});
-            const postsCount = posts.length;
-
-            const currentUserData = 
-            {
-                info : user.dataValues,
-                following,
-                followingCount,
-                follower,
-                followerCount,
-                posts,
-                postsCount
-            }
-            console.log(currentUserData);
-            return currentUserData;
-        }catch(err){
-            console.error(err);
-        }
-    },
     /**
      *
      * @param {Number} userId 조회하고자 하는 사용자의 idx
@@ -104,32 +60,8 @@ module.exports = {
                 ...userFollow,
                 ...userPosts
             };
+
         }catch(err){
-            console.error(err);
-        }
-    },
-    /**
-     *
-     * @param {Number} userId 피드를 조회할 사용자의 idx
-     * @returns 조회된 Post 결과 or 에러
-     */
-    selectUserPosts: async (userId) => {
-        try {
-            const findResult = await Post.findAll({
-                where: {
-                    user_id: userId,
-                },
-                order: [["createdAt", "DESC"]],
-                include: [
-                    {
-                        model: PostImage,
-                        attributes: ["img_url"],
-                        plain: true,
-                    },
-                ],
-            });
-            return findResult;
-        } catch (err) {
             console.error(err);
         }
     },
@@ -137,7 +69,7 @@ module.exports = {
      *
      * @param {Object} userDto 유저의 정보를 업데이트하기 위한 현재 세션 유저(id), params의 유저id(paramsUserId), 변경할 이름(name), 별명(nick), 비밀번호(password), 자기소개(selfIntro)가 담긴 객체
      */
-    updateUser: async (userDto) => {
+    updateUserInfo: async (userDto) => {
         try {
             await User.update(
                 {
@@ -162,7 +94,6 @@ module.exports = {
      */
     updateUserImage: async (userDto) => {
         const imgUrl = await uploadProfileImage(userDto);
-        console.log(imgUrl);
         try {
             await User.update({ image: imgUrl }, { where: { id: userDto.id } });
         } catch (err) {
@@ -180,10 +111,7 @@ module.exports = {
             following_id: followDto.profileUser,
             follower_id: followDto.currentUser,
         };
-        // console.log(followObj.follower_id);
-        // console.log(typeof followObj.following_id);
         if (followObj.follower_id === followObj.following_id) {
-            /* 본인 스스로를 팔로우하는 경우 HTTP 400 리턴 */
             return "Bad Request";
         } else {
             try {
