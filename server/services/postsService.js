@@ -7,15 +7,10 @@ const {
     Hashtag,
 } = require("../sequelize/models/index");
 const db = require("../sequelize/models/index");
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 const sequelize = require("sequelize");
-const { uploadProfileImage, uploadPostsImages } = require("../module/firebase");
-const stream = require("stream");
-const fs = require("fs");
-const path = require("path");
-const { post } = require('../routes/users');
+const { uploadPostsImages } = require("../module/firebase");
 
-// firebase Admin 초기화
 
 class LoadFeed {
     async findFollowUser(userId) {
@@ -50,7 +45,7 @@ class LoadFeed {
             const result = findResult[0].max + 1;
             return result;
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     }
 }
@@ -61,19 +56,18 @@ module.exports = {
      * @param {Number} userId 현재 세션(로그인 된) 유저의 idx 값
      * @returns {Array} [{게시물 id, 내용, 사진, 수정시간, 좋아요 개수, 글쓴이 정보{유저 idx, 이름, 활동명, 프로필사진}}]
      */
-    selectPostsAll: async (userId) => {
+    selectPostsAll: async (currentUser) => {
         const loadFeed = new LoadFeed();
         let result;
-        let r = [];
         try {
-            const followingsId = await loadFeed.findFollowUser(userId);
+            const followingsId = await loadFeed.findFollowUser(currentUser);
             result = await Post.findAll({
                 order: [["updatedAt", "DESC"]],
                 where: {
                     user_id: {
                         [Op.or] :{
                             [Op.in]: followingsId,
-                            [Op.eq]: 1 // 세션으로 변경하기
+                            [Op.eq]: currentUser // 세션으로 변경하기
                         }
                     }
                 },
@@ -82,7 +76,6 @@ module.exports = {
                         model: User,
                         attributes: ["id", "name", "nick", "image"],
                     },
-                    /* Heart.length가 0인 경우 로그인한 유저가 좋아요안함 */
                     {
                         model: Heart,
                         attributes: ["id","user_id"],
@@ -111,27 +104,33 @@ module.exports = {
                 group: ["id", "Hearts.id","PostImages.id"],
                 nest: true
             });
-            
-             await Promise.all(result.map(async (post)=>{
-                const heartCount = await Heart.findAndCountAll({
-                    where:{
-                        post_id : post.id,
-                        user_id : 1
-                    },
-                    attributes:["id"],
-                    raw:true
-                });
-                if(heartCount.count>0){
-                    post.setDataValue('myHeart',true);
-                    
-                }else{
-                    post.setDataValue('myHeart',false);
-                }
-            }));
-            
+
+
+            const addMyHeartInPosts = async (result) => {
+                await Promise.all(result.map(async (post)=>{
+                    const heartCount = await Heart.findAndCountAll({
+                        where:{
+                            post_id : post.id,
+                            user_id : currentUser
+                        },
+                        attributes:["id"],
+                        raw:true
+                    });
+                    if(heartCount.count>0){
+                        post.setDataValue('myHeart',true);
+                        
+                    }else{
+                        post.setDataValue('myHeart',false);
+                    }
+                }));
+                return result;
+            };
+
+            result = await addMyHeartInPosts(result);
+
             return result;
         } catch (err) {
-            throw err;
+            console.error(err);
         }
         
     },
@@ -155,7 +154,7 @@ module.exports = {
             
             return result;
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     },
 
@@ -175,7 +174,7 @@ module.exports = {
         try {
             const postCreateResult = await Post.create({
                 content: postDto.content,
-                user_id: 1,
+                user_id: postDto.user,
                 created_at: Date.now(),
                 updated_at: Date.now(),
             });
@@ -213,7 +212,7 @@ module.exports = {
                 result = "success";
             }
         } catch (err) {
-            throw err;
+            console.error(err);
         }
         return result;
     },
@@ -294,7 +293,7 @@ module.exports = {
                 await Heart.create(dtoObject);
                 return "created";
             } catch (err) {
-                throw err;
+                console.error(err);
             }
         } else {
             try {
@@ -303,7 +302,7 @@ module.exports = {
                 });
                 return "destroy";
             } catch (err) {
-                throw err;
+                console.error(err);
             }
         }
     },
@@ -322,7 +321,7 @@ module.exports = {
                 updatedAt: Date.now(),
             });
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     },
     /**
@@ -361,7 +360,7 @@ module.exports = {
                 return "forbidden";
             }
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     },
     /**
@@ -381,7 +380,7 @@ module.exports = {
                 return "notFound";
             }
         } catch (err) {
-            throw new Error(err);
+            console.error(err);
         }
     },
     /**
@@ -400,7 +399,7 @@ module.exports = {
             });
             return findResult;
         } catch (err) {
-            throw err;
+            console.error(err);
         }
     },
 };

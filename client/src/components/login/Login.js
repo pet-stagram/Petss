@@ -75,14 +75,13 @@ function Login() {
         console.log(e);
       });
   }
-  //아이디 비밀번호 찾기 팝업창
-  // const [openModal, setOpenModal] = useState(false);
-  // const modalOpen = () => {
-  //   setOpenModal(true);
-  // };
-  // const modalClose = () => {
-  //   setOpenModal(false);
-  // };
+  //아이디, 비밀번호 찾기 팝업창
+  const [openModal, setOpenModal] = useState(false);
+
+  //모달창 노출
+  const showModal = () => {
+    setOpenModal(true);
+  };
 
   return (
     <>
@@ -146,13 +145,10 @@ function Login() {
                         아이디가 틀렸을 시 -> "존재하지 않는 아이디 입니다."
                         비밀번호가 틀렸을 시  -> "비밀번호가 일치하지 않습니다."  */}
                 <div className={Logincss.findPw}>
-                  <a
-                    className="openModalBtn"
-                    //onClick={modalOpen}
-                  >
+                  <a className="openModalBtn" onClick={showModal} href>
                     비밀번호를 잊으셨나요?
                   </a>
-                  {/* <Modal open={openModal} close={modalClose} /> */}
+                  {openModal && <Modal setOpenModal={setOpenModal} />}
                 </div>
                 <div className={Logincss.mvReg}>
                   <a href="/register">계정이 없으신가요? 가입하기</a>
