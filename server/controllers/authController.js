@@ -23,9 +23,9 @@ module.exports = {
   //next(); //다음 미들웨어 실행
   postLogin: async (req, res, next) => {
     //isNotLoggendIn
-    //const exUser = req.body; //form에서 입력받은 정보 exUser에 담기
-    const userEmail = userData.email; //원래는exUser 써야하는데 입력받은게 없으니까 임시적으로 userData변수를 적음
-    const userPassword = userData.password;
+    const exUser = req.body; //form에서 입력받은 정보 exUser에 담기
+    const userEmail = exUser.email; //원래는exUser 써야하는데 입력받은게 없으니까 임시적으로 userData변수를 적음
+    const userPassword = exUser.password;
     try {
       const loggingUser = await service.loginUser(userEmail, userPassword); //db담은 exUser변수 loginUser로 전달
       //400 - bad_request - request 실패 ex) 유효성 검사 통과 실패, 잘못된 요청
@@ -176,16 +176,20 @@ module.exports = {
   /* 닉넴중복 체크 */
   postNick: async (req, res) => {
     const userNick = req.body.nick;
-    console.log(req.body.nick);
-    const checkUserNick = await service.checkNick(userNick);
+    console.log(userNick,"req.body.nick에서 들어온 nick값")
+    
     try {
+      const checkUserNick = await service.checkNick(userNick);
+      console.log(checkUserNick,"userNick에서 받아온 nick값");
       if (checkUserNick === 400) {
+        
         res.sendStatus(400);
       } else {
         res.sendStatus(200);
       }
     } catch (err) {
       console.log(err);
+      res.sendStatus(500);
     }
   },
 };

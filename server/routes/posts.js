@@ -412,5 +412,7 @@ router.get("/comment/:postId",controller.getComment);
  *        description: 세션이 없음(로그인 안되어있음)
  *  
  */
+router.put("/like/:id", controller.putLike);
+
 module.exports = router;
- router.put("/like/:id", controller.putLike);
+
