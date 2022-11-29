@@ -101,6 +101,7 @@ module.exports = {
   /* 이메일 인증 */
   postEmail: async (req, res) => {
     const userEmail = req.body.email;
+    console.log(userEmail,"req.body.email에서 받아온값");
     try {
       const sendEmailNum = await service.sendEmail(userEmail);
       console.log("randomNumber: " + sendEmailNum[0] + ", " + sendEmailNum[1]); //랜덤번호 확인용
@@ -118,7 +119,7 @@ module.exports = {
         //console.log("랜덤번호 : " + req.session.randomNumber);
         res.sendStatus(200); //랜덤번호 보내기
       } else {
-        res.sendstatus(409); //이메일 중복 에러
+        res.status(409).send("이메일 중복"); //이메일 중복 에러
         // 이미 생성된 유저의 id 리소스와 회원가입하려는 유저의 id가 충돌한 경우라고 볼 수 있기 때문에 409코드를 사용했다.
       }
     } catch (err) {
