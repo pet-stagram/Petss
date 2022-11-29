@@ -43,8 +43,7 @@ module.exports = {
             /* User1이나 User2가 null이면 null이 아닌 User가 상대방임 */
             return conversations;
         } catch (err) {
-            console.log(err);
-            throw err;
+            console.error(err);
         }
     },
     selectMessages: async (messageDto) => {
@@ -81,7 +80,6 @@ module.exports = {
                 }
             ]
         });
-        
         /* 내가 누군지에 따라 읽음표시 */
       await Conversation.update(
             {
@@ -107,7 +105,7 @@ module.exports = {
         );
         return messages;
     }catch(err){
-        throw err;
+        console.error(err);
     }
     },
     createMessages: async (messageDto) => {
@@ -174,7 +172,7 @@ module.exports = {
             }
         )
     }catch(err){
-        throw err;
+        console.error(err);
     }
     },
 };

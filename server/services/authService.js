@@ -3,6 +3,7 @@ const email = require("../config/email");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+const userService = require("./usersService");
 
 /* min ~ max까지 랜덤으로 숫자를 생성하는 함수 */
 const generateRandom = function (min, max) {
@@ -38,7 +39,7 @@ module.exports = {
       }
       return result;
     } catch (err) {
-      throw err;
+      console.error(err);;
     }
   },
 
@@ -75,6 +76,13 @@ module.exports = {
         });
         console.log("비번맞음");
         result = 200;
+        // 기본이미지 설정
+        const setImageDto = {
+          id : addUser.id,
+          file: "public/images/basic_profile.jpeg",
+          isBasic : true
+        }
+      await userService.updateUserImage(setImageDto);
       }
       //}else{
       //console.log("닉넴있음");
@@ -83,7 +91,7 @@ module.exports = {
       //console.log(result);//null
       return result;
     } catch (err) {
-      throw err;
+      console.error(err);
     }
   },
 
@@ -94,13 +102,19 @@ module.exports = {
     // 0, -1: 이메일 중복 시
     // randomnumber, randomnumber: 정상
     // -1, -1: error 시(catch)
-    const checkEmailUser = await User.findOne({ where: { email: userEmail } });
-
-    if (checkEmailUser) {
+    //const checkEmailUser = await User.findOne({ where: { email: userEmail } });
+                const checkEmailUser = await User.findOne({
+                    where:
+                        {email : userEmail}, 
+                        attributes: ["email"], 
+                        raw:true  
+                        });
+    console.log(checkEmailUser.email);
+    if (checkEmailUser.email) {
       //이메일이 존재한다면,
       //console.log(checkEmailUser);
       return [0, -1];
-    } else if (!checkEmailUser) {
+    } else if (!checkEmailUser.email) {
       //존재하지 않으면 인증번호 발송
       try {
         // throw 'test';
@@ -184,7 +198,7 @@ module.exports = {
       }
        return result;
     } catch (err) {
-        throw err;
+      console.error(err);;
     }
   },
 };

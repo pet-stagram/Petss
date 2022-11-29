@@ -48,6 +48,20 @@ module.exports = {
         //             }else{
         //                 return [1,1];
         //             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         //         // //유저닉넴 검색
         //         // const usernickname = await User.findAll({
         //         //     where: {nick: {[Op.like]:"%"+usernNick+"%"}},

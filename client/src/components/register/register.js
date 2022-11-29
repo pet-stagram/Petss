@@ -57,11 +57,14 @@ function Register() {
   //   const { name, value } = e.target;
   // };
 
+  //활동명 중복 체크,
+  //중복이면 true, 사용가능하면 false일 때 제출 가능하게
+  //코드 받아와서 200이면 false, 다른 코드면 true 코드받아오는 법 찾아보기
   const onBlur = (e) => {
     axios({
       method: "POST",
       url: `api/auth/nick`,
-      data: e.target.value,
+      data: { nick: e.target.value },
     })
       .then((res) => {
         console.log(res);
@@ -82,8 +85,9 @@ function Register() {
       alert("전화번호는 숫자만 입력해주세요.");
       document.querySelector("#regPhone").value = "";
       //잘못적으면 빈칸
+    } else if (isNickDup(true)) {
+      console.log("중복인 활동명임.");
     }
-
     //input에 값이 있는지 체크하고 입력이 다 돼있으면 post전송
     else if (
       data.regName !== "" &&
