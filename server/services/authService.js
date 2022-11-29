@@ -49,6 +49,7 @@ module.exports = {
   insertUser: async (user) => {
     const { regName, nick, password, phone, email, regDate } = user;
     try {
+      console.log(password);
       //const chekNick = await User.findOne({ where: { nick } })//user.nick:nick
       //console.log(chekNick.nick);//
       //if(!chekNick){
