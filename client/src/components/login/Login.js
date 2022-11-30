@@ -48,9 +48,9 @@ function Login() {
     if (user !== "") {
       //값이 다 입력됐다면
       Log();
-    } else if (user === "") {
+    } /*else if (user === "") {
       alert("이메일과 비밀번호를 입력바랍니다.");
-    }
+    }*/
   };
 
   //2.서버에 전송한다. 전송할 때 이메일,비밀번호 값이 db값과 같은지 확인한다.(post)
@@ -67,7 +67,7 @@ function Login() {
       withCredentials: true,
     })
       .then((res) => {
-        navigate("/myFeed");
+        navigate("/edit");
         console.log(res);
       })
       .catch((e) => {
@@ -157,7 +157,6 @@ function Login() {
             </div>
           </div>
         </div>
-        {/* <Footer className={Logincss.logFooter} /> */}
       </body>
     </>
   );
