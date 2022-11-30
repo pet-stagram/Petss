@@ -4,6 +4,7 @@ const serviceAccount = require("../config/petss-b5d7b-firebase-adminsdk-8rolr-ee
 const fs = require("fs");
 const path = require("path");
 const e = require("express");
+const fsExtra = require("fs-extra");
 
 // firebase Admin 초기화
 const admin = firebaseAdmin.initializeApp(
@@ -46,18 +47,21 @@ async function uploadProfileImage(userDto) {
 async function uploadPostsImages(newPostNum, files) {
     const urlArr = [];
     let storage;
-    const promises = files.map(async (file, index) => {
-        const ext = path.extname(file.originalname);
-        storage = await storageRef.upload(file.path, {
-            public: true,
-            destination: `/uploads/feed/${newPostNum}/${index}${ext}`,
-            metadata: {
-                firebaseStorageDownloadTokens: uuidv4(),
-            },
+    
+    
+        const promises = files.map(async (file, index) => {
+            const ext = path.extname(file.originalname);
+            storage = await storageRef.upload(file.path, {
+                public: true,
+                destination: `/uploads/feed/${newPostNum}/${index}${ext}`,
+                metadata: {
+                    firebaseStorageDownloadTokens: uuidv4(),
+                },
+            });
+            urlArr.push(storage[0].metadata.mediaLink);       
+            fsExtra.emptyDirSync(file.destination);
         });
-        urlArr.push(storage[0].metadata.mediaLink);
-        fs.rmSync(file.destination, { recursive: true, force: true });
-    });
+    
     await Promise.all(promises);
     return urlArr;
 }
