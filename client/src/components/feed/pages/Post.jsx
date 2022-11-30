@@ -47,7 +47,7 @@ const Post = ({post}) => {
         <div className="postBox" key={post.id}>
             <div className="userInfo">
                 <span className="userImage">
-                    {/* <img src={post.User.image} alt="팔로잉 유저 프로필" /> */}
+                    <img src={post.User.image} alt="팔로잉 유저 프로필" />
                 </span>
                 
                 <span className="nickname">{post.User.nick}</span>
