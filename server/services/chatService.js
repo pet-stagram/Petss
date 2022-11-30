@@ -18,7 +18,7 @@ module.exports = {
                     {
                         model: User,
                         as: 'User1',
-                        attributes:["id","name","image"],
+                        attributes:["id","name","image","nick"],
                         where: {
                             id: {
                                 [Op.notLike]: currentUser,
@@ -29,7 +29,7 @@ module.exports = {
                     {
                         model: User,
                         as: 'User2',
-                        attributes:["id","name","image"],
+                        attributes:["id","name","image","nick"],
                         where: {
                             id: {
                                 [Op.notLike]: currentUser,
