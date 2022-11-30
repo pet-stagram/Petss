@@ -2,8 +2,9 @@
 .sideContainer{
     position: fixed;
     right:0;
-    width:200px;
-    background-color: #eee;
+    width:300px;
+    background-color: white;
+    border-left: 1px solid #ccc;
     height: 100%;
     overflow-y: scroll;
 }
@@ -20,6 +21,7 @@
     font-size: 14px;
     padding: 10px 10px;
     transition: .3s;
+    margin-left: 10px;
 }
 
 .messageInfo:hover{

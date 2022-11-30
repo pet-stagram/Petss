@@ -21,7 +21,7 @@ const Navbar = () => {
 
   const getLoginInfo = async () => {
     //TODO: 세션한 사람의 아이디를 받아와야함
-    const SESSION_ID = 1;
+    const SESSION_ID = 38;
 
     await axios({
       method: "GET",
