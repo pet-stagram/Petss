@@ -2,7 +2,6 @@ const service = require("../services/usersService");
 
 module.exports = {
     getMe : async (req, res)=>{
-        console.log("왔다");
         const currentUser = req.session.u_id;
         if(!currentUser){
             res.sendStatus(401);

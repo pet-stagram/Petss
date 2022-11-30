@@ -58,7 +58,8 @@ const Side = () => {
                                     <h4
                                         className={styles.messagePartnerName}
                                     >
-                                        {friend.name}
+                                        {friend.nick}
+                                        {console.log(friend)}
                                     </h4>
                                     <p className={styles.lastChat}>
                                         {conversation.lastChat}
