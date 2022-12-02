@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Logo from "../../images/regLogo.png";
 import "./register.css";
 import { useForm } from "react-hook-form";
@@ -65,10 +65,12 @@ function Register() {
       method: "POST",
       url: `api/auth/nick`,
       data: { nick: e.target.value },
+
+      //객체 생성 => {key : value}
     })
       .then((res) => {
         console.log(res);
-        setIsNickDup(false);
+        setIsNickDup();
       })
       .catch((e) => {
         console.log(e);
@@ -85,6 +87,7 @@ function Register() {
       alert("전화번호는 숫자만 입력해주세요.");
       document.querySelector("#regPhone").value = "";
       //잘못적으면 빈칸
+    } else if (isNickDup) {
     }
     //input에 값이 있는지 체크하고 입력이 다 돼있으면 post전송
     else if (

@@ -20,7 +20,7 @@ module.exports = {
             });
 
             const findUserPost = async (user) =>{
-                const posts = await user.getPosts({raw:true, group: ["id"],nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
+                const posts = await user.getPosts({ group: ["id"],nest: true, include:[{model : PostImage, attributes: ["img_url"] , plain: true}]});
                 const postsCount = posts.length;
                 return {
                     posts,

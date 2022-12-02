@@ -1,14 +1,14 @@
 import React from "react";
 import "../edit/editAccount.css";
 import Navbar from "../feed/layout/Navbar";
-//import Profile from "../../images/1.jpg";
+import Profile from "../../images/1.jpg";
 //import $ from "jquery"; //jquery 세팅
 import { useEffect, useState } from "react";
 import Footer from "../footer/Footer";
 import axios from "axios";
 
 function EditProfile() {
-  //axios.get()으로 유저 정보 가져와서 input칸에 반영시키고 제출할 때 유저정보 수정될 수 있게(post)
+  //비번 규칙 넣기
 
   //textarea 입력값 감지
   const [textValue, setTextValue] = useState("");
@@ -19,26 +19,26 @@ function EditProfile() {
   };
 
   const getLoginInfo = async () => {
-    const SESSION_ID = 1;
+    // const SESSION_ID = 1;
 
     await axios({
       method: "GET",
-      url: `api/users/${SESSION_ID}`,
-      withCredentials: true,
+      url: `/api/users/me`,
+      //withCredentials: true,
     })
       .then((result) => {
-        console.log("로그인 유저 조회 성공");
-        console.log(result);
         setData(result.data);
+        console.log("유저 조회 성공");
+        console.log(result.data);
       })
       .catch((err) => {
-        // err.response.status === '400'
-        console.log("로그인 유저 조회 실패");
+        console.log("유저 조회 실패");
         console.log(err);
       });
   };
 
   useEffect(() => {
+    console.log("gk");
     getLoginInfo();
   }, []);
 
@@ -62,14 +62,15 @@ function EditProfile() {
                         <img
                           alt="본인 프로필 사진"
                           className=""
-                          src={data.info?.image}
+                          // src={data.info.image}
+                          src={Profile}
                         ></img>
                       </div>
                     </button>
                   </div>
                 </div>
                 <div className="right">
-                  <h1>{data.info?.nick}</h1>
+                  <h1>{data.info.nick}</h1>
                   <button className="" type="button" id="profileChnBtn">
                     프로필 사진 바꾸기
                   </button>
@@ -84,9 +85,8 @@ function EditProfile() {
                     <input
                       className=""
                       type="text"
-                      aria-required="true"
-                      placeholder={data.info?.name}
                       name=""
+                      placeholder={data.info.name}
                     ></input>
                   </div>
                 </div>
@@ -98,10 +98,8 @@ function EditProfile() {
                     <input
                       className=""
                       type="text"
-                      aria-required="true"
                       name=""
-                      value=""
-                      placeholder={data.info?.nick}
+                      placeholder={data.info.nick}
                     ></input>
                   </div>
                 </div>
@@ -114,9 +112,9 @@ function EditProfile() {
                       <textarea
                         id="editTextarea"
                         maxLength="149"
-                        placeholder={data.info?.self_intro}
                         value={textValue}
                         onChange={(e) => handlesetValue(e)}
+                        placeholder={data.info.self_intro}
                       ></textarea>
                       <div style={{ display: "flex" }}>
                         <p>{textValue.length}</p>/<p>150</p>
@@ -129,11 +127,7 @@ function EditProfile() {
                     <label>이메일</label>
                   </aside>
                   <div>
-                    <input
-                      type="text"
-                      aria-required="true"
-                      placeholder={data.info?.email}
-                    ></input>
+                    <input type="text" placeholder={data.info.email}></input>
                   </div>
                 </div>
                 <div className="editRow" id="editEmailCheck">
@@ -151,9 +145,8 @@ function EditProfile() {
                   <div>
                     <input
                       type="text"
-                      aria-required="true"
-                      placeholder={data.info?.phone}
                       value=""
+                      placeholder={data.info.phone}
                     ></input>
                   </div>
                 </div>

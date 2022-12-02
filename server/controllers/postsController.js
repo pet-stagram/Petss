@@ -32,17 +32,19 @@ module.exports = {
     },
     postPosts: async (req, res) => {
         const currentUser = req.session.u_id;
+        
+        const requestDto = {
+            files : req.files,
+            content : req.body.content,
+            user : currentUser // 세션유저
+        }
+        
         if(!currentUser){
             res.sendStatus(401);
         }else if (requestDto.files.length===0) {
             /* 클라이언트에서 파일 첨부를 하지 않았을 시 */
             res.sendStatus(400);
         }else{
-            const requestDto = {
-                files : req.files,
-                content : req.body.content,
-                user : currentUser // 세션유저
-            }
             try {
                 let fileUrl = await service.uploadFile(requestDto.files);
                 
