@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Logincss from "./Login.module.css";
 import Logo from "../../images/loginLogo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,11 +8,11 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-//import Footer from "../footer/Footer";
 import Modal from "./Modal";
-import Context from "../../ContextProvider";
+import { useUserState } from "../../App";
 
 function Login() {
+  const [userState, setUserState] = useUserState();
   const formSchema = yup.object({
     email: yup
       .string()
@@ -44,7 +44,7 @@ function Login() {
   //제출
   const onSubmit = (e) => {
     // e.preventDefault();
-    console.log(user);
+    console.log(user.email, user.password);
 
     if (user !== "") {
       //값이 다 입력됐다면
@@ -68,13 +68,13 @@ function Login() {
       withCredentials: true,
     })
       .then((res) => {
+        setUserState(res);
         console.log(res);
         navigate("/myFeed");
       })
       .catch((e) => {
         alert("비밀번호가 틀렸거나 계정이 존재하지 않습니다.");
         console.log(e);
-        console.log(context.loggedUser);
       });
   }
   //아이디, 비밀번호 찾기 팝업창
@@ -84,8 +84,6 @@ function Login() {
   const showModal = () => {
     setOpenModal(true);
   };
-
-  const context = useContext(Context);
 
   return (
     <>
@@ -119,7 +117,6 @@ function Login() {
                       name="email"
                       autoComplete="off"
                       {...register("email")}
-                      value={context.loggedUser.email}
                       onChange={(e) => e.target.value}
                     />
                     {errors.email && <p>{errors.email.message}</p>}
@@ -133,7 +130,6 @@ function Login() {
                       name="password"
                       autoComplete="off"
                       {...register("password")}
-                      value={context.loggedUser.password}
                       onChange={(e) => setUser(e.target.value)}
                     />
                     {errors.password && <p>{errors.password.message}</p>}
