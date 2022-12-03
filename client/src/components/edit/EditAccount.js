@@ -10,8 +10,6 @@ import * as yup from "yup";
 import axios from "axios";
 
 function EditProfile() {
-  //수정해서 db에 보내기, 활동명과 이메일 중복 검사
-
   //textarea 입력값 감지
   const [textValue, setTextValue] = useState("");
   const [userState] = useUserState();
