@@ -6,7 +6,7 @@ import { useState } from 'react';
 import Post from './Post';
 
 const MainFeed = () => {
-    const SESSION_ID = 1;
+    // const SESSION_ID = 1;
     const [posts, setPosts] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     // const [isLiked, setIsLiked] = useState()
@@ -43,7 +43,7 @@ const MainFeed = () => {
             isLoading &&
             posts.map((post)=>{
                 return(
-                    <Post post={post}/>
+                <Post post={post} key={post.id}/>
                 );
             })
           } 
@@ -52,3 +52,4 @@ const MainFeed = () => {
 }
 
 export default MainFeed
+

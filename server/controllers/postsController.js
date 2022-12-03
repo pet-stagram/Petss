@@ -66,7 +66,6 @@ module.exports = {
 
     },
     putPosts: async (req, res) => {
-
         const currentUser = req.session.u_id;
         if(!currentUser){
             res.sendStatus(401);
@@ -173,7 +172,6 @@ module.exports = {
         }
     },
     deleteComment: async (req, res) => {
-        
         const currentUser = req.session.u_id;
         if(!currentUser){
             res.sendStatus(401);
