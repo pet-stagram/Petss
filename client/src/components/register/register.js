@@ -52,12 +52,6 @@ function Register() {
 
   const navigate = useNavigate();
 
-  // //입력값 감지
-  // const onChange = (e) => {
-  //   const { name, value } = e.target;
-  // };
-
-  //활동명 중복 체크,
   //중복이면 true, 사용가능하면 false일 때 제출 가능하게
   //코드 받아와서 200이면 false, 다른 코드면 true 코드받아오는 법 찾아보기
   const onBlur = (e) => {
@@ -107,8 +101,8 @@ function Register() {
 
   //db랑 비교해서 중복여부 체크해야 하니 get도 해야 한다.
   //1.submit할 때 data를 db랑 비교(axios.get)해서 중복이면 글씨 변경하기
-  async function addMember(data) {
-    await axios({
+  function addMember(data) {
+    axios({
       method: "POST",
       url: `api/auth/register`,
       data: data,
@@ -116,7 +110,7 @@ function Register() {
     })
       .then((res) => {
         alert("회원가입 성공! ૮ ♡ﻌ♡ა");
-        navigate("/login");
+        navigate("/");
         console.log(res);
       })
       .catch((e) => {
@@ -250,7 +244,7 @@ function Register() {
                   />
                 </div>
                 <div className="mvLog">
-                  <a href="/login">계정이 이미 있으신가요? 로그인</a>
+                  <a href="/">계정이 이미 있으신가요? 로그인</a>
                 </div>
               </form>
             </div>

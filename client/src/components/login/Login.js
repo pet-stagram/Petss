@@ -9,10 +9,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
-import { useUserState } from "../../App";
+import { useUserState } from "../../ContextProvider";
 
-function Login() {
-  const [userState, setUserState] = useUserState();
+function Login({ setIsLogined }) {
   const formSchema = yup.object({
     email: yup
       .string()
@@ -30,51 +29,47 @@ function Login() {
     resolver: yupResolver(formSchema),
   });
   //1. 이메일 ,비밀번호 저장할 변수를 만든다.
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState({ email: "", password: "" });
 
   //입력값 감지
-  // const onChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUser({
-  //     ...user,
-  //     [name]: value,
-  //   });
-  // };
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
+  };
 
   //제출
   const onSubmit = (e) => {
     // e.preventDefault();
-    console.log(user.email, user.password);
+    console.log(user);
 
     if (user !== "") {
       //값이 다 입력됐다면
       Log();
-    } /*else if (user === "") {
+    } else if (user === "") {
       alert("이메일과 비밀번호를 입력바랍니다.");
-    }*/
+    }
   };
 
-  //2.서버에 전송한다. 전송할 때 이메일,비밀번호 값이 db값과 같은지 확인한다.(post)
-  //다르면 로그인 안되고 비번 틀리면 비번 틀렸다 하고, 이메일 틀리면 없는 아이디 입니다 띄우기
-
-  //db전달 함수
-  const navigate = useNavigate();
-
-  async function Log() {
-    await axios({
+  //db전달
+  function Log() {
+    axios({
       method: "POST",
       url: `api/auth/login`,
       data: user,
       withCredentials: true,
     })
       .then((res) => {
-        setUserState(res);
-        console.log(res);
-        navigate("/myFeed");
+        setTimeout(() => {
+          setIsLogined("true");
+          localStorage.setItem("isLogin", "true");
+        }, 150);
       })
       .catch((e) => {
         alert("비밀번호가 틀렸거나 계정이 존재하지 않습니다.");
-        console.log(e);
+        // console.log(e);
       });
   }
   //아이디, 비밀번호 찾기 팝업창
@@ -89,7 +84,6 @@ function Login() {
     <>
       <context>
         <body>
-          {/* 메인피드에서 로그아웃 누르면 로그인 화면으로 넘어오는 것도 생각 */}
           <div className={Logincss.logContainer}>
             <div className={Logincss.mainBox}>
               <div className={Logincss.logoBox}>
@@ -117,7 +111,7 @@ function Login() {
                       name="email"
                       autoComplete="off"
                       {...register("email")}
-                      onChange={(e) => e.target.value}
+                      onChange={onChange}
                     />
                     {errors.email && <p>{errors.email.message}</p>}
                   </div>
@@ -130,7 +124,7 @@ function Login() {
                       name="password"
                       autoComplete="off"
                       {...register("password")}
-                      onChange={(e) => setUser(e.target.value)}
+                      onChange={onChange}
                     />
                     {errors.password && <p>{errors.password.message}</p>}
                   </div>

@@ -1,48 +1,24 @@
-import { createContext } from "react";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 
-//Context객체 생성
-const Context = createContext({
-  loggedUser: {
-    regName: "",
-    nick: "",
-    phone: "",
-    email: "",
-    image: "",
-    self_intro: "",
-  },
-  loggedIn: false,
-  setLoggedUser: () => {},
-  setLoggedIn: () => {},
-});
+const Context = createContext(null); //초기값 설정
 
-export default Context;
-
-export const ContextProvider = ({ children }) => {
-  //유저정보
-  const setLoggedUser = (data) => {
-    setState((prevState) => ({
-      ...prevState,
-      loggedUser: data, //login한 유저정보  = data
-    }));
-  };
-  //loggedUser : 로그인한 유저의 정보, loggedIn : 로그인 상태(true,false)
-  const setLoggedIn = () => {
-    setState((prevState) => ({
-      ...prevState,
-      loggedIn: !prevState.loggedIn,
-    }));
-  };
-  const initialState = {
-    loggedUser: {},
-    loggedIn: false,
-    setLoggedUser,
-    setLoggedIn,
-  };
-
-  const [state, setState] = useState(initialState);
+//value값에 useState를 넘겨서 편하게 사용하려고 만든 컴포넌트
+function ContextProvider({ children }) {
+  const userState = useState();
 
   //Context 오브젝트에 포함된 React 컴포넌트인 Provider는 context를 구독하는 컴포넌트들에게 context의 변화를 알리는 역할을 한다.
-  //하위 컴포넌트에 state 전달.
-  return <Context.Provider value={state}>{children}</Context.Provider>;
-};
+  return <Context.Provider value={userState}>{children}</Context.Provider>;
+}
+
+//위의 value={userState}를 사용할 수 있는 함수. 얘를 계속 재사용함->출력하고 수정가능
+//children에서 사용할 때!! value에 값이 들어오는 것임.
+
+function useUserState() {
+  const value = useContext(Context);
+  if (value === undefined) {
+    throw new Error("Context value에 값이 없음");
+  }
+  return value; //호출한 곳(Login 컴포넌트)에 userState와 setUserState를 리턴
+}
+
+export { ContextProvider, useUserState };

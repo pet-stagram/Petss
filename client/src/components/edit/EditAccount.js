@@ -1,48 +1,92 @@
 import React from "react";
 import "../edit/editAccount.css";
 import Navbar from "../feed/layout/Navbar";
-import Profile from "../../images/1.jpg";
-//import $ from "jquery"; //jquery 세팅
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Footer from "../footer/Footer";
+import { useUserState } from "../../ContextProvider";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import axios from "axios";
 
 function EditProfile() {
-  //비번 규칙 넣기
+  //수정해서 db에 보내기, 활동명과 이메일 중복 검사
 
   //textarea 입력값 감지
   const [textValue, setTextValue] = useState("");
-  const [data, setData] = useState({});
+  const [userState] = useUserState();
 
   const handlesetValue = (e) => {
     setTextValue(e.target.value);
   };
 
-  const getLoginInfo = async () => {
-    // const SESSION_ID = 1;
+  console.log(userState);
 
-    await axios({
-      method: "GET",
-      url: `/api/users/me`,
-      //withCredentials: true,
-    })
-      .then((result) => {
-        setData(result.data);
-        console.log("유저 조회 성공");
-        console.log(result.data);
-      })
-      .catch((err) => {
-        console.log("유저 조회 실패");
-        console.log(err);
-      });
+  const formSchema = yup.object().shape({
+    regName: yup.string().trim().required("이름을 입력해주세요"),
+    nick: yup.string().trim().required("활동명을 입력해주세요"),
+    phone: yup.string().trim().required("휴대폰 번호를 입력해주세요"),
+    email: yup
+      .string()
+      .trim()
+      .required("이메일을 입력해주세요")
+      .email("이메일 형식이 아닙니다."),
+    password: yup
+      .string()
+      .trim()
+      .required("영문, 숫자포함 8자리를 입력해주세요")
+      .min(8, "최소 8자 이상 가능합니다.")
+      .max(30, "최대 30자 까지만 가능합니다")
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,30}$/,
+        "영문 숫자포함 8자리를 입력해주세요."
+      ),
+    passwordConfirm: yup
+      .string()
+      .trim()
+      .oneOf([yup.ref("password")], "비밀번호가 다릅니다."),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    //onTouched랑 resolver 둘 다 있어야 error message뜬다.
+    mode: "onTouched",
+    // validationSchema: formSchema,
+    resolver: yupResolver(formSchema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+    if (
+      data.regName !== "" &&
+      data.nick !== "" &&
+      data.phone !== "" &&
+      data.email !== ""
+    ) {
+      updateMember(data);
+    }
   };
 
-  useEffect(() => {
-    console.log("gk");
-    getLoginInfo();
-  }, []);
+  function updateMember(data) {
+    axios({
+      method: "POST",
+      url: `api/users/info`,
+      data: data,
+      withCredentials: true,
+    })
+      .then((res) => {
+        alert("정보가 수정되었습니다.");
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
 
-  return (
+  return userState ? (
     <div>
       <body>
         {/* 프로필 사진, 이름, 활동명, 소개, 이메일, 전화번호, 비밀번호 변경 -> 이전비번,새비번,새비번 확인,비밀번호 찾기   
@@ -62,32 +106,34 @@ function EditProfile() {
                         <img
                           alt="본인 프로필 사진"
                           className=""
-                          // src={data.info.image}
-                          src={Profile}
+                          src={userState.info.image}
                         ></img>
                       </div>
                     </button>
                   </div>
                 </div>
                 <div className="right">
-                  <h1>{data.info.nick}</h1>
+                  <h1>{userState.info.nick}</h1>
                   <button className="" type="button" id="profileChnBtn">
                     프로필 사진 바꾸기
                   </button>
                 </div>
               </div>
-              <form className="" method="post">
+              <form method="post" onSubmit={handleSubmit(onSubmit)}>
                 <div className="editRow">
                   <aside>
                     <label>이름</label>
                   </aside>
                   <div>
                     <input
-                      className=""
                       type="text"
-                      name=""
-                      placeholder={data.info.name}
+                      name="regName"
+                      defaultValue={userState.info.name}
+                      {...register("regName")}
                     ></input>
+                    {errors.regName && (
+                      <p className="editMsg">{errors.regName.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="editRow">
@@ -96,11 +142,14 @@ function EditProfile() {
                   </aside>
                   <div>
                     <input
-                      className=""
                       type="text"
-                      name=""
-                      placeholder={data.info.nick}
+                      name="nick"
+                      defaultValue={userState.info.nick}
+                      {...register("nick")}
                     ></input>
+                    {errors.nick && (
+                      <p className="editMsg">{errors.nick.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="editRow" id="rowIntroduce">
@@ -114,7 +163,7 @@ function EditProfile() {
                         maxLength="149"
                         value={textValue}
                         onChange={(e) => handlesetValue(e)}
-                        placeholder={data.info.self_intro}
+                        placeholder={userState.info.self_intro}
                       ></textarea>
                       <div style={{ display: "flex" }}>
                         <p>{textValue.length}</p>/<p>150</p>
@@ -127,7 +176,15 @@ function EditProfile() {
                     <label>이메일</label>
                   </aside>
                   <div>
-                    <input type="text" placeholder={data.info.email}></input>
+                    <input
+                      type="text"
+                      defaultValue={userState.info.email}
+                      name="email"
+                      {...register("email")}
+                    ></input>
+                    {errors.email && (
+                      <p className="editMsg">{errors.email.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="editRow" id="editEmailCheck">
@@ -145,25 +202,13 @@ function EditProfile() {
                   <div>
                     <input
                       type="text"
-                      value=""
-                      placeholder={data.info.phone}
+                      defaultValue={userState.info.phone}
+                      name="phone"
+                      {...register("phone")}
                     ></input>
-                  </div>
-                </div>
-                <div className="editRow">
-                  <aside>
-                    <label>이전 비밀번호</label>
-                  </aside>
-                  <div>
-                    <input
-                      className=""
-                      type="text"
-                      aria-required="true"
-                      placeholder="*******************"
-                      name=""
-                      value=""
-                      disabled
-                    ></input>
+                    {errors.phone && (
+                      <p className="editMsg">{errors.phone.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="editRow">
@@ -172,12 +217,9 @@ function EditProfile() {
                   </aside>
                   <div>
                     <input
-                      className=""
                       type="text"
-                      aria-required="false"
-                      placeholder=""
-                      name=""
-                      value=""
+                      name="passwordConfirm"
+                      {...register("passwordfConfirm")}
                     ></input>
                   </div>
                 </div>
@@ -189,10 +231,8 @@ function EditProfile() {
                     <input
                       className=""
                       type="text"
-                      aria-required="false"
                       placeholder=""
                       name=""
-                      value=""
                     ></input>
                   </div>
                 </div>
@@ -200,7 +240,7 @@ function EditProfile() {
                   <aside>
                     <label></label>
                   </aside>
-                  <button type="button">제출</button>
+                  <input type="submit" value="수정"></input>
                 </div>
               </form>
             </div>
@@ -209,6 +249,8 @@ function EditProfile() {
         <Footer />
       </body>
     </div>
+  ) : (
+    ""
   );
 }
 
