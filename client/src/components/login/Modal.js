@@ -2,14 +2,16 @@ import React from "react";
 import "./Modal.css";
 import Lock from "../../images/lock.png";
 function Modal({ setOpenModal, close }) {
+  //추가해야 할 부분 : 이메일 값 보내기, 가입된 이메일이면 메일로 가상비밀번호 보내기
+  //가상비밀번호가 그 이메일의 비밀번호로 바뀌어야 함.
+  //그래서 로그인하고 비번 바꾸면 된다.
+
   //모달창 닫기
   const closeModal = () => {
     setOpenModal(false);
   };
 
   return (
-    //모달이 열릴때 openModal 클래스 생성됨.
-
     <div className="pwModalContainer">
       <div className="pwModal">
         <div id="titleCloseBtn">
