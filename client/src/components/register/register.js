@@ -85,7 +85,7 @@ function Register() {
       alert("전화번호는 숫자만 입력해주세요.");
       document.querySelector("#regPhone").value = "";
       //잘못적으면 빈칸
-    } else if (isNickDup(true)) {
+    } else if (isNickDup) {
       console.log("중복인 활동명임.");
     }
     //input에 값이 있는지 체크하고 입력이 다 돼있으면 post전송
