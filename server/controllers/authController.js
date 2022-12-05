@@ -42,8 +42,14 @@ module.exports = {
         req.session.u_id = loggingUser.id;
         console.log(req.session.u_id);
 
-        console.log("성공");
-        res.sendStatus(200);
+        const currentUserId = req.session.u_id;
+        try {
+          const userInfo = await userService.selectUser(currentUserId);
+          console.log("성공");
+          res.status(200).json(userInfo);
+        } catch (err) {
+          console.error(err);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -101,7 +107,7 @@ module.exports = {
   /* 이메일 인증 */
   postEmail: async (req, res) => {
     const userEmail = req.body.email;
-    console.log(userEmail,"req.body.email에서 받아온값");
+    console.log(userEmail, "req.body.email에서 받아온값");
     try {
       const sendEmailNum = await service.sendEmail(userEmail);
       console.log("randomNumber: " + sendEmailNum[0] + ", " + sendEmailNum[1]); //랜덤번호 확인용
@@ -170,13 +176,12 @@ module.exports = {
   /* 닉넴중복 체크 */
   postNick: async (req, res) => {
     const userNick = req.body.nick;
-    console.log(userNick,"req.body.nick에서 들어온 nick값")
-    
+    console.log(userNick, "req.body.nick에서 들어온 nick값");
+
     try {
       const checkUserNick = await service.checkNick(userNick);
-      console.log(checkUserNick,"userNick에서 받아온 nick값");
+      console.log(checkUserNick, "userNick에서 받아온 nick값");
       if (checkUserNick === 400) {
-        
         res.sendStatus(400);
       } else {
         res.sendStatus(200);
