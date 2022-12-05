@@ -108,3 +108,8 @@
   resize: none;
   font-size: 15px;
 }
+
+.editMsg {
+  font-size: 14px;
+  color: rgb(68, 68, 68);
+}
