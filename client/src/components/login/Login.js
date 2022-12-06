@@ -67,7 +67,7 @@ function Login() {
       withCredentials: true,
     })
       .then((res) => {
-        navigate("/myFeed");
+        navigate("/edit");
         console.log(res);
       })
       .catch((e) => {
