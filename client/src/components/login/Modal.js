@@ -14,8 +14,10 @@ function Modal({ setOpenModal, close }) {
   return (
     <div className="pwModalContainer">
       <div className="pwModal">
-        <div id="titleCloseBtn">
-          <button onClick={closeModal}> X </button>
+        <div>
+          <button onClick={closeModal} id="closeBtn">
+            X
+          </button>
         </div>
         <div className="lockImgWrap">
           <div className="lockImg">
@@ -25,7 +27,7 @@ function Modal({ setOpenModal, close }) {
         <div>
           <div className="pwModaltitle">
             <h1>비밀번호를 잊으셨나요?</h1>
-            <p>
+            <p id="pwModalMsg">
               가입된 이메일을 입력하시면 비밀번호 재설정이 가능한 메일을
               보내드립니다.
             </p>
