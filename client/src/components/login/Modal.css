@@ -16,7 +16,7 @@
   align-items: center;
 }
 
-#titleCloseBtn button {
+#closeBtn {
   position: relative;
   bottom: 15px;
   left: 500px;
@@ -63,4 +63,24 @@
   height: 35px;
   font-size: 17px;
   background-color: rgb(232, 232, 232);
+}
+
+@media (max-width: 1000px) {
+  .pwModal {
+    position: relative;
+    right: 90px;
+    bottom: 380px;
+    border-radius: 10px;
+  }
+  .pwModalContainer {
+    width: 500px;
+  }
+  #closeBtn {
+    position: relative;
+    bottom: -27px;
+    left: 230px;
+  }
+  #pwModalMsg {
+    padding: 30px;
+  }
 }

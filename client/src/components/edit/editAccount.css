@@ -1,12 +1,13 @@
 .editContainer {
-  padding: 30px;
+  padding: 50px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
 .editAccountWrap {
   width: 950px;
-  margin-left: 250px;
+  margin-left: 80px;
 }
 .editAccountBox {
   background-color: #fff;

@@ -243,8 +243,8 @@ function EditProfile() {
               </form>
             </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
       </body>
     </div>
   ) : (
