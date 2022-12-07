@@ -6,53 +6,69 @@ import AddFeed from "./components/feed/pages/AddFeed";
 import Navbar from "./components/feed/layout/Navbar";
 import Side from "./components/feed/layout/Side";
 import MyFeed from "./components/feed/pages/MyFeed";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
-import axios from "axios";
 import Register from "./components/register/Register";
 import Messanger from "./components/messanger/Messanger";
 import Edit from "./components/edit/EditAccount";
+import { useUserState, ContextProvider } from "./ContextProvider";
+import axios from "axios";
 
 function App() {
-  const [isLogined, setIsLogined] = useState(true);
-
-  //저장된 값 확인하는 용
-  // useEffect(() => {
-  //   // url은 저장된 유저값이 있는지 체크하는 url
-  //   axios
-  //     .get("/")
-  //     .then((data) => {
-  //       data.result ? setIsLogined(true) : setIsLogined(false);
-  //     })
-  //     .catch((err) => {});
-  // }, []);
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={isLogined ? <Main component={<MainFeed />} /> : <Login />}
-        />
+        <Route path="/" element={<Main component={<MainFeed />} />} />
         <Route path="/addFeed" element={<Main component={<AddFeed />} />} />
         <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
-        <Route path="/edit" element={<Edit />} />
+        <Route path="/edit" element={<Main component={<Edit />} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
         <Route
           path="/message/:conversationId"
           element={<Main component={<Messanger />} />}
         />
-        {/* <Route path="/*" element={<Main component = {<MainFeed/>} />  } /> */}
       </Routes>
     </BrowserRouter>
   );
 }
-function Main(props) {
+function Main({ component }) {
+  //로그인 유무를 localostorage에 저장 false는 login, true는 main
+  const isLoginedStorage = localStorage.getItem("isLogin");
+
+  const [isLogined, setIsLogined] = useState(isLoginedStorage ?? "false");
+
+  return (
+    <ContextProvider>
+      {isLogined === "true" ? (
+        <Wrapper component={component} />
+      ) : (
+        <Login setIsLogined={setIsLogined} />
+      )}
+    </ContextProvider>
+  );
+}
+
+function Wrapper({ component }) {
+  const [userState, setUserState] = useUserState();
+
+  function getUser() {
+    axios("/api/users/me")
+      .then((res) => {
+        setUserState(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <div className="wrapper">
       <Navbar />
-      {props.component}
+      {component}
       <Side />
     </div>
   );
