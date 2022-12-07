@@ -108,12 +108,11 @@ module.exports = {
   postEmail: async (req, res) => {
     const userEmail = req.body.email;
     console.log(userEmail, "req.body.email에서 받아온값");
-    try {
+    try{
       const sendEmailNum = await service.sendEmail(userEmail);
-      console.log("randomNumber: " + sendEmailNum[0] + ", " + sendEmailNum[1]); //랜덤번호 확인용
-      if (sendEmailNum[0] === -1 && sendEmailNum[1] === -1) {
-        throw "Error sendEmail()";
-      } else if (sendEmailNum[0] === sendEmailNum[1]) {
+      if(sendEmailNum[0]===0 && sendEmailNum[1]===-1){
+        res.sendStatus(409);
+      }else if(sendEmailNum[0] === sendEmailNum[1]){
         if (req.session.randomNumber === undefined) {
           //req.session.randomNumber이 undefined 상태이면 sendEmailNum[0] 저장
           req.session.randomNumber = sendEmailNum[0];
@@ -122,14 +121,10 @@ module.exports = {
           req.session.randomNumber = sendEmailNum[0]; // req.session.randomNumber에 새로운 sendEmailNum[0] 저장
           req.session.count = 0;
         }
-        //console.log("랜덤번호 : " + req.session.randomNumber);
         res.sendStatus(200); //랜덤번호 보내기
-      } else {
-        res.status(409).send("이메일 중복"); //이메일 중복 에러
-        // 이미 생성된 유저의 id 리소스와 회원가입하려는 유저의 id가 충돌한 경우라고 볼 수 있기 때문에 409코드를 사용했다.
       }
-    } catch (err) {
-      res.status(400).send(err); //알수없는에러
+    }catch(err){
+      res.sendStatus(500);
     }
   },
 
