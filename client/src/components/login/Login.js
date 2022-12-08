@@ -7,9 +7,7 @@ import axios from "axios";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
-import { useUserState } from "../../ContextProvider";
 
 function Login({ setIsLogined }) {
   const formSchema = yup.object({
@@ -33,11 +31,16 @@ function Login({ setIsLogined }) {
 
   //입력값 감지
   const onChange = (e) => {
-    const { name, value } = e.target;
     setUser({
       ...user,
-      [name]: value,
+      [e.target.name]: e.target.value,
     });
+    if (user.email !== "") {
+      errors.email = false;
+    }
+    if (user.password !== "") {
+      errors.password = false;
+    }
   };
 
   //제출
