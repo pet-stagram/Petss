@@ -8,7 +8,18 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
-  const [isNickDup, setIsNickDup] = useState(false);
+  const [isNickOk, setIsNickOk] = useState(false);
+  const [isEmailOk, setIsEmailOk] = useState(false);
+  const [account, setAccount] = useState({
+    regName: "",
+    nick: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    phone: "",
+  });
+  const [disable, setDisable] = useState(true);
+
   //blur : 요소의 포커스가 해제되었을 때 발생..
   //trim()을 해주어야 space(공백)을 string으로 인식 안 함!! 필수!
   const formSchema = yup.object().shape({
@@ -48,27 +59,73 @@ function Register() {
     resolver: yupResolver(formSchema),
   });
 
-  // const onSubmit = (data) => console.log(data);
-
   const navigate = useNavigate();
 
-  //중복이면 true, 사용가능하면 false일 때 제출 가능하게
-  //코드 받아와서 200이면 false, 다른 코드면 true 코드받아오는 법 찾아보기
-  const onBlur = (e) => {
+  //input에 입력될 때마다 account state값 변경되게 하는 함수
+  const onChangeAccount = (e) => {
+    setAccount({
+      ...account,
+      [e.target.name]: e.target.value,
+    });
+    if (account.regName !== "") {
+      errors.regName = false;
+    }
+    if (account.nick !== "") {
+      errors.nick = false;
+    }
+    if (account.password !== "") {
+      errors.password = false;
+    }
+    if (account.passwordConfirm !== "") {
+      errors.passwordConfirm = false;
+    }
+    if (account.phone !== "") {
+      errors.phone = false;
+    }
+    if (account.email !== "") {
+      errors.email = false;
+    }
+  };
+
+  //닉네임 중복 체크 함수
+  const nickCheck = (e) => {
     axios({
       method: "POST",
       url: `api/auth/nick`,
-      data: { nick: e.target.value },
+      data: { nick: account.nick },
 
       //객체 생성 => {key : value}
     })
       .then((res) => {
+        setIsNickOk(true); //200이면 사용가능하므로 true
+        alert("사용 가능한 활동명입니다.");
         console.log(res);
-        setIsNickDup();
       })
       .catch((e) => {
+        setIsNickOk(false);
+        alert("이미 사용 중인 활동명입니다.");
         console.log(e);
-        setIsNickDup(true);
+      });
+  };
+
+  //이메일 중복 체크 함수
+  const emailCheck = (e) => {
+    axios({
+      method: "POST",
+      url: `api/auth/email`,
+      data: { email: account.email }, //key 값이 server req.body(객체) 의 key값이랑 같아야 한다!!!!!!!
+      //post로 줬을때만 body로 전달가능
+    })
+      .then((res) => {
+        setIsEmailOk(true); //200이면 사용가능하므로 true
+        setDisable(false);
+        alert("사용 가능한 이메일입니다.");
+        console.log(res);
+      })
+      .catch((e) => {
+        setIsEmailOk(false);
+        alert("이미 사용 중인 이메일입니다.");
+        console.log(e);
       });
   };
 
@@ -79,10 +136,10 @@ function Register() {
     //전화번호가 숫자인지 체크하기
     if (isNaN(data.phone)) {
       alert("전화번호는 숫자만 입력해주세요.");
-      document.querySelector("#regPhone").value = "";
-      //잘못적으면 빈칸
-    } else if (isNickDup) {
-      console.log("중복인 활동명임.");
+      document.querySelector("#regPhone").value = ""; //잘못적으면 빈칸
+    } else if (isNickOk === false || isEmailOk === false) {
+      //활동명,이메일 중복체크 안하면 진행 안되게
+      alert("활동명이나 이메일 중복확인을 해주세요.");
     }
     //input에 값이 있는지 체크하고 입력이 다 돼있으면 post전송
     else if (
@@ -96,12 +153,6 @@ function Register() {
     }
   };
 
-  // const onClick = () => {
-  //   console.log(data);
-  // };
-
-  //db랑 비교해서 중복여부 체크해야 하니 get도 해야 한다.
-  //1.submit할 때 data를 db랑 비교(axios.get)해서 중복이면 글씨 변경하기
   function addMember(data) {
     axios({
       method: "POST",
@@ -142,23 +193,35 @@ function Register() {
                     id="name"
                     autoComplete="off"
                     {...register("regName")}
+                    onChange={onChangeAccount}
                   />
                   {errors.regName && <p>{errors.regName.message}</p>}
                 </div>
-                <div className="regRowWrap">
+                <div className="regRowWrap" id="emailWrap">
                   {/* 겹치는 활동명이면 겹친다고 말해주고 다시 바로 지워지게 만들기 */}
-                  <input
-                    type="text"
-                    placeholder="활동명"
-                    name="nick"
-                    id="nick"
-                    className="regInput"
-                    autoComplete="off"
-                    {...register("nick")}
-                    onBlur={onBlur}
-                  />
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="활동명"
+                      name="nick"
+                      id="regNick"
+                      className="regInput"
+                      autoComplete="off"
+                      {...register("nick")}
+                      onChange={onChangeAccount}
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="button"
+                      value="중복확인"
+                      className="regInput"
+                      id="NickCheck"
+                      autoComplete="off"
+                      onClick={nickCheck}
+                    />
+                  </div>
                   {errors.nick && <p>{errors.nick.message}</p>}
-                  {isNickDup && <p>이미 사용중인 활동명 입니다</p>}
                 </div>
                 <div className="regRowWrap">
                   <input
@@ -169,6 +232,7 @@ function Register() {
                     name="password"
                     autoComplete="off"
                     {...register("password")}
+                    onChange={onChangeAccount}
                   />
                   {errors.password && <p>{errors.password.message}</p>}
                 </div>
@@ -180,6 +244,7 @@ function Register() {
                     name="passwordConfirm"
                     autoComplete="off"
                     {...register("passwordConfirm")}
+                    onChange={onChangeAccount}
                   />
                   {errors.passwordConfirm && (
                     <p>{errors.passwordConfirm.message}</p>
@@ -194,6 +259,7 @@ function Register() {
                     name="phone"
                     autoComplete="off"
                     {...register("phone")}
+                    onChange={onChangeAccount}
                   />
                   <div style={{ fontSize: "12px", color: "grey" }}>
                     * 특수기호 없이 010부터 숫자만 입력해 주세요.
@@ -210,6 +276,7 @@ function Register() {
                       name="email"
                       autoComplete="off"
                       {...register("email")}
+                      onChange={onChangeAccount}
                     />
                   </div>
                   <div>
@@ -219,6 +286,7 @@ function Register() {
                       className="regInput"
                       id="certification"
                       autoComplete="off"
+                      onClick={emailCheck}
                     />
                   </div>
                   {errors.email && (
@@ -232,7 +300,9 @@ function Register() {
                     placeholder="인증번호를 입력하세요"
                     className="regInput"
                     id="chkCert"
-                    disabled
+                    name="emailnumber"
+                    disabled={disable}
+                    //true면 비활성화
                   />
                 </div>
                 <div className="regRowWrap">
@@ -241,7 +311,6 @@ function Register() {
                     value="회원가입"
                     className="regInput"
                     id="regBtn"
-                    // disabled={errors || watch()}
                   />
                 </div>
                 <div className="mvLog">
