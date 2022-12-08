@@ -49,6 +49,7 @@ module.exports = {
   insertUser: async (user) => {
     const { regName, nick, password, phone, email, regDate } = user;
     try {
+      console.log(password);
       //const chekNick = await User.findOne({ where: { nick } })//user.nick:nick
       //console.log(chekNick.nick);//
       //if(!chekNick){
@@ -97,56 +98,55 @@ module.exports = {
 
   /* 이메일 인증 */
   sendEmail: async (userEmail) => {
+    console.log(userEmail, "Controller에서 받아 온 userEmail");
     //email주소로 인증번호 발송, 이미 존재하는 이메일이면 이메일 안보냄
     // return 값
     // 0, -1: 이메일 중복 시
     // randomnumber, randomnumber: 정상
     // -1, -1: error 시(catch)
-    //const checkEmailUser = await User.findOne({ where: { email: userEmail } });
-                const checkEmailUser = await User.findOne({
+    const checkEmailUser = await User.findOne({ where: { email: userEmail } });
+    try{
+      const checkEmailUser = await User.findOne({
                     where:
                         {email : userEmail}, 
                         attributes: ["email"], 
                         raw:true  
                         });
-    console.log(checkEmailUser.email);
-    if (checkEmailUser.email) {
-      //이메일이 존재한다면,
-      //console.log(checkEmailUser);
-      return [0, -1];
-    } else if (!checkEmailUser.email) {
-      //존재하지 않으면 인증번호 발송
-      try {
-        // throw 'test';
-        const send = async (data) => {
-          //send function data 호출 할때 넣음
-          nodemailer
-            .createTransport(email)
-            .sendMail(data, function (err, info) {
-              //data=from,to,messageid
-              if (err) {
-                console.log(err);
-              } else {
-                console.log(info);
-                return info.response;
-              }
-            });
-        };
-        const sendmessage = {
-          //랜덤숫자 발송하기 위한 메세지를 담은 변수
-          from: "min@min.com",
-          to: "b08c00d3ca-35b52b@inbox.mailtrap.io",
-          subject: "[petss]인증 관련 이메일 입니다.",
-          text: "오른쪽 숫자 6자리를 입력해주세요 : " + randomNumber,
-        };
-        send(sendmessage); //메세지 담은 sendmessage를 메일보냄
-        console.log(sendmessage);
-        return [randomNumber, randomNumber];
-      } catch (err) {
-        return [-1, -1];
+      // console.log(checkEmailUser.email,"findOne으로 찾아온 email값");//
+      
+      if(checkEmailUser.email===userEmail){
+        console.log(checkEmailUser.email,"존재함:checkEmailUser.email");
+        return [0, -1];
       }
+      else{
+          const send = async (data) => {
+            //send function data 호출 할때 넣음
+            nodemailer
+              .createTransport(email)
+              .sendMail(data, function (err, info) {
+                //data=from,to,messageid
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log(info);
+                  return info.response;
+                }
+              });
+          };
+          const sendmessage = {
+            //랜덤숫자 발송하기 위한 메세지를 담은 변수
+            from: "min@min.com",
+            to: "b08c00d3ca-35b52b@inbox.mailtrap.io",
+            subject: "[petss]인증 관련 이메일 입니다.",
+            text: "오른쪽 숫자 6자리를 입력해주세요 : " + randomNumber,
+          };
+          send(sendmessage); //메세지 담은 sendmessage를 메일보냄
+          console.log(sendmessage);
+          return [randomNumber, randomNumber];  
+      }
+    }catch(err){
+      return [-1, -1];
     }
-
     //인증번호 너무 많이 요청한 경우 429에러뜸. 5회 제한으로 할 수 있게
   },
 
