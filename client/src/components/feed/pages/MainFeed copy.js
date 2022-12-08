@@ -38,6 +38,7 @@ const MainFeed = () => {
   return (
       <main className='mainFeedWrap'>
         {posts === ""? <div>No Data</div> : 
+            
             isLoading &&
             posts.map((post)=>{
                 return(

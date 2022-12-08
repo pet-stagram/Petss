@@ -1,50 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../../css/reset.css";
 import "../../css/navbar.css";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import petssLogo from "../../../images/petss_logo.png";
 import Modal from "react-modal";
 import AddFeed from "../pages/AddFeed";
 import { addFeedStyle, searchStyle } from "../../css/modalStyles";
 import Search from "../pages/Search";
-import axios from "axios";
+import { useUserState } from "../../../ContextProvider";
 
-const Navbar = () => {
+const Navbar = ({setIsLogined}) => {
+  const [userState] = useUserState();
   const [searchIsOpen, setSearchIsOpen] = useState(false);
+  console.log(setIsLogined);
   // const [modalOn, setModalOn] = React.useState(false);
   // const onOpenModal = () => {
   // setModalOn(!modalOn);
   // }
 
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
-  const [data, setData] = useState({});
 
-  const getLoginInfo = async () => {
+  // const getLoginInfo = async () => {
     //TODO: 세션한 사람의 아이디를 받아와야함
-    const SESSION_ID = 38;
 
-    await axios({
-      method: "GET",
-      url: `api/users/${SESSION_ID}`,
-      withCredentials: true,
-    })
-      .then((result) => {
-        console.log("로그인 유저 조회 성공");
-        console.log(result);
-        setData(result.data);
-      })
-      .catch((err) => {
-        // err.response.status === '400'
-        console.log("로그인 유저 조회 실패");
-        console.log(err);
-      });
-  };
+  //   await axios({
+  //     method: "GET",
+  //     url: `api/users/${SESSION_ID}`,
+  //     withCredentials: true,
+  //   })
+  //     .then((result) => {
+  //       console.log("로그인 유저 조회 성공");
+  //       console.log(result);
+  //       setData(result.data);
+  //     })
+  //     .catch((err) => {
+  //       // err.response.status === '400'
+  //       console.log("로그인 유저 조회 실패");
+  //       console.log(err);
+  //     });
+  // };
 
-  useEffect(() => {
-    getLoginInfo();
-  }, []);
+  const logout = () => {
+    setIsLogined("false");
+  }
 
-  return (
+  // useEffect(() => {
+  //   getLoginInfo();
+  // }, []);
+
+  
+  return userState ? (
     <div className="navbar">
       <h1>
         <img src={petssLogo} alt="logoImage" className="logoImage" />
@@ -53,9 +58,9 @@ const Navbar = () => {
       <hr />
       <div className="propileBox">
         <span className="propileImage">
-          <img src={data.info?.image} alt="세션 로그인 유저 프로필" />
+          <img src={userState.info.image} alt="세션 로그인 유저 프로필" />
         </span>
-        <span className="nickname">{data.info?.nick}</span>
+        <span className="nickname">{userState.info.nick}</span>
       </div>
       <hr />
       <nav>
@@ -90,13 +95,14 @@ const Navbar = () => {
           <li>
             <NavLink to="/edit">설정</NavLink>
             </li>
-          <li>
-            <NavLink to="/logout">로그아웃</NavLink>
+          <li onClick={()=>logout()}>
+            로그아웃
           </li>
         </ul>
       </nav>
     </div>
-  );
+  )
+  : ""
 };
 
 export default Navbar;
