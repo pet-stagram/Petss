@@ -59,7 +59,7 @@ const Side = () => {
                                         className={styles.messagePartnerName}
                                     >
                                         {friend.nick}
-                                        {console.log(friend)}
+                                        {/* {console.log(friend)} */}
                                     </h4>
                                     <p className={styles.lastChat}>
                                         {conversation.lastChat}

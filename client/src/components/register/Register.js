@@ -10,7 +10,14 @@ import { useNavigate } from "react-router-dom";
 function Register() {
   const [isNickOk, setIsNickOk] = useState(false);
   const [isEmailOk, setIsEmailOk] = useState(false);
-  const [account, setAccount] = useState({ nick: "", email: "" });
+  const [account, setAccount] = useState({
+    regName: "",
+    nick: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    phone: "",
+  });
   const [disable, setDisable] = useState(true);
 
   //blur : 요소의 포커스가 해제되었을 때 발생..
@@ -60,6 +67,24 @@ function Register() {
       ...account,
       [e.target.name]: e.target.value,
     });
+    if (account.regName !== "") {
+      errors.regName = false;
+    }
+    if (account.nick !== "") {
+      errors.nick = false;
+    }
+    if (account.password !== "") {
+      errors.password = false;
+    }
+    if (account.passwordConfirm !== "") {
+      errors.passwordConfirm = false;
+    }
+    if (account.phone !== "") {
+      errors.phone = false;
+    }
+    if (account.email !== "") {
+      errors.email = false;
+    }
   };
 
   //닉네임 중복 체크 함수
@@ -168,6 +193,7 @@ function Register() {
                     id="name"
                     autoComplete="off"
                     {...register("regName")}
+                    onChange={onChangeAccount}
                   />
                   {errors.regName && <p>{errors.regName.message}</p>}
                 </div>
@@ -196,7 +222,6 @@ function Register() {
                     />
                   </div>
                   {errors.nick && <p>{errors.nick.message}</p>}
-                  {/* {isNickDup && <p>이미 사용중인 활동명 입니다</p>} */}
                 </div>
                 <div className="regRowWrap">
                   <input
@@ -207,6 +232,7 @@ function Register() {
                     name="password"
                     autoComplete="off"
                     {...register("password")}
+                    onChange={onChangeAccount}
                   />
                   {errors.password && <p>{errors.password.message}</p>}
                 </div>
@@ -218,6 +244,7 @@ function Register() {
                     name="passwordConfirm"
                     autoComplete="off"
                     {...register("passwordConfirm")}
+                    onChange={onChangeAccount}
                   />
                   {errors.passwordConfirm && (
                     <p>{errors.passwordConfirm.message}</p>
@@ -232,6 +259,7 @@ function Register() {
                     name="phone"
                     autoComplete="off"
                     {...register("phone")}
+                    onChange={onChangeAccount}
                   />
                   <div style={{ fontSize: "12px", color: "grey" }}>
                     * 특수기호 없이 010부터 숫자만 입력해 주세요.
