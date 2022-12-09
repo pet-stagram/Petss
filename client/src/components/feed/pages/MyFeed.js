@@ -9,8 +9,10 @@ import { followerStyle } from "../../css/modalStyles";
 import Following from './Following';
 import { Link } from 'react-router-dom';
 import Loading from './Loading';
+import { useUserState } from '../../../ContextProvider';
 
 const MyFeed = () => {
+  const [userState] = useUserState();
   const [data, setData] = useState({});
   const [feedList, setFeedList] = useState([]);
   const [isReceiveData, setIsReceiveData] = useState(false);
@@ -19,7 +21,6 @@ const MyFeed = () => {
   axios.defaults.withCredentials = true;
 
   const getMyInfo = async() => {
-    const SESSION_ID = 38;
     await axios({
       method: "GET",
       url: `api/users/me`,
