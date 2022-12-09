@@ -4,9 +4,6 @@ import Navbar from "../feed/layout/Navbar";
 import { useState } from "react";
 import Footer from "../footer/Footer";
 import { useUserState } from "../../ContextProvider";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import axios from "axios";
 
 function EditProfile() {
@@ -17,26 +14,34 @@ function EditProfile() {
   const [errors, setErrors] = useState({
     regName: false,
     nick: false,
-    password: false,
+    passwordConfirm: false,
     email: false,
     phone: false,
   });
 
+  //textarea에 입력하는 글자 수 표현하기 위함.
   const handlesetValue = (e) => {
     setTextValue(e.target.value);
   };
 
-  //{}:새 객체 ,
+  //{}:새 객체
+  //인풋칸이 비어있으면 경고메시지 띄움.
   const inputCheck = (e) => {
     if (e.target.value === "") {
       setErrors({
         ...errors,
+        //input의 name을 추적함.
         [e.target.name]: true,
+      });
+    } else {
+      setErrors({
+        ...errors,
+        [e.target.name]: false,
       });
     }
   };
 
-  const submitForm = (e, userState) => {
+  const submitForm = (e) => {
     e.preventDefault();
     console.log(userState);
     updateMember(userState);
@@ -75,19 +80,20 @@ function EditProfile() {
                 <div className="editRow" id="rowTop">
                   <div className="left">
                     <div>
-                      <button className="editPhotoBtn" id="edPhBtn">
+                      <button className="editPhotoBtn">
                         <div className="editImgWrap">
                           <img
                             alt="본인 프로필 사진"
                             className=""
                             src={userState.info.image}
+                            id="editprofile"
                           ></img>
                         </div>
                       </button>
                     </div>
                   </div>
                   <div className="right">
-                    <h1>{userState.info.nick}</h1>
+                    <h1 id="editNick">{userState.info.nick}</h1>
                     <button className="" type="button" id="profileChnBtn">
                       프로필 사진 바꾸기
                     </button>
@@ -96,33 +102,56 @@ function EditProfile() {
                 <form onSubmit={submitForm}>
                   <div className="editRow">
                     <aside>
-                      <label>이름</label>
+                      <label className="editLabel">이름</label>
                     </aside>
                     <div>
                       <input
                         type="text"
                         name="regName"
+                        className="editRowInput"
                         defaultValue={userState.info.name}
                         onChange={inputCheck}
                       ></input>
+                      {errors.regName && (
+                        <p className="warningMsg">이름을 입력해주세요.</p>
+                      )}
                     </div>
                   </div>
-                  <div className="editRow">
+
+                  <div className="editRow" id="editRowNickName">
                     <aside>
-                      <label>활동명</label>
+                      <label className="editLabel">활동명</label>
                     </aside>
                     <div>
                       <input
                         type="text"
                         name="nick"
+                        className="editRowInput"
                         defaultValue={userState.info.nick}
                         onChange={inputCheck}
                       ></input>
+                      {errors.nick && (
+                        <p className="warningMsg">활동명을 입력해주세요.</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="editRow" id="editNickBtn">
+                    <aside>
+                      <label className="editLabel"></label>
+                    </aside>
+                    <div>
+                      <button type="button" className="editBtn">
+                        중복확인
+                      </button>
                     </div>
                   </div>
                   <div className="editRow" id="rowIntroduce">
                     <aside>
-                      <label>소개</label>
+                      <label className="editLabel">
+                        소개
+                        <br />
+                        <p className="selectInput">(선택)</p>
+                      </label>
                     </aside>
                     <div>
                       <div>
@@ -141,64 +170,86 @@ function EditProfile() {
                   </div>
                   <div className="editRow" id="editRowEmail">
                     <aside>
-                      <label>이메일</label>
+                      <label className="editLabel">이메일</label>
                     </aside>
                     <div>
                       <input
                         type="text"
                         defaultValue={userState.info.email}
                         name="email"
+                        className="editRowInput"
                         onChange={inputCheck}
                       ></input>
+                      {errors.email && (
+                        <p className="warningMsg">이메일을 입력해주세요.</p>
+                      )}
                     </div>
                   </div>
-                  <div className="editRow" id="editEmailCheck">
+                  <div className="editRow" id="editEmailBtn">
                     <aside>
-                      <label></label>
+                      <label className="editLabel"></label>
                     </aside>
                     <div>
-                      <button type="button">이메일 확인</button>
+                      <button type="button" className="editBtn">
+                        인증번호 받기
+                      </button>
                     </div>
                   </div>
                   <div className="editRow">
                     <aside>
-                      <label>전화번호</label>
+                      <label className="editLabel">전화번호</label>
                     </aside>
                     <div>
                       <input
                         type="text"
                         defaultValue={userState.info.phone}
                         name="phone"
+                        className="editRowInput"
                         onChange={inputCheck}
                       ></input>
+                      {errors.phone && (
+                        <p className="warningMsg">
+                          휴대폰 번호를 입력해주세요.
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="editRow">
                     <aside>
-                      <label>새 비밀번호</label>
-                    </aside>
-                    <div>
-                      <input type="text" name="passwordConfirm"></input>
-                    </div>
-                  </div>
-                  <div className="editRow">
-                    <aside>
-                      <label>새 비밀번호 확인</label>
+                      <label className="editLabel">
+                        새 비밀번호 <br />
+                        <p className="selectInput">(선택)</p>
+                      </label>
                     </aside>
                     <div>
                       <input
-                        className=""
                         type="text"
-                        placeholder=""
-                        name=""
+                        name="password"
+                        placeholder="선택입력"
+                        className="editRowInput"
                       ></input>
                     </div>
                   </div>
-                  <div className="editRow" id="editSubmit">
+                  <div className="editRow">
                     <aside>
-                      <label></label>
+                      <label className="editLabel">새 비밀번호 확인</label>
                     </aside>
-                    <input type="submit" value="수정"></input>
+                    <div>
+                      <input
+                        className="editRowInput"
+                        type="text"
+                        placeholder=""
+                        name="passwordConfirm"
+                      ></input>
+                    </div>
+                  </div>
+                  <div className="editRow">
+                    <aside>
+                      <label className="editLabel"></label>
+                    </aside>
+                    <button type="submit" className="editBtn">
+                      수정
+                    </button>
                   </div>
                 </form>
               </div>
