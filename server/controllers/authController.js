@@ -120,6 +120,7 @@ module.exports = {
         } else {
           req.session.randomNumber = sendEmailNum[0]; // req.session.randomNumber에 새로운 sendEmailNum[0] 저장
           req.session.count = 0;
+          
         }
         res.sendStatus(200); //랜덤번호 보내기
       }
