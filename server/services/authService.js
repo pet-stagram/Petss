@@ -104,7 +104,6 @@ module.exports = {
     // 0, -1: 이메일 중복 시
     // randomnumber, randomnumber: 정상
     // -1, -1: error 시(catch)
-    const checkEmailUser = await User.findOne({ where: { email: userEmail } });
     try{
       const checkEmailUser = await User.findOne({
                     where:
@@ -112,38 +111,38 @@ module.exports = {
                         attributes: ["email"], 
                         raw:true  
                         });
-      // console.log(checkEmailUser.email,"findOne으로 찾아온 email값");//
-      
-      if(checkEmailUser.email===userEmail){
-        console.log(checkEmailUser.email,"존재함:checkEmailUser.email");
-        return [0, -1];
+      //console.log(checkEmailUser.email,"findOne으로 찾아온 email값");
+      if(checkEmailUser){
+          console.log(checkEmailUser.email);
+          return [0, -1];
       }
       else{
-          const send = async (data) => {
+            const send = async (data) => {
             //send function data 호출 할때 넣음
             nodemailer
-              .createTransport(email)
-              .sendMail(data, function (err, info) {
+            .createTransport(email)
+            .sendMail(data, function (err, info) {
                 //data=from,to,messageid
                 if (err) {
                   console.log(err);
                 } else {
                   console.log(info);
-                  return info.response;
+                  //return info.response;
+                  info.response;
                 }
               });
-          };
-          const sendmessage = {
+          };          
+          const sendmessage = {  
             //랜덤숫자 발송하기 위한 메세지를 담은 변수
             from: "min@min.com",
             to: "b08c00d3ca-35b52b@inbox.mailtrap.io",
             subject: "[petss]인증 관련 이메일 입니다.",
             text: "오른쪽 숫자 6자리를 입력해주세요 : " + randomNumber,
-          };
+          };         
           send(sendmessage); //메세지 담은 sendmessage를 메일보냄
           console.log(sendmessage);
-          return [randomNumber, randomNumber];  
-      }
+          return [randomNumber, randomNumber];   
+      }      
     }catch(err){
       return [-1, -1];
     }
@@ -155,10 +154,8 @@ module.exports = {
     //controller에서 받아온 변수 randomNumber,inputNum
     //console.log("랜덤번호 : "+checkRandomNumber, "입력한번호 : "+inputNum);
     const { checkRandomNumber, inputNum, count } = emailCheckDto;
-
     //세션의 숫자와 유저가 입력한 숫자가 동일한지 확인한다
     //count  +1 해서 합이 5번 되면 안되게 하는것처럼 //for문으로 돌리지말고
-
     let result;
     if (checkRandomNumber.toString() === inputNum.toString()) {
       console.log("인증번호맞음");
