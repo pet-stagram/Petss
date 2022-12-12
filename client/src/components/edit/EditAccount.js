@@ -15,7 +15,8 @@ function EditProfile() {
   //중복검사
   const [isNickOk, setIsNickOk] = useState(true);
   const [isEmailOk, setIsEmailOk] = useState(true);
-  const [isPwNotSame, setIsPwNotSame] = useState(false);
+  const [pw, setPw] = useState("");
+  const [pwConfirm, setPwConfirm] = useState("");
   //인풋 칸 활성화
   const [disable, setDisable] = useState(true);
   //가져온 유저 정보 저장
@@ -108,17 +109,17 @@ function EditProfile() {
   };
 
   //비밀번호 중복 체크
-  const passwordCheck = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
-    if (user.password !== user.passwordConfirm) {
-      setIsPwNotSame(true);
-    } else if (user.password === user.passwordConfirm) {
-      setIsPwNotSame(false);
-    }
-  };
+  // const passwordCheck = (e) => {
+  //   setUser({
+  //     ...user,
+  //     [e.target.name]: e.target.value,
+  //   });
+  //   if (user.password !== user.passwordConfirm) {
+  //     setIsPwNotSame(true);
+  //   } else if (user.password === user.passwordConfirm) {
+  //     setIsPwNotSame(false);
+  //   }
+  // };
 
   //수정 버튼 누를 때 발생(===============최종 제출=================)
   const submitForm = (e) => {
@@ -149,6 +150,7 @@ function EditProfile() {
       })
       .catch((e) => {
         console.log(e);
+        console.log(userState);
       });
   }
   //모달 관련 함수들============================
@@ -353,7 +355,7 @@ function EditProfile() {
                         name="password"
                         placeholder="선택입력"
                         className="editRowInput"
-                        onChange={passwordCheck}
+                        //onChange={passwordCheck}
                       ></input>
                     </div>
                   </div>
@@ -366,11 +368,11 @@ function EditProfile() {
                         className="editRowInput"
                         type="password"
                         name="passwordConfirm"
-                        onChange={passwordCheck}
+                        //onChange={passwordCheck}
                       ></input>
-                      {isPwNotSame && (
+                      {/* {isPwNotSame && (
                         <p className="warningMsg">비밀번호가 다릅니다.</p>
-                      )}
+                      )} */}
                     </div>
                   </div>
                   <div className="editRow">
