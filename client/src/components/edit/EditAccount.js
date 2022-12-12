@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import "../edit/editAccount.css";
 import Navbar from "../feed/layout/Navbar";
 import { useState } from "react";
 import Footer from "../footer/Footer";
 import { useUserState } from "../../ContextProvider";
 import axios from "axios";
+import ModalEdit from "../edit/ModalEdit";
 
 function EditProfile() {
   //textarea 입력값 감지
   const [textValue, setTextValue] = useState("");
+  //가져오는 유저 정보
   const [userState] = useUserState();
-  const [user, setUser] = useState();
+  //중복검사
+  const [isNickOk, setIsNickOk] = useState(true);
+  const [isEmailOk, setIsEmailOk] = useState(true);
+  const [isPwNotSame, setIsPwNotSame] = useState(false);
+  //인풋 칸 활성화
+  const [disable, setDisable] = useState(true);
+  //가져온 유저 정보 저장
+  const [user, setUser] = useState({
+    regName: userState?.info.regName,
+    nick: userState?.info.nick,
+    selfIntro: userState?.info.selfIntro,
+    email: userState?.info.email,
+    phone: userState?.info.phone,
+    password: userState?.info.password,
+    passwordConfirm: "",
+  });
+  //에러메시지 띄우는 용도
   const [errors, setErrors] = useState({
     regName: false,
     nick: false,
@@ -26,7 +44,12 @@ function EditProfile() {
 
   //{}:새 객체
   //인풋칸이 비어있으면 경고메시지 띄움.
+  //onChange
   const inputCheck = (e) => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
     if (e.target.value === "") {
       setErrors({
         ...errors,
@@ -41,17 +64,83 @@ function EditProfile() {
     }
   };
 
-  const submitForm = (e) => {
-    e.preventDefault();
-    console.log(userState);
-    updateMember(userState);
+  //닉네임 중복 체크 함수
+  const nickCheck = (e) => {
+    axios({
+      method: "POST",
+      url: `api/auth/nick`,
+      data: { nick: user.nick },
+
+      //객체 생성 => {key : value}
+    })
+      .then((res) => {
+        setIsNickOk(true);
+        alert("사용 가능한 활동명입니다.");
+        console.log(res);
+      })
+      .catch((e) => {
+        setIsNickOk(false);
+        alert("이미 사용 중인 활동명입니다.");
+        console.log(e);
+      });
   };
 
+  //이메일 중복 체크 함수
+  const emailCheck = (e) => {
+    axios({
+      method: "POST",
+      url: `api/auth/email`,
+      data: { email: user.email },
+      //key 값이 server req.body(객체) 의 key값이랑 같아야 한다.
+      //post로 줬을때만 body로 전달가능
+    })
+      .then((res) => {
+        setIsEmailOk(true);
+        setDisable(false);
+        alert("사용 가능한 이메일입니다.");
+        console.log(res);
+      })
+      .catch((e) => {
+        setIsEmailOk(false);
+        alert("이미 사용 중인 이메일입니다.");
+        console.log(e);
+      });
+  };
+
+  //비밀번호 중복 체크
+  const passwordCheck = (e) => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
+    if (user.password !== user.passwordConfirm) {
+      setIsPwNotSame(true);
+    } else if (user.password === user.passwordConfirm) {
+      setIsPwNotSame(false);
+    }
+  };
+
+  //수정 버튼 누를 때 발생(===============최종 제출=================)
+  const submitForm = (e) => {
+    e.preventDefault();
+    if (
+      userState.info.nick === user.nick &&
+      userState.info.email === user.email
+    ) {
+      setIsNickOk(true);
+      setIsEmailOk(true);
+    } else if (isNickOk === false || isEmailOk === false) {
+      alert("활동명이나 이메일 중복확인 바랍니다.");
+    }
+    updateMember();
+  };
+
+  //서버 전달 함수
   function updateMember() {
     axios({
       method: "POST",
       url: `/api/users/info`,
-      data: userState,
+      data: user,
       withCredentials: true,
     })
       .then((res) => {
@@ -60,17 +149,31 @@ function EditProfile() {
       })
       .catch((e) => {
         console.log(e);
-        console.log(userState);
       });
   }
+  //모달 관련 함수들============================
+  const el = useRef();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleCloseModal = (e) => {
+    setIsOpen(true);
+    //모달 바깥부분 눌렀을 때?
+    if (isOpen && (!el.current || !el.current.contains(e.target)))
+      setIsOpen(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", handleCloseModal);
+
+    return () => {
+      window.removeEventListener("click", handleCloseModal);
+    };
+  }, []);
 
   return (
     userState && (
       <div>
         <body>
-          {/* 프로필 사진, 이름, 활동명, 소개, 이메일, 전화번호, 비밀번호 변경 -> 이전비번,새비번,새비번 확인,비밀번호 찾기   
-          프로필 사진 로그인한 정보 가져오기
-        */}
           <div className="editContainer">
             <div className="navbarWrap">
               <Navbar />
@@ -94,9 +197,15 @@ function EditProfile() {
                   </div>
                   <div className="right">
                     <h1 id="editNick">{userState.info.nick}</h1>
-                    <button className="" type="button" id="profileChnBtn">
+                    <button
+                      className=""
+                      type="button"
+                      id="profileChnBtn"
+                      onClick={handleCloseModal}
+                    >
                       프로필 사진 바꾸기
                     </button>
+                    {isOpen && <ModalEdit setIsOpen={setIsOpen}></ModalEdit>}
                   </div>
                 </div>
                 <form onSubmit={submitForm}>
@@ -111,6 +220,7 @@ function EditProfile() {
                         className="editRowInput"
                         defaultValue={userState.info.name}
                         onChange={inputCheck}
+                        required
                       ></input>
                       {errors.regName && (
                         <p className="warningMsg">이름을 입력해주세요.</p>
@@ -140,7 +250,11 @@ function EditProfile() {
                       <label className="editLabel"></label>
                     </aside>
                     <div>
-                      <button type="button" className="editBtn">
+                      <button
+                        type="button"
+                        className="editBtn"
+                        onClick={nickCheck}
+                      >
                         중복확인
                       </button>
                     </div>
@@ -157,13 +271,14 @@ function EditProfile() {
                       <div>
                         <textarea
                           id="editTextarea"
+                          name="selfIntro"
                           maxLength="149"
                           value={textValue}
                           onChange={(e) => handlesetValue(e)}
                           placeholder={userState.info.self_intro}
                         ></textarea>
                         <div style={{ display: "flex" }}>
-                          <p>{textValue.length}</p>/<p>150</p>
+                          <p>{textValue.trim().length}</p>/<p>150</p>
                         </div>
                       </div>
                     </div>
@@ -190,9 +305,20 @@ function EditProfile() {
                       <label className="editLabel"></label>
                     </aside>
                     <div>
-                      <button type="button" className="editBtn">
+                      <button
+                        type="button"
+                        className="editBtn"
+                        onClick={emailCheck}
+                      >
                         인증번호 받기
                       </button>
+                      <input
+                        type="text"
+                        id="editCertifi"
+                        autoComplete="off"
+                        placeholder="인증번호를 입력하세요"
+                        disabled={disable}
+                      ></input>
                     </div>
                   </div>
                   <div className="editRow">
@@ -223,10 +349,11 @@ function EditProfile() {
                     </aside>
                     <div>
                       <input
-                        type="text"
+                        type="password"
                         name="password"
                         placeholder="선택입력"
                         className="editRowInput"
+                        onChange={passwordCheck}
                       ></input>
                     </div>
                   </div>
@@ -237,10 +364,13 @@ function EditProfile() {
                     <div>
                       <input
                         className="editRowInput"
-                        type="text"
-                        placeholder=""
+                        type="password"
                         name="passwordConfirm"
+                        onChange={passwordCheck}
                       ></input>
+                      {isPwNotSame && (
+                        <p className="warningMsg">비밀번호가 다릅니다.</p>
+                      )}
                     </div>
                   </div>
                   <div className="editRow">

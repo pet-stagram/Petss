@@ -4,29 +4,10 @@ import Logo from "../../images/loginLogo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
 import Modal from "./Modal";
 
 function Login({ setIsLogined }) {
-  const formSchema = yup.object({
-    email: yup
-      .string()
-      .required("이메일을 입력해주세요")
-      .email("이메일 형식이 아닙니다"),
-    password: yup.string().required("비밀번호를 입력해주세요"),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    mode: "onTouched",
-    resolver: yupResolver(formSchema),
-  });
-  //1. 이메일 ,비밀번호 저장할 변수를 만든다.
+  //유저 정보 저장
   const [user, setUser] = useState({ email: "", password: "" });
 
   //입력값 감지
@@ -35,24 +16,24 @@ function Login({ setIsLogined }) {
       ...user,
       [e.target.name]: e.target.value,
     });
-    if (user.email !== "") {
-      errors.email = false;
-    }
-    if (user.password !== "") {
-      errors.password = false;
-    }
   };
 
   //제출
   const onSubmit = (e) => {
-    // e.preventDefault();
-    console.log(user);
-
+    e.preventDefault();
     if (user !== "") {
-      //값이 다 입력됐다면
+    } else if (e.key === "Enter") {
       Log();
-    } else if (user === "") {
+    }
+
+    if (user === "") {
       alert("이메일과 비밀번호를 입력바랍니다.");
+    }
+  };
+
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      Log();
     }
   };
 
@@ -100,7 +81,8 @@ function Login({ setIsLogined }) {
                 <form
                   className={Logincss.login}
                   method="post"
-                  onSubmit={handleSubmit(onSubmit)}
+                  onSubmit={onSubmit}
+                  onKeyDown={onKeyPress}
                 >
                   <h1 className={Logincss.loginIcon}>
                     <FontAwesomeIcon icon={faPaw} />
@@ -113,10 +95,8 @@ function Login({ setIsLogined }) {
                       id={Logincss.logEmail}
                       name="email"
                       autoComplete="off"
-                      {...register("email")}
                       onChange={onChange}
                     />
-                    {errors.email && <p>{errors.email.message}</p>}
                   </div>
                   <div className={Logincss.inputwrap}>
                     <input
@@ -126,10 +106,8 @@ function Login({ setIsLogined }) {
                       id={Logincss.pw}
                       name="password"
                       autoComplete="off"
-                      {...register("password")}
                       onChange={onChange}
                     />
-                    {errors.password && <p>{errors.password.message}</p>}
                   </div>
 
                   <input
@@ -139,9 +117,6 @@ function Login({ setIsLogined }) {
                     id={Logincss.logBtn}
                     style={{ marginBottom: "30px" }}
                   />
-                  {/* 로그인 버튼 눌렀을 때 아이디 비밀번호 일치하면 -> 피드화면으로 넘어가기
-                        아이디가 틀렸을 시 -> "존재하지 않는 아이디 입니다."
-                        비밀번호가 틀렸을 시  -> "비밀번호가 일치하지 않습니다."  */}
                   <div className={Logincss.findPw}>
                     <a className="openModalBtn" onClick={showModal} href>
                       비밀번호를 잊으셨나요?

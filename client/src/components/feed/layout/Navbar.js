@@ -12,7 +12,7 @@ import { useUserState } from "../../../ContextProvider";
 const Navbar = ({ setIsLogined }) => {
   const [userState] = useUserState();
   const [searchIsOpen, setSearchIsOpen] = useState(false);
-  console.log(setIsLogined);
+  //console.log(setIsLogined);
   // const [modalOn, setModalOn] = React.useState(false);
   // const onOpenModal = () => {
   // setModalOn(!modalOn);

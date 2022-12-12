@@ -139,7 +139,7 @@ function Register() {
       document.querySelector("#regPhone").value = ""; //잘못적으면 빈칸
     } else if (isNickOk === false || isEmailOk === false) {
       //활동명,이메일 중복체크 안하면 진행 안되게
-      alert("활동명이나 이메일 중복확인을 해주세요.");
+      alert("활동명이나 이메일 중복확인 바랍니다.");
     }
     //input에 값이 있는지 체크하고 입력이 다 돼있으면 post전송
     else if (
