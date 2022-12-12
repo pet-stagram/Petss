@@ -40,7 +40,9 @@ module.exports = {
                 name: req.body.name,
                 nick: req.body.nick,
                 password: req.body.pw,
+                email: req.body.email,
                 selfIntro: req.body.selfIntro,
+                phone: req.body.phone
             };
             try {
                 await service.updateUserInfo(userDto);
