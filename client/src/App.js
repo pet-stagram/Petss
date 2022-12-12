@@ -40,7 +40,7 @@ function Main({ component }) {
   return (
     <ContextProvider>
       {isLogined === "true" ? (
-        <Wrapper component={component} setIsLogined={setIsLogined}/>
+        <Wrapper component={component} setIsLogined={setIsLogined} />
       ) : (
         <Login setIsLogined={setIsLogined} />
       )}
@@ -48,7 +48,7 @@ function Main({ component }) {
   );
 }
 
-function Wrapper({ component, setIsLogined}) {
+function Wrapper({ component, setIsLogined }) {
   const [userState, setUserState] = useUserState();
 
   function getUser() {
@@ -67,7 +67,7 @@ function Wrapper({ component, setIsLogined}) {
 
   return (
     <div className="wrapper">
-      <Navbar setIsLogined={setIsLogined}/>
+      <Navbar setIsLogined={setIsLogined} />
       {component}
       <Side />
     </div>

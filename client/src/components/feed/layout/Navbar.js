@@ -9,10 +9,10 @@ import { addFeedStyle, searchStyle } from "../../css/modalStyles";
 import Search from "../pages/Search";
 import { useUserState } from "../../../ContextProvider";
 
-const Navbar = ({setIsLogined}) => {
+const Navbar = ({ setIsLogined }) => {
   const [userState] = useUserState();
   const [searchIsOpen, setSearchIsOpen] = useState(false);
-  console.log(setIsLogined);
+  //console.log(setIsLogined);
   // const [modalOn, setModalOn] = React.useState(false);
   // const onOpenModal = () => {
   // setModalOn(!modalOn);
@@ -21,7 +21,7 @@ const Navbar = ({setIsLogined}) => {
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
 
   // const getLoginInfo = async () => {
-    //TODO: 세션한 사람의 아이디를 받아와야함
+  //TODO: 세션한 사람의 아이디를 받아와야함
 
   //   await axios({
   //     method: "GET",
@@ -42,13 +42,12 @@ const Navbar = ({setIsLogined}) => {
 
   const logout = () => {
     setIsLogined("false");
-  }
+  };
 
   // useEffect(() => {
   //   getLoginInfo();
   // }, []);
 
-  
   return userState ? (
     <div className="navbar">
       <h1>
@@ -94,15 +93,14 @@ const Navbar = ({setIsLogined}) => {
           <li>알림</li>
           <li>
             <NavLink to="/edit">설정</NavLink>
-            </li>
-          <li onClick={()=>logout()}>
-            로그아웃
           </li>
+          <li onClick={() => logout()}>로그아웃</li>
         </ul>
       </nav>
     </div>
-  )
-  : ""
+  ) : (
+    ""
+  );
 };
 
 export default Navbar;
