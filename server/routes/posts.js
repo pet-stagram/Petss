@@ -259,7 +259,7 @@ router.delete("/:postId",controller.deletePosts);
  *       - application/json
  *      requestBody:
  *        content:
- *          multipart/form-data:
+ *          application/json:
  *            schema:
  *                type: object
  *                properties:
