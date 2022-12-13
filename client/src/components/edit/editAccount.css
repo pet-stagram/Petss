@@ -13,7 +13,8 @@
   background-color: #fff;
   border: 1px solid #ddd;
   padding: 0 150px;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 15px;
 }
 .editRow {
   display: flex;
@@ -25,7 +26,7 @@
   padding-left: 58px;
 }
 
-#edPhBtn {
+.editPhotoBtn {
   width: 60px;
   height: 60px;
   margin-left: 10px;
@@ -38,7 +39,7 @@
   background-color: transparent;
 }
 
-.editPhotoBtn img {
+#editprofile {
   width: 62px;
   height: 62px;
   position: relative;
@@ -51,7 +52,7 @@
   margin-left: 10px;
 }
 
-.editRow .right h1 {
+#editNick {
   font-size: 18px;
   margin-bottom: 5px;
 }
@@ -61,32 +62,33 @@
   color: rgb(251, 196, 77);
   font-weight: bold;
 }
-.editRow label {
+.editLabel {
   display: inline-block;
   width: 120px;
   text-align: right;
   margin-right: 20px;
 }
 
-.editRow input {
+.editRowInput {
   width: 350px;
   height: 35px;
   border: 1px solid rgb(186, 185, 185);
   border-radius: 3px;
   padding: 10px;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 500;
 }
 
-#editRowEmail {
+#editRowEmail,
+#editRowNickName {
   margin-bottom: 0px;
 }
 
-#editEmailCheck {
+.editCheck {
   margin-top: 10px;
 }
 
-#editEmailCheck button,
-#editSubmit button {
+.editBtn {
   background-color: rgb(255, 205, 95);
   font-size: 15px;
   padding: 6px 12px;
@@ -95,6 +97,19 @@
   font-weight: bold;
 }
 
+#editNickBtn,
+#editEmailBtn {
+  margin-top: 10px;
+}
+#editCertifi {
+  width: 238px;
+  height: 32px;
+  border: 1px solid rgb(186, 185, 185);
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
 #rowIntroduce {
   align-items: start;
 }
@@ -113,4 +128,15 @@
 .editMsg {
   font-size: 14px;
   color: rgb(68, 68, 68);
+}
+
+.selectInput {
+  font-size: 14px;
+  color: rgb(132, 132, 132);
+}
+
+.warningMsg {
+  font-size: 14px;
+  margin-top: 5px;
+  color: rgb(132, 132, 132);
 }

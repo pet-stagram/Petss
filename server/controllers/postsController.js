@@ -193,7 +193,7 @@ module.exports = {
         }
     },
     getComment : async (req, res)=>{
-        const currentUser = req.session.u_id;
+        const currentUser = 1;
         const postId = req.params.postId;
         if(!currentUser){
             res.sendStatus(401);

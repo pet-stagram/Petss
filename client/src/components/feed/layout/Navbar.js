@@ -9,17 +9,15 @@ import { addFeedStyle, searchStyle } from "../../css/modalStyles";
 import Search from "../pages/Search";
 import { useUserState } from "../../../ContextProvider";
 
-const Navbar = ({setIsLogined}) => {
+const Navbar = ({ setIsLogined }) => {
   const [userState] = useUserState();
   const [searchIsOpen, setSearchIsOpen] = useState(false);
-  // console.log(setIsLogined);
-
 
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
 
   const logout = () => {
     setIsLogined("false");
-  }
+  };
 
   return userState ? (
     <div className="navbar">
@@ -66,15 +64,14 @@ const Navbar = ({setIsLogined}) => {
           <li>알림</li>
           <li>
             <NavLink to="/edit">설정</NavLink>
-            </li>
-          <li onClick={()=>logout()}>
-            로그아웃
           </li>
+          <li onClick={() => logout()}>로그아웃</li>
         </ul>
       </nav>
     </div>
-  )
-  : ""
+  ) : (
+    ""
+  );
 };
 
 export default Navbar;
