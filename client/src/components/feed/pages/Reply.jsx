@@ -18,7 +18,7 @@ const Reply = ({ postId }) => {
         url: `api/posts/comment/${postId}`,
         withCredentials: true,
     }).then((comments) => {
-        console.log(comments);
+        console.log(comments.data);
         setComments(comments.data);
     }).catch((err)=>{
         console.log(err);
@@ -37,7 +37,7 @@ const Reply = ({ postId }) => {
 
   useEffect(()=>{
     getComments(postId);
-  },[])
+  },[comments.length])
 
   return (
     <div>
