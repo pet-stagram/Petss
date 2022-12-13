@@ -6,6 +6,7 @@ import Footer from "../footer/Footer";
 import { useUserState } from "../../ContextProvider";
 import axios from "axios";
 import ModalEdit from "../edit/ModalEdit";
+import Toast from "react-bootstrap/Toast";
 
 function EditProfile() {
   //textarea 입력값 감지
@@ -15,8 +16,8 @@ function EditProfile() {
   //중복검사
   const [isNickOk, setIsNickOk] = useState(true);
   const [isEmailOk, setIsEmailOk] = useState(true);
-  const [pw, setPw] = useState("");
-  const [pwConfirm, setPwConfirm] = useState("");
+  const [pw, setPw] = useState(false);
+  const [pwConfirm, setPwConfirm] = useState(false);
   //인풋 칸 활성화
   const [disable, setDisable] = useState(true);
   //가져온 유저 정보 저장
@@ -27,7 +28,7 @@ function EditProfile() {
     email: userState?.info.email,
     phone: userState?.info.phone,
     password: userState?.info.password,
-    passwordConfirm: "",
+    passwordConfirm: userState?.info.password,
   });
   //에러메시지 띄우는 용도
   const [errors, setErrors] = useState({
@@ -109,18 +110,32 @@ function EditProfile() {
   };
 
   //비밀번호 중복 체크
-  // const passwordCheck = (e) => {
-  //   setUser({
-  //     ...user,
-  //     [e.target.name]: e.target.value,
-  //   });
-  //   if (user.password !== user.passwordConfirm) {
-  //     setIsPwNotSame(true);
-  //   } else if (user.password === user.passwordConfirm) {
-  //     setIsPwNotSame(false);
-  //   }
-  // };
+  const passwordRegex = /^(?=.*[A-Za-z0-9])(?=.*\d)[A-Za-z\d]{7,30}$/;
+  const passwordCheck = (e) => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
+    const pw = user.password;
 
+    if (pw.match(passwordRegex) === null) {
+      setPw(true);
+    } else {
+      setPw(false);
+    }
+  };
+  const passwordDoubleCheck = (e) => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
+
+    if (user.password !== user.passwordConfirm) {
+      setPwConfirm(true);
+    } else {
+      setPwConfirm(false);
+    }
+  };
   //수정 버튼 누를 때 발생(===============최종 제출=================)
   const submitForm = (e) => {
     e.preventDefault();
@@ -137,7 +152,7 @@ function EditProfile() {
   };
 
   //서버 전달 함수
-  function updateMember() {
+  function updateMember(e) {
     axios({
       method: "POST",
       url: `/api/users/info`,
@@ -150,27 +165,15 @@ function EditProfile() {
       })
       .catch((e) => {
         console.log(e);
-        console.log(userState);
+        console.log(user);
       });
   }
   //모달 관련 함수들============================
-  const el = useRef();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOepn, setIsOpen] = useState(false);
 
-  const handleCloseModal = (e) => {
+  const handleModal = () => {
     setIsOpen(true);
-    //모달 바깥부분 눌렀을 때?
-    if (isOpen && (!el.current || !el.current.contains(e.target)))
-      setIsOpen(false);
   };
-
-  useEffect(() => {
-    window.addEventListener("click", handleCloseModal);
-
-    return () => {
-      window.removeEventListener("click", handleCloseModal);
-    };
-  }, []);
 
   return (
     userState && (
@@ -200,14 +203,13 @@ function EditProfile() {
                   <div className="right">
                     <h1 id="editNick">{userState.info.nick}</h1>
                     <button
-                      className=""
                       type="button"
                       id="profileChnBtn"
-                      onClick={handleCloseModal}
+                      onClick={handleModal}
                     >
                       프로필 사진 바꾸기
                     </button>
-                    {isOpen && <ModalEdit setIsOpen={setIsOpen}></ModalEdit>}
+                    {isOepn && <ModalEdit setIsOpen={setIsOpen}></ModalEdit>}
                   </div>
                 </div>
                 <form onSubmit={submitForm}>
@@ -291,7 +293,7 @@ function EditProfile() {
                     </aside>
                     <div>
                       <input
-                        type="text"
+                        type="email"
                         defaultValue={userState.info.email}
                         name="email"
                         className="editRowInput"
@@ -355,8 +357,13 @@ function EditProfile() {
                         name="password"
                         placeholder="선택입력"
                         className="editRowInput"
-                        //onChange={passwordCheck}
+                        onChange={passwordCheck}
                       ></input>
+                      {pw && (
+                        <p className="warningMsg">
+                          영문 숫자포함 8~30자리를 입력해주세요.
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="editRow">
@@ -368,11 +375,13 @@ function EditProfile() {
                         className="editRowInput"
                         type="password"
                         name="passwordConfirm"
-                        //onChange={passwordCheck}
+                        onChange={passwordDoubleCheck}
                       ></input>
-                      {/* {isPwNotSame && (
-                        <p className="warningMsg">비밀번호가 다릅니다.</p>
-                      )} */}
+                      {pwConfirm && (
+                        <p className="warningMsg">
+                          비밀번호가 일치하지 않습니다.
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="editRow">

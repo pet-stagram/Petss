@@ -4,6 +4,7 @@
   margin-bottom: 40px;
   color: rgb(115, 115, 115);
   font-size: 12px;
+  margin-right: 30px;
   font-weight: 500;
 }
 .footerwrap {
@@ -21,5 +22,5 @@
 
 .editFooter p {
   margin-left: 300px;
-  margin-top: 20px;
+  margin-top: 15px;
 }

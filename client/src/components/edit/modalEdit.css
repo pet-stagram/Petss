@@ -1,0 +1,23 @@
+.editModalContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: rgba(0, 0, 0, 0.6); */
+  position: relative;
+  top: 50%;
+  left: 50%;
+}
+
+.editModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #eee;
+}
+.editModalBtn {
+  font-size: 16px;
+  font-weight: 600;
+  background-color: transparent;
+}
