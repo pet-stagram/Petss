@@ -40,4 +40,16 @@
       padding: '0',
     },
   };
-export {addFeedStyle, notifStyle, searchStyle, followerStyle};
+
+  const replyStyle = {
+    content: {
+      width: '500px',
+      height: '600px',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      padding: '10px',
+    }
+  }
+
+export {addFeedStyle, notifStyle, searchStyle, followerStyle, replyStyle};

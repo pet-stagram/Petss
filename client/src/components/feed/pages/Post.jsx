@@ -6,10 +6,15 @@ import reply from "../../../images/reply.png"
 import message from "../../../images/message.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faAngleLeft, faChevronRight, faAngleRight,  } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import Reply from "./Reply";
+import { replyStyle } from '../../css/modalStyles';
 
 
 const Post = ({post}) => {
     const [count, setCount] = useState(0);
+    const [replyOpen, setReplyOpen] = useState(false);
+    
 
     const handlePrev = (post) => {
         setCount(() => (count === 0 ? post.PostImages.length - 1 : count - 1));
@@ -26,7 +31,7 @@ const Post = ({post}) => {
     /////////////////////////////////////////////////////////////////////////////////
 
     const handleLikeClick = async(postId) => {
-        console.log(postId);
+        // console.log(postId);
         
         await axios({
             method: "PUT",
@@ -41,6 +46,8 @@ const Post = ({post}) => {
               console.log(err);
           });
     }
+
+
 
   return (
     <div>
@@ -64,7 +71,15 @@ const Post = ({post}) => {
                         <button onClick={()=>handleLikeClick(post.id)}>
                             <img src={post.Hearts.length===0 ? emptyPaw : paw} alt="like" className="like"/>
                         </button>
-                        <button><img src={reply} alt="like" className="like"/></button>
+                        <button onClick={() => setReplyOpen(true)}><img src={reply} alt="like" className="like"/></button>
+                            <Modal
+                            isOpen={replyOpen}
+                            onRequestClose={() => setReplyOpen(false)}
+                            ariaHideApp={false}
+                            style={replyStyle}
+                            >
+                            <Reply postId={post.id}/>
+                        </Modal>
                         <button><img src={message} alt="like" className="like"/></button>
                     </div>
                     <p className='likeCount'>좋아요 {post.Hearts.length} 개                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </p>
