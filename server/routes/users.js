@@ -253,6 +253,12 @@ router.get("/:userId",controller.getUser);
  *                  pw:
  *                      type: string
  *                      description: 변경할 사용자 비밀번호
+ *                  email:
+ *                      type: string
+ *                      description: 변경할 사용자 이메일
+ *                  phone:
+ *                      type: string
+ *                      description: 변경할 사용자 전화번호
  *                  selfIntro:
  *                      type: string
  *                      description: 변경할 사용자 자기소개

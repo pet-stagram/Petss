@@ -76,6 +76,8 @@ module.exports = {
                     name: userDto.name,
                     nick: userDto.nick,
                     password: userDto.password,
+                    email: userDto.email,
+                    phone: userDto.phone,
                     self_intro: userDto.selfIntro,
                 },
                 {

@@ -259,7 +259,7 @@ router.delete("/:postId",controller.deletePosts);
  *       - application/json
  *      requestBody:
  *        content:
- *          multipart/form-data:
+ *          application/json:
  *            schema:
  *                type: object
  *                properties:
@@ -366,18 +366,30 @@ router.delete("/comment/:commentId",controller.deleteComment);
  *                      content:
  *                        type: string
  *                        example: 안녕하세요
- *                      updatedAt:
- *                          type: date
- *                          example: 2022-11-10 10:29:10
  *                      createdAt:
  *                          type: date
  *                          example: 2022-11-10 10:29:10
- *                      user_id:
- *                        type: integer
- *                        example: 1
+ *                      updatedAt:
+ *                          type: date
+ *                          example: 2022-11-10 10:29:10
  *                      post_id:
  *                        type: integer
- *                        example: 1     
+ *                        example: 1
+ *                      User:
+ *                        type: object
+ *                        properties: 
+ *                              id:
+ *                                  type: integer
+ *                                  example: 1
+ *                              name:
+ *                                  type: string
+ *                                  example: 이순신
+ *                              nick:
+ *                                  type: string
+ *                                  example: 충무공
+ *                              image:
+ *                                  type: string
+ *                                  example: https://storage....     
  *       400:
  *        description: 잘못된 요청값                      
  *       401:

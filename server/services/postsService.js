@@ -392,11 +392,18 @@ module.exports = {
         try {
             const findResult = await Comment.findAll({
                 order: [["created_at", "ASC"]],
+                attributes:["id","content","createdAt","updatedAt","post_id"],
                 where: {
                     post_id: postId,
                 },
-                raw: true,
-            });
+                include: {
+                    model: User,
+                    required: true,
+                    attributes: ["id","name","nick","image"],
+                    nested:true
+                },
+            },
+            );
             return findResult;
         } catch (err) {
             console.error(err);

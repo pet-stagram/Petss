@@ -5,7 +5,6 @@ import { useLocation, useParams } from "react-router-dom";
 import MessageBox from './MessageBox';
 import { useInView } from 'react-intersection-observer';
 
-
 function Messanger(props) {
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState({});
@@ -25,9 +24,6 @@ function Messanger(props) {
                 );
                 setMessages({ ...messages, ...messageResult });
                 setLoading(false);
-                setTimeout(()=>{
-                    console.log(messages);
-                },1000)
             } catch (err) {
                 if (err.response.status === 504) {
                     setLoading(true);
@@ -59,6 +55,5 @@ function Messanger(props) {
         </>
     );
 }
-
 
 export default Messanger;
