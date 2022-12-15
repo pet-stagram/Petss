@@ -9,6 +9,9 @@ import ModalEdit from "../edit/ModalEdit";
 import Toast from "react-bootstrap/Toast";
 
 function EditProfile() {
+  //State가 바뀌면 재랜더링 된다.
+  //화면에서 바뀌는건 set으로
+
   //textarea 입력값 감지
   const [textValue, setTextValue] = useState("");
   //가져오는 유저 정보
@@ -22,14 +25,16 @@ function EditProfile() {
   const [disable, setDisable] = useState(true);
   //가져온 유저 정보 저장
   const [user, setUser] = useState({
-    regName: userState?.info.regName,
+    regName: userState?.info.name,
     nick: userState?.info.nick,
-    selfIntro: userState?.info.selfIntro,
+    selfIntro: userState?.info.self_intro,
     email: userState?.info.email,
     phone: userState?.info.phone,
-    password: userState?.info.password,
-    passwordConfirm: userState?.info.password,
+    password: "",
+    passwordConfirm: "",
   });
+
+  //console.log(user.nick);
   //에러메시지 띄우는 용도
   const [errors, setErrors] = useState({
     regName: false,
@@ -110,27 +115,34 @@ function EditProfile() {
   };
 
   //비밀번호 중복 체크
-  const passwordRegex = /^(?=.*[A-Za-z0-9])(?=.*\d)[A-Za-z\d]{7,30}$/;
+  //useEffect(()=>{},[요 안에 있는 값이 바뀔때 useEffect가 실행된다. 지정해서 렌더링 가능....])
+  useEffect(() => {
+    //console.log(user?.password); ->?. 문법은 undefined들어가도 실행된다.
+    passwordCk();
+  }, [user?.password]);
+
   const passwordCheck = (e) => {
     setUser({
       ...user,
       [e.target.name]: e.target.value,
     });
-    const pw = user.password;
+    //setUser은 비동기라서 동기 다 처리하고 진행된다.
+  };
+  const passwordRegex = /^(?=.*[A-Za-z0-9])(?=.*\d)[A-Za-z\d]{8,30}$/;
 
-    if (pw.match(passwordRegex) === null) {
-      setPw(true);
-    } else {
-      setPw(false);
+  const passwordCk = () => {
+    if (user.password) {
+      if (user?.password.match(passwordRegex) === null) {
+        setPw(true);
+      } else {
+        setPw(false);
+      }
     }
   };
-  const passwordDoubleCheck = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
 
-    if (user.password !== user.passwordConfirm) {
+  //setState할 때 현재 state랑 변경하려는 값이랑 똑같으면 랜더링을 안 함!!
+  const passwordDoubleCheck = (e) => {
+    if (user.password !== e.target.value) {
       setPwConfirm(true);
     } else {
       setPwConfirm(false);
@@ -139,16 +151,12 @@ function EditProfile() {
   //수정 버튼 누를 때 발생(===============최종 제출=================)
   const submitForm = (e) => {
     e.preventDefault();
-    if (
-      userState.info.nick === user.nick &&
-      userState.info.email === user.email
-    ) {
-      setIsNickOk(true);
-      setIsEmailOk(true);
-    } else if (isNickOk === false || isEmailOk === false) {
+    if (isNickOk === false || isEmailOk === false) {
       alert("활동명이나 이메일 중복확인 바랍니다.");
     }
-    updateMember();
+    if (user !== undefined) {
+      updateMember();
+    }
   };
 
   //서버 전달 함수
@@ -165,7 +173,7 @@ function EditProfile() {
       })
       .catch((e) => {
         console.log(e);
-        console.log(user);
+        console.log(userState);
       });
   }
   //모달 관련 함수들============================
@@ -224,6 +232,7 @@ function EditProfile() {
                         className="editRowInput"
                         defaultValue={userState.info.name}
                         onChange={inputCheck}
+                        id="editName"
                         required
                       ></input>
                       {errors.regName && (
@@ -240,6 +249,7 @@ function EditProfile() {
                       <input
                         type="text"
                         name="nick"
+                        id="editNickname"
                         className="editRowInput"
                         defaultValue={userState.info.nick}
                         onChange={inputCheck}
@@ -296,6 +306,7 @@ function EditProfile() {
                         type="email"
                         defaultValue={userState.info.email}
                         name="email"
+                        id="editEmail"
                         className="editRowInput"
                         onChange={inputCheck}
                       ></input>
@@ -334,6 +345,7 @@ function EditProfile() {
                         type="text"
                         defaultValue={userState.info.phone}
                         name="phone"
+                        id="editPhone"
                         className="editRowInput"
                         onChange={inputCheck}
                       ></input>
