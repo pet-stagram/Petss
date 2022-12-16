@@ -7,7 +7,7 @@ import message from "../../../images/message.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faAngleLeft, faChevronRight, faAngleRight,  } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
-import Reply from "./Reply";
+import Comment from './Comment';
 import { replyStyle } from '../../css/modalStyles';
 
 
@@ -78,7 +78,7 @@ const Post = ({post}) => {
                             ariaHideApp={false}
                             style={replyStyle}
                             >
-                            <Reply postId={post.id}/>
+                            <Comment postId={post.id}/>
                         </Modal>
                         <button><img src={message} alt="like" className="like"/></button>
                     </div>

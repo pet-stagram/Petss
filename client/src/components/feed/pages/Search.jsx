@@ -20,7 +20,7 @@ const Search = () => {
   return (
     <form>
         <div className={style.search}>
-            <input type="text" name="searchInput" className={style.searchInput} autoComplete="off" placeholder="검색어를 입력하세요" onChange={onChangeWord}/>
+            <input type="text" name="searchWord" className={style.searchInput} autoComplete="off" placeholder="검색어를 입력하세요" onChange={onChangeWord}/>
             <input type="button" name="searchBtn" className={style.searchBtn} value="검색"  onClick={handleAddWord}/>
         </div>
         <ul className={style.searchHistory}>

@@ -8,6 +8,7 @@ import AddFeed from "../pages/AddFeed";
 import { addFeedStyle, searchStyle } from "../../css/modalStyles";
 import Search from "../pages/Search";
 import { useUserState } from "../../../ContextProvider";
+import axios from "axios";
 
 const Navbar = ({ setIsLogined }) => {
   const [userState] = useUserState();
@@ -15,8 +16,25 @@ const Navbar = ({ setIsLogined }) => {
 
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
 
-  const logout = () => {
-    setIsLogined("false");
+  const logout = async() => {
+    console.log("1");
+    await axios({
+      method: "GET",
+      url: `api/auth/logout`,
+      withCredentials: true,
+    })
+    .then((result) => {
+      sessionStorage.setItem("isLogin", "false");
+      setIsLogined("false");
+      console.log("2");
+    })
+    .catch((err) => {
+        console.log(err);
+        console.log("3");
+    });
+
+
+
   };
 
   return userState ? (

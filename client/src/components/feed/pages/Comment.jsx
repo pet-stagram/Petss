@@ -3,16 +3,14 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-const Reply = ({ postId }) => {
+const Comment = ({ postId }) => {
   // TODO : 이미지슬라이드 크기 조절 & 순서,번호 표시 가능 시 게시물 사진도 같이 보여주기.
   const [comments, setComments] = useState([]);
   const [text, setText] = useState('');
   const navigate = useNavigate();
 
 
-  const getComments = async(postId) => {
-    console.log(postId);
-
+  const getComments = async() => {
     await axios({
         method:"GET",
         url: `api/posts/comment/${postId}`,
@@ -30,13 +28,15 @@ const Reply = ({ postId }) => {
     await axios
       .post('api/posts/comment', {postId, content:text}
       )
-      .then(()=>{setText('')})
-      // ()=>console.log("ok")
+      .then(()=>{
+        setText('');
+        getComments();
+      })
       .catch(console.error);
   };
 
   useEffect(()=>{
-    getComments(postId);
+    getComments();
   },[comments.length])
 
   return (
@@ -45,7 +45,10 @@ const Reply = ({ postId }) => {
         {
           comments.map((comment)=>{
             return(
-            <li>{comment.content}</li>
+            <li>
+                <span><img src={comment.User.image} alt="user_imag" />{comment.User.nick}</span>
+                <span>{comment.content}</span>
+            </li>
             )
           })
         }
@@ -64,4 +67,4 @@ const Reply = ({ postId }) => {
   );
 };
 
-export default Reply;
+export default Comment;
