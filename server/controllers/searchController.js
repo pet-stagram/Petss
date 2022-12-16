@@ -15,7 +15,7 @@ module.exports = {
     //     res.send(result)
     // },
     getSearch : async(req,res)=>{
-        const userDataHash = req.query.Hashtag;
+        const userDataHash = req.query.Hashtags;
         console.log(userDataHash,"Controller");
         try{//0,-1:409err / 값값 / 1,1:400err/ -1-1:catchErr
             const findHashhData = await service.findSearch(userDataHash);
