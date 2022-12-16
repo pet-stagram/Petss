@@ -161,7 +161,7 @@ const WritePost = ({ files, previews, setIsOpenAddFeed }) => {
       >
         <textarea
           name="content"
-          placeholder="글내용"
+          placeholder="내용"
           className={styles.addFeedContent}
           onChange={(e) => setContent(e.target.value)}
           required
