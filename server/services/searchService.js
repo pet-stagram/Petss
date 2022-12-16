@@ -6,12 +6,12 @@ const path = require("path");
 const { raw } = require("express");
 
 module.exports = {
-    findSearch : async(userData)=>{
-        //console.log(userData,"userData");
-        const userHashtag = userData.hashtag;
-        const usernNick = userData.nick;
-        console.log(userHashtag,"userHashtag");//값없음 맞음
-        console.log(usernNick,"usernNick");
+    findSearch : async(userDataHash)=>{
+        console.log(userDataHash,"Service");//
+        //const userHashtag = userDataHash;
+        //const usernNick = userData.nick;
+        //console.log(userHashtag,"userHashtag");//
+        //console.log(usernNick,"usernNick");
         // try{
         //     // return 값
         //         // 0, -1: 입력된 데이터가 없을 때

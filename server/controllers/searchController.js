@@ -15,9 +15,10 @@ module.exports = {
     //     res.send(result)
     // },
     getSearch : async(req,res)=>{
-        const userData = req.query;
+        const userDataHash = req.query.Hashtag;
+        console.log(userDataHash,"Controller");
         try{//0,-1:409err / 값값 / 1,1:400err/ -1-1:catchErr
-            const findHashhData = await service.findSearch(userData);
+            const findHashhData = await service.findSearch(userDataHash);
             //console.log(findHashhData[0],findHashhData[1]);//[] 값 넘어옴
             // if(findHashhData[0]===-1 && findHashhData[1]===-1){
             //     throw "Error sendEmail()";
