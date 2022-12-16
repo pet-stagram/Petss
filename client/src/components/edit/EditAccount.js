@@ -8,32 +8,37 @@ import axios from "axios";
 import ModalEdit from "../edit/ModalEdit";
 import Basic from "../../images/basic.png";
 
-function EditProfile() {
+function EditProfile(props) {
+  /**고쳐야 하는 부분
+   * 1. post -> put
+   * 2.서버 키 값이랑 내가 보내는 key값 이름이 같아야 함 (name:~~)
+   * 3.selfIntro -> self_intro
+   * 4.form에 name값 key랑 맞추기
+   */
   //State가 바뀌면 재랜더링 된다.
   //화면에서 바뀌는건 set으로
 
   //textarea 입력값 감지
   const [textValue, setTextValue] = useState("");
-  //가져오는 유저 정보
+  //가져오는 로그인 유저 정보
   const [userState] = useUserState();
   //중복검사
   const [isNickOk, setIsNickOk] = useState(true);
   const [isEmailOk, setIsEmailOk] = useState(true);
   const [pw, setPw] = useState(false);
   const [pwConfirm, setPwConfirm] = useState(false);
-  const [userPw, setUserPw] = useState({ password: "" });
   //인풋 칸 활성화
   const [disable, setDisable] = useState(true);
-  //가져온 유저 정보 저장
+  //가져온 유저값 저장하기
   const [user, setUser] = useState({
-    regName: userState?.info.name,
+    name: userState?.info.name,
     nick: userState?.info.nick,
-    selfIntro: userState?.info.self_intro,
+    pw: undefined,
     email: userState?.info.email,
     phone: userState?.info.phone,
+    selfIntro: userState?.info.self_intro,
   });
 
-  //console.log(user.nick);
   //에러메시지 띄우는 용도
   const [errors, setErrors] = useState({
     regName: false,
@@ -42,7 +47,8 @@ function EditProfile() {
     email: false,
     phone: false,
   });
-
+  //비밀번호 저장
+  const [userPw, setUserPw] = useState({ password: "" });
   //textarea에 입력하는 글자 수 표현하기 위함.
   const handlesetValue = (e) => {
     setTextValue(e.target.value);
@@ -160,19 +166,15 @@ function EditProfile() {
 
   /**서버 전달 함수 */
   function updateMember(e) {
-    axios({
-      method: "POST",
-      url: `/api/users/info`,
-      data: user,
-      withCredentials: true,
-    })
+    axios
+      .put("/api/users/info", user)
       .then((res) => {
         alert("정보가 수정되었습니다.");
         console.log(res);
       })
       .catch((e) => {
         console.log(e);
-        console.log(user);
+        //console.log(user);
       });
   }
   /**모달 관련 */
@@ -207,6 +209,7 @@ function EditProfile() {
                           >
                             <img
                               alt="본인 프로필 사진"
+                              name="image"
                               src={userState.info.image}
                               id="editprofile"
                             ></img>
@@ -242,7 +245,7 @@ function EditProfile() {
                     <div>
                       <input
                         type="text"
-                        name="regName"
+                        name="name"
                         className="editRowInput"
                         defaultValue={userState.info.name}
                         onChange={inputCheck}
