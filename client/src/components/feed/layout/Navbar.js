@@ -8,45 +8,34 @@ import AddFeed from "../pages/AddFeed";
 import { addFeedStyle, searchStyle } from "../../css/modalStyles";
 import Search from "../pages/Search";
 import { useUserState } from "../../../ContextProvider";
+import axios from "axios";
 
 const Navbar = ({ setIsLogined }) => {
   const [userState] = useUserState();
   const [searchIsOpen, setSearchIsOpen] = useState(false);
-  //console.log(setIsLogined);
-  // const [modalOn, setModalOn] = React.useState(false);
-  // const onOpenModal = () => {
-  // setModalOn(!modalOn);
-  // }
 
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
 
-  // const getLoginInfo = async () => {
-  //TODO: 세션한 사람의 아이디를 받아와야함
+  const logout = async() => {
+    console.log("1");
+    await axios({
+      method: "GET",
+      url: `api/auth/logout`,
+      withCredentials: true,
+    })
+    .then((result) => {
+      sessionStorage.setItem("isLogin", "false");
+      setIsLogined("false");
+      console.log("2");
+    })
+    .catch((err) => {
+        console.log(err);
+        console.log("3");
+    });
 
-  //   await axios({
-  //     method: "GET",
-  //     url: `api/users/${SESSION_ID}`,
-  //     withCredentials: true,
-  //   })
-  //     .then((result) => {
-  //       console.log("로그인 유저 조회 성공");
-  //       console.log(result);
-  //       setData(result.data);
-  //     })
-  //     .catch((err) => {
-  //       // err.response.status === '400'
-  //       console.log("로그인 유저 조회 실패");
-  //       console.log(err);
-  //     });
-  // };
 
-  const logout = () => {
-    setIsLogined("false");
+
   };
-
-  // useEffect(() => {
-  //   getLoginInfo();
-  // }, []);
 
   return userState ? (
     <div className="navbar">

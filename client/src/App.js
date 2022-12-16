@@ -14,7 +14,25 @@ import Edit from "./components/edit/EditAccount";
 import { useUserState, ContextProvider } from "./ContextProvider";
 import axios from "axios";
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    const handleTabClose = event => {
+      event.preventDefault();
+      console.log('beforeunload event triggered');
+      return (event.returnValue = 'Are you sure you want to exit?');
+      };
+  
+      window.addEventListener('beforeunload', handleTabClose);
+  
+      return () => {
+        window.removeEventListener('beforeunload', handleTabClose);
+      };
+    }, []);
+
+
+
+
+
   return (
     <BrowserRouter>
       <Routes>
@@ -33,7 +51,7 @@ function App() {
 }
 function Main({ component }) {
   //로그인 유무를 localostorage에 저장 false는 login, true는 main
-  const isLoginedStorage = localStorage.getItem("isLogin");
+  const isLoginedStorage = sessionStorage.getItem("isLogin");
 
   const [isLogined, setIsLogined] = useState(isLoginedStorage ?? "false");
 
