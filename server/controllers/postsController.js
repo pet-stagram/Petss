@@ -111,7 +111,6 @@ module.exports = {
     },
     putLike: async (req, res) => {
         /* 세션 없으면 401 보내주기 */
-        // if(!req.session.user){res.sendStatus(401);}
         const currentUser = req.session.u_id;
         if(!currentUser){
             res.sendStatus(401);
@@ -121,7 +120,6 @@ module.exports = {
                 postId: req.params.id,
                 user: currentUser, //후에 세션 유저로 변경
             };
-
             try {
                 await service.updateHeart(likeDto);
                 res.sendStatus(200);
@@ -207,8 +205,5 @@ module.exports = {
                 res.sendStatus(400);
             }
         }
-        
-        
-       
     }
 };

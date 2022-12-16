@@ -68,11 +68,12 @@ function Main({ component }) {
 
 function Wrapper({ component, setIsLogined }) {
   const [userState, setUserState] = useUserState();
-
+  const [isLoading, setIsLoding] = useState(true);
   function getUser() {
     axios("/api/users/me")
       .then((res) => {
         setUserState(res.data);
+        setIsLoding(false);
       })
       .catch((err) => {
         console.error(err);
@@ -84,6 +85,7 @@ function Wrapper({ component, setIsLogined }) {
   }, []);
 
   return (
+    isLoading||
     <div className="wrapper">
       <Navbar setIsLogined={setIsLogined} />
       {component}

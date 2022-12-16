@@ -75,7 +75,6 @@ module.exports = {
                 {
                     name: userDto.name,
                     nick: userDto.nick,
-                    password: userDto.password,
                     email: userDto.email,
                     phone: userDto.phone,
                     self_intro: userDto.selfIntro,
@@ -87,7 +86,23 @@ module.exports = {
                 }
             );
         } catch (err) {
-            console.error(err);
+            throw err;
+        }
+    },
+    updateUserPw: async (currentUser, userPw) =>{
+        try {
+            await User.update(
+                {
+                    password: userPw
+                },
+                {
+                    where: {
+                        id: currentUser,
+                    },
+                }
+            );
+        } catch (err) {
+            throw err;
         }
     },
     /**

@@ -38,6 +38,7 @@ function EditProfile() {
     phone: false,
   });
 
+  console.log(userState);
   //textarea에 입력하는 글자 수 표현하기 위함.
   const handlesetValue = (e) => {
     setTextValue(e.target.value);
@@ -139,7 +140,7 @@ function EditProfile() {
   //서버 전달 함수
   function updateMember() {
     axios({
-      method: "POST",
+      method: "PUT",
       url: `/api/users/info`,
       data: user,
       withCredentials: true,
