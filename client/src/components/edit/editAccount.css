@@ -140,3 +140,6 @@
   margin-top: 5px;
   color: rgb(132, 132, 132);
 }
+#editProfileLabel {
+  cursor: pointer;
+}

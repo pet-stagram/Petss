@@ -6,7 +6,7 @@ import Footer from "../footer/Footer";
 import { useUserState } from "../../ContextProvider";
 import axios from "axios";
 import ModalEdit from "../edit/ModalEdit";
-import Toast from "react-bootstrap/Toast";
+import Basic from "../../images/basic.png";
 
 function EditProfile() {
   //State가 바뀌면 재랜더링 된다.
@@ -21,6 +21,7 @@ function EditProfile() {
   const [isEmailOk, setIsEmailOk] = useState(true);
   const [pw, setPw] = useState(false);
   const [pwConfirm, setPwConfirm] = useState(false);
+  const [userPw, setUserPw] = useState({ password: "" });
   //인풋 칸 활성화
   const [disable, setDisable] = useState(true);
   //가져온 유저 정보 저장
@@ -30,8 +31,6 @@ function EditProfile() {
     selfIntro: userState?.info.self_intro,
     email: userState?.info.email,
     phone: userState?.info.phone,
-    password: "",
-    passwordConfirm: "",
   });
 
   //console.log(user.nick);
@@ -119,11 +118,11 @@ function EditProfile() {
   useEffect(() => {
     //console.log(user?.password); ->?. 문법은 undefined들어가도 실행된다.
     passwordCk();
-  }, [user?.password]);
+  }, [userPw?.password]);
 
   const passwordCheck = (e) => {
-    setUser({
-      ...user,
+    setUserPw({
+      ...userPw,
       [e.target.name]: e.target.value,
     });
     //setUser은 비동기라서 동기 다 처리하고 진행된다.
@@ -131,8 +130,8 @@ function EditProfile() {
   const passwordRegex = /^(?=.*[A-Za-z0-9])(?=.*\d)[A-Za-z\d]{8,30}$/;
 
   const passwordCk = () => {
-    if (user.password) {
-      if (user?.password.match(passwordRegex) === null) {
+    if (userPw.password) {
+      if (userPw?.password.match(passwordRegex) === null) {
         setPw(true);
       } else {
         setPw(false);
@@ -140,15 +139,15 @@ function EditProfile() {
     }
   };
 
-  //setState할 때 현재 state랑 변경하려는 값이랑 똑같으면 랜더링을 안 함!!
+  //setState할 때 현재 state랑 변경하려는 값이랑 똑같으면 랜더링을 하지 않는다.
   const passwordDoubleCheck = (e) => {
-    if (user.password !== e.target.value) {
+    if (userPw.password !== e.target.value) {
       setPwConfirm(true);
     } else {
       setPwConfirm(false);
     }
   };
-  //수정 버튼 누를 때 발생(===============최종 제출=================)
+  /**최종적으로 제출할 때 실행 */
   const submitForm = (e) => {
     e.preventDefault();
     if (isNickOk === false || isEmailOk === false) {
@@ -159,7 +158,7 @@ function EditProfile() {
     }
   };
 
-  //서버 전달 함수
+  /**서버 전달 함수 */
   function updateMember(e) {
     axios({
       method: "POST",
@@ -173,15 +172,19 @@ function EditProfile() {
       })
       .catch((e) => {
         console.log(e);
-        console.log(userState);
+        console.log(user);
       });
   }
-  //모달 관련 함수들============================
-  const [isOepn, setIsOpen] = useState(false);
+  /**모달 관련 */
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleModal = () => {
     setIsOpen(true);
   };
+
+  /**프로필 업로드 */
+  const [profileImage, setProfileImage] = useState();
+  const profileImgFileInput = useRef(null);
 
   return (
     userState && (
@@ -198,12 +201,23 @@ function EditProfile() {
                     <div>
                       <button className="editPhotoBtn">
                         <div className="editImgWrap">
-                          <img
-                            alt="본인 프로필 사진"
-                            className=""
-                            src={userState.info.image}
-                            id="editprofile"
-                          ></img>
+                          <label
+                            htmlFor="profileChangeBtn"
+                            id="editProfileLabel"
+                          >
+                            <img
+                              alt="본인 프로필 사진"
+                              src={userState.info.image}
+                              id="editprofile"
+                            ></img>
+                          </label>
+                          <input
+                            style={{ display: "none" }}
+                            type="file"
+                            accept="image/*"
+                            ref={profileImgFileInput}
+                            id="profileChangeBtn"
+                          ></input>
                         </div>
                       </button>
                     </div>
@@ -217,9 +231,9 @@ function EditProfile() {
                     >
                       프로필 사진 바꾸기
                     </button>
-                    {isOepn && <ModalEdit setIsOpen={setIsOpen}></ModalEdit>}
                   </div>
                 </div>
+                {isOpen && <ModalEdit setIsOpen={setIsOpen}></ModalEdit>}
                 <form onSubmit={submitForm}>
                   <div className="editRow">
                     <aside>

@@ -1,27 +1,48 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import "./modalEdit.css";
+import basicImage from "../../images/basic.png";
 
-function ModalEdit({ toggleShow }) {
-  //모달창 닫기
+function ModalEdit({ setIsOpen }) {
+  const [image, setImage] = useState({ basicImage });
+  const fileInput = useRef(null);
+
+  const onChange = (e) => {
+    if (e.target.files[0]) {
+    }
+  };
+
+  /**창 닫기 */
   const closeModal = () => {
-    toggleShow(false);
+    setIsOpen(false);
   };
 
   return (
     <div className="editModalContainer">
       <div className="editModal">
-        <div>프로필 사진 바꾸기</div>
-        <div id="uploadPhoto">
-          <button type="button" className="editModalBtn">
-            사진 업로드
-          </button>
+        <div className="editModalRow" id="editModalTitle">
+          프로필 사진 바꾸기
         </div>
-        <div>
+        <div className="editModalRow">
+          <label id="uploadPhoto" htmlFor="uploadImage">
+            사진 업로드
+          </label>
+          <input
+            ref={fileInput}
+            type="file"
+            className="editModalBtn"
+            id="uploadImage"
+            accept="image/*"
+            multiple
+            style={{ display: "none" }}
+            onChange={onChange}
+          />
+        </div>
+        <div className="editModalRow">
           <button type="button" id="deletePhoto" className="editModalBtn">
             현재 사진 삭제
           </button>
         </div>
-        <div>
+        <div id="closeModal" className="editModalRow">
           <button type="button" onClick={closeModal} className="editModalBtn">
             취소
           </button>
