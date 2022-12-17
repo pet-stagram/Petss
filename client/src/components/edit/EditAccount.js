@@ -8,18 +8,16 @@ import axios from "axios";
 import ModalEdit from "../edit/ModalEdit";
 import Basic from "../../images/basic.png";
 
-function EditProfile(props) {
-  /**고쳐야 하는 부분
-   * 1. post -> put
-   * 2.서버 키 값이랑 내가 보내는 key값 이름이 같아야 함 (name:~~)
-   * 3.selfIntro -> self_intro
-   * 4.form에 name값 key랑 맞추기
+function EditProfile() {
+  /**
+   *State가 바뀌면 재랜더링 된다.
+   *화면에서 바뀌는건 set으로.
+   *setState할 때 현재 state랑 변경하려는 값이랑 똑같으면 랜더링을 하지 않는다.
+   *{}:새 객체
+   *key 값이 server req.body(객체) 의 key값이랑 같아야 한다.
+   *post로 줬을때만 body로 전달 가능
    */
-  //State가 바뀌면 재랜더링 된다.
-  //화면에서 바뀌는건 set으로
 
-  //textarea 입력값 감지
-  const [textValue, setTextValue] = useState("");
   //가져오는 로그인 유저 정보
   const [userState] = useUserState();
   //중복검사
@@ -41,22 +39,25 @@ function EditProfile(props) {
 
   //에러메시지 띄우는 용도
   const [errors, setErrors] = useState({
-    regName: false,
+    name: false,
     nick: false,
     passwordConfirm: false,
     email: false,
     phone: false,
   });
   //비밀번호 저장
-  const [userPw, setUserPw] = useState({ password: "" });
+  const [userPw, setUserPw] = useState({ pw: "" });
+
   //textarea에 입력하는 글자 수 표현하기 위함.
   const handlesetValue = (e) => {
-    setTextValue(e.target.value);
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
+    //setTextValue(e.target.value);
   };
 
-  //{}:새 객체
-  //인풋칸이 비어있으면 경고메시지 띄움.
-  //onChange
+  //onChange (인풋칸이 비어있으면 경고메시지 띄움.)
   const inputCheck = (e) => {
     setUser({
       ...user,
@@ -76,14 +77,12 @@ function EditProfile(props) {
     }
   };
 
-  //닉네임 중복 체크 함수
+  // 닉네임 중복 체크 함수
   const nickCheck = (e) => {
     axios({
       method: "POST",
       url: `api/auth/nick`,
       data: { nick: user.nick },
-
-      //객체 생성 => {key : value}
     })
       .then((res) => {
         setIsNickOk(true);
@@ -103,13 +102,15 @@ function EditProfile(props) {
       method: "POST",
       url: `api/auth/email`,
       data: { email: user.email },
-      //key 값이 server req.body(객체) 의 key값이랑 같아야 한다.
+      //
       //post로 줬을때만 body로 전달가능
     })
       .then((res) => {
         setIsEmailOk(true);
         setDisable(false);
-        alert("사용 가능한 이메일입니다.");
+        alert(
+          "사용 가능한 이메일입니다. 메일에서 인증번호를 확인하시고 입력해주세요."
+        );
         console.log(res);
       })
       .catch((e) => {
@@ -124,7 +125,7 @@ function EditProfile(props) {
   useEffect(() => {
     //console.log(user?.password); ->?. 문법은 undefined들어가도 실행된다.
     passwordCk();
-  }, [userPw?.password]);
+  }, [userPw?.pw]);
 
   const passwordCheck = (e) => {
     setUserPw({
@@ -136,8 +137,8 @@ function EditProfile(props) {
   const passwordRegex = /^(?=.*[A-Za-z0-9])(?=.*\d)[A-Za-z\d]{8,30}$/;
 
   const passwordCk = () => {
-    if (userPw.password) {
-      if (userPw?.password.match(passwordRegex) === null) {
+    if (userPw.pw) {
+      if (userPw?.pw.match(passwordRegex) === null) {
         setPw(true);
       } else {
         setPw(false);
@@ -145,14 +146,14 @@ function EditProfile(props) {
     }
   };
 
-  //setState할 때 현재 state랑 변경하려는 값이랑 똑같으면 랜더링을 하지 않는다.
   const passwordDoubleCheck = (e) => {
-    if (userPw.password !== e.target.value) {
+    if (userPw.pw !== e.target.value) {
       setPwConfirm(true);
     } else {
       setPwConfirm(false);
     }
   };
+
   /**최종적으로 제출할 때 실행 */
   const submitForm = (e) => {
     e.preventDefault();
@@ -167,7 +168,7 @@ function EditProfile(props) {
   /**서버 전달 함수 */
   function updateMember(e) {
     axios
-      .put("/api/users/info", user)
+      .put("/api/users/info", { user, userPw })
       .then((res) => {
         alert("정보가 수정되었습니다.");
         console.log(res);
@@ -216,6 +217,7 @@ function EditProfile(props) {
                           </label>
                           <input
                             style={{ display: "none" }}
+                            name="image"
                             type="file"
                             accept="image/*"
                             ref={profileImgFileInput}
@@ -252,7 +254,7 @@ function EditProfile(props) {
                         id="editName"
                         required
                       ></input>
-                      {errors.regName && (
+                      {errors.name && (
                         <p className="warningMsg">이름을 입력해주세요.</p>
                       )}
                     </div>
@@ -304,12 +306,12 @@ function EditProfile(props) {
                           id="editTextarea"
                           name="selfIntro"
                           maxLength="149"
-                          value={textValue}
-                          onChange={(e) => handlesetValue(e)}
+                          value={user.selfIntro}
+                          onChange={handlesetValue}
                           placeholder={userState.info.self_intro}
                         ></textarea>
                         <div style={{ display: "flex" }}>
-                          <p>{textValue.trim().length}</p>/<p>150</p>
+                          <p>{user.selfIntro?.length}</p>/<p>150</p>
                         </div>
                       </div>
                     </div>
@@ -383,7 +385,7 @@ function EditProfile(props) {
                     <div>
                       <input
                         type="password"
-                        name="password"
+                        name="pw"
                         placeholder="선택입력"
                         className="editRowInput"
                         onChange={passwordCheck}
