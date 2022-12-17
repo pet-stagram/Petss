@@ -52,7 +52,7 @@ module.exports = {
         const messages = await Message.findAndCountAll({
             limit : 15,
             offset: offset,
-            order:[["sendAt","DESC"]],
+            order:[["sendAt","ASC"]],
             where:{
                 conversation_id : conversationId
             },

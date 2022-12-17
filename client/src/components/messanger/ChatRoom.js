@@ -7,33 +7,21 @@ import * as common from "../../module/commonFuncion";
 function ChatRoom({messages, messageView, setMessages, conversationId, msgLength, setMsgLength}) {
     const page = useRef(1);
     const [ref, inView] = useInView();
-    
+    const chatContainer = useRef(null);
     const [loading, setLoading] = useState(false);
     const [length,setLength] = useState(0);
     const plusLength = () => {
         setLength(length+10);
     }
-    
+    const messagesEndRef = useRef();
+
     const fetch = async () => {
-        if(length===0){
-            const reverseData = {
-                chats : messages.chats.reverse(),
-                partner : messages.partner,
-                messageLength : messages.messageLength                
-            }
-        }
         try {
         setLoading(true);
         const data = await common.getConversationDetail(conversationId, length);
         if(data.chats.length===0){
             console.log("없음")
         }else{
-            const arr = messages.chats.splice(0, 0, ...data.chats.reverse())
-            const reverseData = {
-                chats : arr,
-                partner : data.partner,
-                messageLength : data.messageLength                
-            }
             plusLength();
             setLoading(false);
         }
@@ -42,6 +30,10 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
         }
       };
 
+    useEffect(()=>{
+        messagesEndRef.current?.scrollIntoView();
+    },[messageView]);
+
     useEffect(() => {
         if (inView) {
           fetch();
@@ -49,9 +41,8 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
       }, [inView]);
 
   return (
-    <div className={styles.chatRoom}>
+    <div className={styles.chatRoom} ref={chatContainer}>
         <div ref={ref} style={{ position: 'absolute', top: '0px' }} />
-                {loading&&<h6>로딩중</h6>}
                 {messages.chats.map((chat, index) => {
                     if (chat.senderId === messages.partner.id) {
                         return (
@@ -105,8 +96,8 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
                     }
                 })}
 
-               
-            </div>
+                <div ref={messagesEndRef}></div>
+    </div>
   )
 }
 

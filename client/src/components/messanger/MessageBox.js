@@ -2,11 +2,12 @@ import React from 'react'
 import ChatRoom from './ChatRoom';
 import styles from "../../css/messanger.module.css";
 import { useEffect, useState, useRef } from 'react';
+import { useUserState } from '../../ContextProvider';
 import {joinChat, getSocket, sendSocketMessage, receiveMessage } from "../../module/socketio";
 
 const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLength }) => {
     const scrollRef = useRef();
-
+    const [user,setUser] = useUserState();
     const [messageView, setMessageView] = useState([]);
     const [conversation, setConversation] = useState(conversationId);
     const [room, setRoom] = useState("");
@@ -23,7 +24,7 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
         setMessageView([]);
         
     }, [conversationId]);
-
+    
     const sendMessage = (partner) => {
         const content = document.querySelector("#sendInput");
         try {
@@ -32,12 +33,11 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
                 content,
                 sender: "me",
                 partner: partner.id,
-                me: 29, //세션
+                me: user?.info?.id, //세션
             };
             sendSocketMessage(messageInfo);
             setTimeout(() => {
                 content.value = "";
-                
             }, 10);
             
         } catch (err) {
