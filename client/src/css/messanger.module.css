@@ -123,33 +123,37 @@
 }
 
 .messageWrap{
-    width: 100%;
-    display: inline-block;
-
+    display: flex;
+    flex-direction: column;
+    
 }
 
+
 .message{
-    background-color: white;
     border: 1px solid #eee;
     padding: 12px 15px;
     margin: 12px 20px;
     border-radius: 20px;
 }
 
+.myMsgWrap{
+    align-items: flex-end;
+}
+
+.partnerMsgWrap{
+    align-items: flex-start;
+}
+
 .myMsg{
     background-color: #ccc;
-    float: right;
 }
 
 .partnerMsg{
     background-color: white;
+
 }
 
 .newMessage{
     width: 100%;
     display: flex;
-}
-
-.myNewMsg{
-    justify-content: end
 }

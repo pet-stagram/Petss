@@ -24,10 +24,10 @@ export function getChanged(bool){
     return !bool;
 }
 
-export async function getConversationDetail(selectedConversation,msgLength) {
+export async function getConversationDetail(selectedConversation,lastId) {
 
     try{
-        const result = await axios.get(`/api/chat/message?conversation=${selectedConversation}&offset=${msgLength}`);  
+        const result = await axios.get(`/api/chat/message?conversation=${selectedConversation}&lastId=${lastId||0}`);  
       const messages = result.data.rows;
       let partner;
       messages.map((message) => {

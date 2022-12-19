@@ -22,7 +22,6 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
         });
         /* 대화바뀔 때마다 message가 담긴 state 초기화 */
         setMessageView([]);
-        
     }, [conversationId]);
     
     const sendMessage = (partner) => {
@@ -31,7 +30,6 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
             const messageInfo = {
                 conversation,
                 content,
-                sender: "me",
                 partner: partner.id,
                 me: user?.info?.id, //세션
             };
@@ -54,9 +52,9 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
                     {/* 이미지 클릭 시 상대방 프로필 가기 */}        
                     <img
                         className={styles.partnerImage}
-                        src={messages.partner.image}
+                        src={messages?.partner?.image}
                         alt="상대방 이미지"/>
-                    <span>{messages.partner.nick}</span>
+                    <span>{messages?.partner?.nick}</span>
                 
             </div>
             <ChatRoom messages={messages} messageView={messageView} setMessageView={setMessageView} setMessages={setMessages} conversationId ={conversationId} msgLength = {msgLength} setMsgLength = {setMsgLength}/>
@@ -65,7 +63,7 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
                         type="text"
                         id="sendInput"
                         className={styles.sendInput}/>
-                    <button className={styles.sendButton} onClick={() => sendMessage(messages.partner)}>
+                    <button className={styles.sendButton} onClick={() => sendMessage(messages?.partner)}>
                         보내기
                     </button>
                 </div>

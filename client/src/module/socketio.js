@@ -18,6 +18,6 @@ export const receiveMessage = () => {
 }
 
 export const sendSocketMessage = (messageInfo) => {
-  const {conversation, content, sender, me, partner} = messageInfo;
-  socket.emit("reqMsg",{comment: content.value, conversation, sender, me, partner});
+  const {conversation, content, me, partner} = messageInfo;
+  socket.emit("reqMsg",{comment: content.value, conversation, me, partner});
 }

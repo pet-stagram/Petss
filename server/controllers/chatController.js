@@ -23,7 +23,7 @@ module.exports ={
             const messageDto = {
             me : currentUser,// session
             conversationId : req.query.conversation,
-            offset : parseInt(req.query.offset)
+            lastId : parseInt(req.query.lastId,10)
         };
         
         try{

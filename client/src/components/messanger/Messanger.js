@@ -19,7 +19,7 @@ function Messanger(props) {
         const fetchConversationDetail = async (conversationId) => {
             try {
                 const messageResult = await common.getConversationDetail(
-                    conversationId, 0
+                    conversationId
                 );
                 setMessages({ ...messages, ...messageResult });
                 setLoading(false);
