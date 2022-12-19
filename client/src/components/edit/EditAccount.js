@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useMemo } from "react";
 import "../edit/editAccount.css";
 import Navbar from "../feed/layout/Navbar";
 import { useState } from "react";
@@ -172,10 +172,10 @@ function EditProfile() {
       .then((res) => {
         alert("정보가 수정되었습니다.");
         console.log(res);
+        console.log(user);
       })
       .catch((e) => {
         console.log(e);
-        //console.log(user);
       });
   }
   /**모달 관련 */
@@ -186,8 +186,52 @@ function EditProfile() {
   };
 
   /**프로필 업로드 */
-  const [profileImage, setProfileImage] = useState();
+  /* 서버에 보내주는 실제 이미지 파일 */
+  const [imageFile, setImageFile] = useState([]);
+
+  const [profileImage, setProfileImage] = useState([]);
   const profileImgFileInput = useRef(null);
+  const handleClickFileInput = () => {
+    profileImgFileInput.current?.click();
+  };
+  //onChange event
+  const uploadProfile = (e) => {
+    const fileList = e.target.files;
+    const length = fileList?.length;
+    if (fileList && fileList[0]) {
+      const url = URL.createObjectURL(fileList[0]);
+
+      setProfileImage({
+        file: fileList[0],
+        thumbnail: url,
+        type: fileList[0].type.slice(0, 5),
+      });
+    }
+  };
+
+  const showImage = useMemo(() => {
+    if (!profileImage && profileImage == null) {
+      return (
+        <img
+          name="image"
+          src={userState?.info.image}
+          alt="내 프로필 사진"
+          id="editprofile"
+          onClick={handleClickFileInput}
+        />
+      );
+    }
+
+    return (
+      <img
+        name="image"
+        src={profileImage.thumbnail}
+        alt={profileImage.type}
+        onClick={handleClickFileInput}
+        id="editprofile"
+      />
+    );
+  });
 
   return (
     userState && (
@@ -208,12 +252,13 @@ function EditProfile() {
                             htmlFor="profileChangeBtn"
                             id="editProfileLabel"
                           >
-                            <img
+                            {showImage}
+                            {/* <img
                               alt="본인 프로필 사진"
                               name="image"
                               src={userState.info.image}
                               id="editprofile"
-                            ></img>
+                            ></img> */}
                           </label>
                           <input
                             style={{ display: "none" }}
@@ -222,6 +267,7 @@ function EditProfile() {
                             accept="image/*"
                             ref={profileImgFileInput}
                             id="profileChangeBtn"
+                            onChange={uploadProfile}
                           ></input>
                         </div>
                       </button>
