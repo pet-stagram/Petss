@@ -11,21 +11,20 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
     const [messageView, setMessageView] = useState([]);
     const [conversation, setConversation] = useState(conversationId);
     const [room, setRoom] = useState("");
-
     
     useEffect(() => {
         joinChat(conversationId);
         setRoom(conversationId);
-        
         getSocket().on("reqMsg", (data) => {
             setMessageView((prevMsg) => [...prevMsg, data]);
         });
         /* 대화바뀔 때마다 message가 담긴 state 초기화 */
         setMessageView([]);
-    }, [conversationId]);
+    }, []);
     
     const sendMessage = (partner) => {
         const content = document.querySelector("#sendInput");
+        if(content.value !== ""){
         try {
             const messageInfo = {
                 conversation,
@@ -41,6 +40,7 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
         } catch (err) {
             throw err;
         }
+    }
     };
 
     return (
@@ -62,7 +62,9 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
                     <input
                         type="text"
                         id="sendInput"
-                        className={styles.sendInput}/>
+                        className={styles.sendInput}
+                        onKeyPress={()=>sendMessage(messages?.partner)}
+                        />
                     <button className={styles.sendButton} onClick={() => sendMessage(messages?.partner)}>
                         보내기
                     </button>

@@ -12,7 +12,6 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
     const [hasMore , setHasMore]= useState(true);
     const messagesEndRef = useRef();
     const [user,setUser] = useUserState();    
-
     const fetch = async () => {
         try {
         setLoading(true);
@@ -33,7 +32,7 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
       };
 
     useEffect(()=>{
-        messagesEndRef.current?.scrollIntoView();
+        messagesEndRef.current?.scrollIntoView();    
     },[messageView]);
 
     useEffect(() => {
