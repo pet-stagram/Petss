@@ -24,3 +24,15 @@
   margin-left: 300px;
   margin-top: 15px;
 }
+
+@media (max-width: 1500px) {
+  .footerwrap {
+    margin-left: 50px;
+  }
+  .editFooter ul li {
+    margin-right: 30px;
+  }
+  .editFooter p {
+    margin-left: 270px;
+  }
+}

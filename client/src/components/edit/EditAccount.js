@@ -191,7 +191,8 @@ function EditProfile() {
 
   const [profileImage, setProfileImage] = useState([]);
   const profileImgFileInput = useRef(null);
-  const handleClickFileInput = () => {
+  const handleClickFileInput = (e) => {
+    e.preventDefault();
     profileImgFileInput.current?.click();
   };
   //onChange event
@@ -200,24 +201,24 @@ function EditProfile() {
     const length = fileList?.length;
     if (fileList && fileList[0]) {
       const url = URL.createObjectURL(fileList[0]);
-
       setProfileImage({
         file: fileList[0],
         thumbnail: url,
         type: fileList[0].type.slice(0, 5),
       });
     }
+    // const formData = new FormData();
+    // formData.append("file", e.target.files[0]);
+    // axios.put(`api/users/info`, formData);
   };
-
   const showImage = useMemo(() => {
-    if (!profileImage && profileImage == null) {
+    if (!profileImage && profileImage === null) {
       return (
         <img
           name="image"
           src={userState?.info.image}
           alt="내 프로필 사진"
           id="editprofile"
-          onClick={handleClickFileInput}
         />
       );
     }
@@ -227,7 +228,6 @@ function EditProfile() {
         name="image"
         src={profileImage.thumbnail}
         alt={profileImage.type}
-        onClick={handleClickFileInput}
         id="editprofile"
       />
     );
@@ -246,20 +246,19 @@ function EditProfile() {
                 <div className="editRow" id="rowTop">
                   <div className="left">
                     <div>
-                      <button className="editPhotoBtn">
+                      <button
+                        className="editPhotoBtn"
+                        onClick={handleClickFileInput}
+                      >
                         <div className="editImgWrap">
-                          <label
-                            htmlFor="profileChangeBtn"
-                            id="editProfileLabel"
-                          >
-                            {showImage}
-                            {/* <img
+                          {showImage}
+                          {/* <img
                               alt="본인 프로필 사진"
                               name="image"
                               src={userState.info.image}
                               id="editprofile"
                             ></img> */}
-                          </label>
+
                           <input
                             style={{ display: "none" }}
                             name="image"

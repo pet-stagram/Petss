@@ -1,8 +1,9 @@
 import React, { useState, useRef } from "react";
 import "./modalEdit.css";
 import basicImage from "../../images/basic.png";
+import axios from "axios";
 
-function ModalEdit({ setIsOpen }) {
+function ModalEdit({ setIsOpen, profileImage }) {
   const [image, setImage] = useState({ basicImage });
   const fileInput = useRef(null);
 
@@ -14,6 +15,11 @@ function ModalEdit({ setIsOpen }) {
   /**창 닫기 */
   const closeModal = () => {
     setIsOpen(false);
+  };
+
+  /**프로필 사진 삭제하기(기본 프로필로 변경하기) */
+  const deletePhoto = () => {
+    axios.post(`api/users/image`, profileImage);
   };
 
   return (
