@@ -18,6 +18,7 @@ function Register() {
     password: "",
     passwordConfirm: "",
     phone: "",
+    text: "",
   });
   const [disable, setDisable] = useState(true);
 
@@ -153,7 +154,7 @@ function Register() {
       addMember(data);
     }
   };
-
+  /**최종적 회원가입 */
   function addMember(data) {
     axios({
       method: "POST",
@@ -170,7 +171,24 @@ function Register() {
         console.log(e);
       });
   }
-
+  /**인증번호 일치 검사 */
+  const matchCertificationNumber = (e) => {
+    axios({
+      method: "POST",
+      url: `api/nick`,
+      data: { text: account.text },
+      //withCredentials: true
+    })
+      .then((res) => {
+        alert("인증번호가 일치합니다.");
+        console.log(res);
+      })
+      .catch((e) => {
+        alert("인증번호가 일치하지 않습니다.");
+        console.log(e);
+        console.log(account.text);
+      });
+  };
   return (
     <>
       <body>
@@ -313,8 +331,9 @@ function Register() {
                     placeholder="인증번호를 입력하세요"
                     className="regInput"
                     id="chkCert"
-                    name="emailnumber"
+                    name="text"
                     disabled={disable}
+                    onChange={onChangeAccount}
                     //true면 비활성화
                   />
                 </div>
@@ -324,6 +343,7 @@ function Register() {
                     value="회원가입"
                     className="regInput"
                     id="regBtn"
+                    onClick={matchCertificationNumber}
                   />
                 </div>
                 <div className="mvLog">
