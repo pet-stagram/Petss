@@ -4,6 +4,7 @@ import "../../css/mainFeed.css"
 import "../../css/reset.css";
 import { useState } from 'react';
 import Post from './Post';
+import Loading from './Loading';
 
 const MainFeed = () => {
     const [posts, setPosts] = useState({});
@@ -16,9 +17,9 @@ const MainFeed = () => {
           withCredentials: true,
       })
           .then((result) => {
-              console.log("팔로워 피드 조회 성공");
-              console.log("메인피드 데이터!!");
-              console.log(result.data);
+              // console.log("팔로워 피드 조회 성공");
+              // console.log("메인피드 데이터!!");
+              // console.log(result.data);
               setPosts(result.data);
               setIsLoading(true);
           })
@@ -38,12 +39,14 @@ const MainFeed = () => {
   return (
       <main className='mainFeedWrap'>
         {posts === ""? <div>No Data</div> : 
-            isLoading &&
+            isLoading ?
             posts.map((post)=>{
                 return(
                 <Post post={post} key={post.id}/>
                 );
             })
+            :
+            <Loading/>
           } 
       </main>
   )

@@ -23,6 +23,7 @@ function EditProfile() {
   //중복검사
   const [isNickOk, setIsNickOk] = useState(true);
   const [isEmailOk, setIsEmailOk] = useState(true);
+  const [isEmailNumberOk, setIsEmailNumberOk] = useState(false);
   const [pw, setPw] = useState(false);
   const [pwConfirm, setPwConfirm] = useState(false);
   //인풋 칸 활성화
@@ -47,6 +48,7 @@ function EditProfile() {
   });
   //비밀번호 저장
   const [userPw, setUserPw] = useState({ pw: "" });
+  const [emailcheck, setEmailCheck] = useState("");
 
   //textarea에 입력하는 글자 수 표현하기 위함.
   const handlesetValue = (e) => {
@@ -54,7 +56,10 @@ function EditProfile() {
       ...user,
       [e.target.name]: e.target.value,
     });
-    //setTextValue(e.target.value);
+    setEmailCheck({
+      emailCheck,
+      [e.target.name]: e.target.value,
+    });
   };
 
   //onChange (인풋칸이 비어있으면 경고메시지 띄움.)
@@ -157,7 +162,11 @@ function EditProfile() {
   /**최종적으로 제출할 때 실행 */
   const submitForm = (e) => {
     e.preventDefault();
-    if (isNickOk === false || isEmailOk === false) {
+    if (
+      isNickOk === false ||
+      isEmailOk === false ||
+      isEmailNumberOk === false
+    ) {
       alert("활동명이나 이메일 중복확인 바랍니다.");
     }
     if (user !== undefined) {
@@ -181,12 +190,28 @@ function EditProfile() {
   /**모달 관련 */
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleModal = () => {
-    setIsOpen(true);
+  /**인증번호 일치 검사 */
+  const matchCertificationNumber = (e) => {
+    axios({
+      method: "POST",
+      url: `api/auth/emailcheck`,
+      data: { text: emailcheck },
+      withCredentials: true,
+    })
+      .then((res) => {
+        setIsEmailNumberOk(true);
+        alert("인증번호가 일치합니다.");
+        console.log(res);
+      })
+      .catch((e) => {
+        alert("인증번호가 일치하지 않습니다.");
+        console.log(e);
+        console.log(emailcheck);
+      });
   };
 
   /**프로필 업로드 */
-  /* 서버에 보내주는 실제 이미지 파일 */
+  /* 서버에 보내주는 실제 이미지 파일 
   const [imageFile, setImageFile] = useState([]);
 
   const [profileImage, setProfileImage] = useState([]);
@@ -207,9 +232,9 @@ function EditProfile() {
         type: fileList[0].type.slice(0, 5),
       });
     }
-    // const formData = new FormData();
-    // formData.append("file", e.target.files[0]);
-    // axios.put(`api/users/info`, formData);
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    axios.put(`api/users/info`, formData);
   };
   const showImage = useMemo(() => {
     if (!profileImage && profileImage === null) {
@@ -232,7 +257,7 @@ function EditProfile() {
       />
     );
   });
-
+*/
   return (
     userState && (
       <div>
@@ -248,25 +273,24 @@ function EditProfile() {
                     <div>
                       <button
                         className="editPhotoBtn"
-                        onClick={handleClickFileInput}
+                        //onClick={handleClickFileInput}
                       >
                         <div className="editImgWrap">
-                          {showImage}
-                          {/* <img
-                              alt="본인 프로필 사진"
-                              name="image"
-                              src={userState.info.image}
-                              id="editprofile"
-                            ></img> */}
-
+                          {/* {showImage} */}
+                          <img
+                            alt="본인 프로필 사진"
+                            name="image"
+                            src={userState.info.image}
+                            id="editprofile"
+                          ></img>
                           <input
                             style={{ display: "none" }}
                             name="image"
                             type="file"
                             accept="image/*"
-                            ref={profileImgFileInput}
+                            //ref={profileImgFileInput}
                             id="profileChangeBtn"
-                            onChange={uploadProfile}
+                            //onChange={uploadProfile}
                           ></input>
                         </div>
                       </button>
@@ -277,7 +301,7 @@ function EditProfile() {
                     <button
                       type="button"
                       id="profileChnBtn"
-                      onClick={handleModal}
+                      onClick={() => setIsOpen(true)}
                     >
                       프로필 사진 바꾸기
                     </button>
@@ -397,6 +421,7 @@ function EditProfile() {
                         autoComplete="off"
                         placeholder="인증번호를 입력하세요"
                         disabled={disable}
+                        onChange={setEmailCheck}
                       ></input>
                     </div>
                   </div>
@@ -464,7 +489,11 @@ function EditProfile() {
                     <aside>
                       <label className="editLabel"></label>
                     </aside>
-                    <button type="submit" className="editBtn">
+                    <button
+                      type="submit"
+                      className="editBtn"
+                      onClick={matchCertificationNumber}
+                    >
                       수정
                     </button>
                   </div>

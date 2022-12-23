@@ -50,7 +50,7 @@ function Login({ setIsLogined }) {
       .then((res) => {
         setTimeout(() => {
           setIsLogined("true");
-          localStorage.setItem("isLogin", "true");
+          sessionStorage.setItem("isLogin", "true");
         }, 150);
       })
       .catch((e) => {

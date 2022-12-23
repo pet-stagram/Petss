@@ -11,6 +11,7 @@ import Footer from "../footer/Footer";
 function Register() {
   const [isNickOk, setIsNickOk] = useState(false);
   const [isEmailOk, setIsEmailOk] = useState(false);
+  const [isEmailNumberOk, setIsEmailNumberOk] = useState(false);
   const [account, setAccount] = useState({
     regName: "",
     nick: "",
@@ -139,7 +140,11 @@ function Register() {
     if (isNaN(data.phone)) {
       alert("전화번호는 숫자만 입력해주세요.");
       document.querySelector("#regPhone").value = ""; //잘못적으면 빈칸
-    } else if (isNickOk === false || isEmailOk === false) {
+    } else if (
+      isNickOk === false ||
+      isEmailOk === false ||
+      isEmailNumberOk === false
+    ) {
       //활동명,이메일 중복체크 안하면 진행 안되게
       alert("활동명이나 이메일 중복확인 바랍니다.");
     }
@@ -154,6 +159,7 @@ function Register() {
       addMember(data);
     }
   };
+
   /**최종적 회원가입 */
   function addMember(data) {
     axios({
@@ -171,15 +177,17 @@ function Register() {
         console.log(e);
       });
   }
+
   /**인증번호 일치 검사 */
   const matchCertificationNumber = (e) => {
     axios({
       method: "POST",
-      url: `api/nick`,
+      url: `api/auth/emailcheck`,
       data: { text: account.text },
-      //withCredentials: true
+      withCredentials: true,
     })
       .then((res) => {
+        setIsEmailNumberOk(true);
         alert("인증번호가 일치합니다.");
         console.log(res);
       })
@@ -330,7 +338,7 @@ function Register() {
                     type="text"
                     placeholder="인증번호를 입력하세요"
                     className="regInput"
-                    id="chkCert"
+                    id="text"
                     name="text"
                     disabled={disable}
                     onChange={onChangeAccount}
