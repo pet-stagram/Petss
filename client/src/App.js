@@ -16,18 +16,37 @@ import axios from "axios";
 
 const App = () => {
 
+  
+  const isLoginedStorage = sessionStorage.getItem("isLogin");
+
+  const [isLogined, setIsLogined] = useState(isLoginedStorage ?? "false");
+  
   useEffect(() => {
     const handleTabClose = (e) => {
       e.preventDefault();
-      return (e.returnValue = 'Are you sure you want to exit?');
-      };
+         
+          axios({
+          method: "GET",
+          url: `api/auth/logout`,
+          withCredentials: true,
+        })
+
+        .then((result) => {
+          sessionStorage.setItem("isLogin", "false");
+          setIsLogined("false");
+        })
+
+        .catch((err) => {
+            console.log(err);
+        });
+      }
   
       window.addEventListener('beforeunload', handleTabClose);
   
       return () => {
         window.removeEventListener('beforeunload', handleTabClose);
       };
-    }, []);
+    }, []);    
 
 
 
@@ -36,7 +55,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Main component={<MainFeed />} />} />
+        <Route path="/" element={<Main isLogined={isLogined} setIsLogined={setIsLogined} component={<MainFeed />} />} />
         <Route path="/addFeed" element={<Main component={<AddFeed />} />} />
         <Route path="/myFeed" element={<Main component={<MyFeed />} />} />
         <Route path="/edit" element={<Main component={<Edit />} />} />
@@ -49,11 +68,11 @@ const App = () => {
     </BrowserRouter>
   );
 }
-function Main({ component }) {
+function Main({ component, isLogined, setIsLogined }) {
   //로그인 유무를 localostorage에 저장 false는 login, true는 main
-  const isLoginedStorage = sessionStorage.getItem("isLogin");
 
-  const [isLogined, setIsLogined] = useState(isLoginedStorage ?? "false");
+  // const isLoginedStorage = sessionStorage.getItem("isLogin");
+  // const [isLogined, setIsLogined] = useState(isLoginedStorage ?? "false");
 
   return (
     <ContextProvider>

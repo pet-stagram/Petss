@@ -17,20 +17,17 @@ const Navbar = ({ setIsLogined }) => {
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
 
   const logout = async() => {
-    console.log("1");
     await axios({
       method: "GET",
       url: `api/auth/logout`,
       withCredentials: true,
     })
     .then((result) => {
-      sessionStorage.setItem("isLogin", "false");
+      sessionStorage.removeItem("isLogin");
       setIsLogined("false");
-      console.log("2");
     })
     .catch((err) => {
         console.log(err);
-        console.log("3");
     });
 
 
