@@ -1,0 +1,22 @@
+.userInfo{
+    text-align: left;
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 2fr 6fr;
+    font-size: 14px;
+    margin-left: 20px;
+    margin: 0 0 15px 20px;
+}
+
+.userImage{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-size: cover;
+    margin-right: 12px;
+}
+.userImage img{
+    width: 40px;
+    height: 40px;
+}

@@ -5,9 +5,10 @@ import emptyPaw from "../../../images/empty_paw.png"
 import reply from "../../../images/reply.png"
 import message from "../../../images/message.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faAngleLeft, faChevronRight, faAngleRight,  } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight,  } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
 import Comment from './Comment';
+import styles from "../../css/post.module.css";
 import { replyStyle } from '../../css/modalStyles';
 
 
@@ -51,27 +52,27 @@ const Post = ({post}) => {
 
   return (
     <div>
-        <div className="postBox" key={post.id}>
-            <div className="userInfo">
-                <span className="userImage">
-                    <img src={post.User.image} alt="팔로잉 유저 프로필" />
+        <div className={styles.postBox} key={post.id}>
+            <div className={styles.userInfo}>
+                <span className={styles.userImage}>
+                    <img src={post.User.image} alt="following user profile" />
                 </span>
                 
-                <span className="nickname">{post.User.nick}</span>
+                <span className={styles.nickname}>{post.User.nick}</span>
             </div>
              {/************************************************************************/}
             <div >
-                <div className="post">
-                    <button onClick={()=>handlePrev(post)} className="imageButton"><FontAwesomeIcon icon={faAngleLeft}/></button>
-                    <div className="postImageBox" style={{backgroundImage: "url('"+post.PostImages[count]?.img_url+"')"}}></div>
-                    <button onClick={()=>handleNext(post)} className="imageButton"><FontAwesomeIcon icon={faAngleRight}/></button>
+                <div className={styles.post}>
+                    <button onClick={()=>handlePrev(post)} className={styles.imageButton}><FontAwesomeIcon icon={faAngleLeft}/></button>
+                    <div className={styles.postImageBox} style={{backgroundImage: "url('"+post.PostImages[count]?.img_url+"')"}}></div>
+                    <button onClick={()=>handleNext(post)} className={styles.imageButton}><FontAwesomeIcon icon={faAngleRight}/></button>
                 </div>
                 <div style={{padding:"0 20px"}}>
-                    <div className="postReaction">
+                    <div className={styles.postReaction}>
                         <button onClick={()=>handleLikeClick(post.id)}>
-                            <img src={post.Hearts.length===0 ? emptyPaw : paw} alt="like" className="like"/>
+                            <img src={post.Hearts.length===0 ? emptyPaw : paw} alt="like" className={styles.like}/>
                         </button>
-                        <button onClick={() => setReplyOpen(true)}><img src={reply} alt="like" className="like"/></button>
+                        <button onClick={() => setReplyOpen(true)}><img src={reply} alt="like" className={styles.like}/></button>
                             <Modal
                             isOpen={replyOpen}
                             onRequestClose={() => setReplyOpen(false)}
@@ -80,10 +81,10 @@ const Post = ({post}) => {
                             >
                             <Comment postId={post.id}/>
                         </Modal>
-                        <button><img src={message} alt="like" className="like"/></button>
+                        <button><img src={message} alt="like" className={styles.like}/></button>
                     </div>
                     <p className='likeCount'>좋아요 {post.Hearts.length} 개                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </p>
-                    <div className="postContent"> 
+                    <div className={styles.postContent}> 
                         {post.content}
                     </div>
                 </div>

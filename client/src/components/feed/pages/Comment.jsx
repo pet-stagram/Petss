@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import styles from "../../css/comment.module.css"
 
 const Comment = ({ postId }) => {
   // TODO : 이미지슬라이드 크기 조절 & 순서,번호 표시 가능 시 게시물 사진도 같이 보여주기.
@@ -45,8 +46,9 @@ const Comment = ({ postId }) => {
         {
           comments.map((comment)=>{
             return(
-            <li>
-                <span><img src={comment.User.image} alt="user_imag" />{comment.User.nick}</span>
+            <li className={styles.userInfo}>
+                <span className={styles.userImage}><img src={comment.User.image} alt="user_imag" /></span>
+                <span>{comment.User.nick}</span>
                 <span>{comment.content}</span>
             </li>
             )

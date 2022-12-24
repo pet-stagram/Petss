@@ -15,11 +15,11 @@ import { useUserState, ContextProvider } from "./ContextProvider";
 import axios from "axios";
 
 const App = () => {
+
   useEffect(() => {
-    const handleTabClose = event => {
-      event.preventDefault();
-      console.log('beforeunload event triggered');
-      return (event.returnValue = 'Are you sure you want to exit?');
+    const handleTabClose = (e) => {
+      e.preventDefault();
+      return (e.returnValue = 'Are you sure you want to exit?');
       };
   
       window.addEventListener('beforeunload', handleTabClose);
