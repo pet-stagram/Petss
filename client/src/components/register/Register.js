@@ -6,10 +6,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Footer from "../footer/Footer";
 
 function Register() {
   const [isNickOk, setIsNickOk] = useState(false);
   const [isEmailOk, setIsEmailOk] = useState(false);
+  const [isEmailNumberOk, setIsEmailNumberOk] = useState(false);
   const [account, setAccount] = useState({
     regName: "",
     nick: "",
@@ -17,6 +19,7 @@ function Register() {
     password: "",
     passwordConfirm: "",
     phone: "",
+    text: "",
   });
   const [disable, setDisable] = useState(true);
 
@@ -38,8 +41,8 @@ function Register() {
       .min(8, "최소 8자 이상 가능합니다.")
       .max(30, "최대 30자 까지만 가능합니다")
       .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,30}$/,
-        "영문 숫자포함 8자리를 입력해주세요."
+        /^(?=.*[A-Za-z0-9])(?=.*\d)[A-Za-z\d]{8,30}$/,
+        "영문 숫자포함 8~30자리를 입력해주세요."
       ),
     passwordConfirm: yup
       .string()
@@ -137,7 +140,11 @@ function Register() {
     if (isNaN(data.phone)) {
       alert("전화번호는 숫자만 입력해주세요.");
       document.querySelector("#regPhone").value = ""; //잘못적으면 빈칸
-    } else if (isNickOk === false || isEmailOk === false) {
+    } else if (
+      isNickOk === false ||
+      isEmailOk === false ||
+      isEmailNumberOk === false
+    ) {
       //활동명,이메일 중복체크 안하면 진행 안되게
       alert("활동명이나 이메일 중복확인 바랍니다.");
     }
@@ -153,6 +160,7 @@ function Register() {
     }
   };
 
+  /**최종적 회원가입 */
   function addMember(data) {
     axios({
       method: "POST",
@@ -170,13 +178,32 @@ function Register() {
       });
   }
 
+  /**인증번호 일치 검사 */
+  const matchCertificationNumber = (e) => {
+    axios({
+      method: "POST",
+      url: `api/auth/emailcheck`,
+      data: { text: account.text },
+      withCredentials: true,
+    })
+      .then((res) => {
+        setIsEmailNumberOk(true);
+        alert("인증번호가 일치합니다.");
+        console.log(res);
+      })
+      .catch((e) => {
+        alert("인증번호가 일치하지 않습니다.");
+        console.log(e);
+        console.log(account.text);
+      });
+  };
   return (
     <>
       <body>
         <div className="regContainer">
           <div className="mainBox">
             <div className="logo">
-              <img src={Logo} alt="펫스 로고 사진" />
+              <img src={Logo} id="registerLogoImage" alt="펫스 로고 사진" />
             </div>
             <div className="regBox">
               <form
@@ -195,7 +222,9 @@ function Register() {
                     {...register("regName")}
                     onChange={onChangeAccount}
                   />
-                  {errors.regName && <p>{errors.regName.message}</p>}
+                  {errors.regName && (
+                    <p className="registerMessage">{errors.regName.message}</p>
+                  )}
                 </div>
                 <div className="regRowWrap" id="emailWrap">
                   {/* 겹치는 활동명이면 겹친다고 말해주고 다시 바로 지워지게 만들기 */}
@@ -221,7 +250,9 @@ function Register() {
                       onClick={nickCheck}
                     />
                   </div>
-                  {errors.nick && <p>{errors.nick.message}</p>}
+                  {errors.nick && (
+                    <p className="registerMessage">{errors.nick.message}</p>
+                  )}
                 </div>
                 <div className="regRowWrap">
                   <input
@@ -234,7 +265,9 @@ function Register() {
                     {...register("password")}
                     onChange={onChangeAccount}
                   />
-                  {errors.password && <p>{errors.password.message}</p>}
+                  {errors.password && (
+                    <p className="registerMessage">{errors.password.message}</p>
+                  )}
                 </div>
                 <div className="regRowWrap">
                   <input
@@ -247,7 +280,9 @@ function Register() {
                     onChange={onChangeAccount}
                   />
                   {errors.passwordConfirm && (
-                    <p>{errors.passwordConfirm.message}</p>
+                    <p className="registerMessage">
+                      {errors.passwordConfirm.message}
+                    </p>
                   )}
                 </div>
                 <div className="regRowWrap">
@@ -264,7 +299,9 @@ function Register() {
                   <div style={{ fontSize: "12px", color: "grey" }}>
                     * 특수기호 없이 010부터 숫자만 입력해 주세요.
                   </div>
-                  {errors.phone && <p>{errors.phone.message}</p>}
+                  {errors.phone && (
+                    <p className="registerMessage">{errors.phone.message}</p>
+                  )}
                 </div>
                 <div className="regRowWrap" id="emailWrap">
                   <div>
@@ -290,7 +327,9 @@ function Register() {
                     />
                   </div>
                   {errors.email && (
-                    <p className="emailMsg">{errors.email.message}</p>
+                    <p id="emailMsg" className="registerMessage">
+                      {errors.email.message}
+                    </p>
                   )}
                 </div>
 
@@ -299,9 +338,10 @@ function Register() {
                     type="text"
                     placeholder="인증번호를 입력하세요"
                     className="regInput"
-                    id="chkCert"
-                    name="emailnumber"
+                    id="text"
+                    name="text"
                     disabled={disable}
+                    onChange={onChangeAccount}
                     //true면 비활성화
                   />
                 </div>
@@ -311,13 +351,17 @@ function Register() {
                     value="회원가입"
                     className="regInput"
                     id="regBtn"
+                    onClick={matchCertificationNumber}
                   />
                 </div>
                 <div className="mvLog">
-                  <a href="/">계정이 이미 있으신가요? 로그인</a>
+                  <a href="/" id="moveLoginPage">
+                    계정이 이미 있으신가요? 로그인
+                  </a>
                 </div>
               </form>
             </div>
+            <Footer />
           </div>
         </div>
       </body>
