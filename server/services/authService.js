@@ -39,7 +39,7 @@ module.exports = {
       }
       return result;
     } catch (err) {
-      console.error(err);;
+      console.error(err);
     }
   },
 
@@ -79,11 +79,11 @@ module.exports = {
         result = 200;
         // 기본이미지 설정
         const setImageDto = {
-          id : addUser.id,
+          id: addUser.id,
           file: "public/images/basic_profile.jpeg",
-          isBasic : true
-        }
-      await userService.updateUserImage(setImageDto);
+          isBasic: true,
+        };
+        await userService.updateUserImage(setImageDto);
       }
       //}else{
       //console.log("닉넴있음");
@@ -104,46 +104,44 @@ module.exports = {
     // 0, -1: 이메일 중복 시
     // randomnumber, randomnumber: 정상
     // -1, -1: error 시(catch)
-    try{
+    try {
       const checkEmailUser = await User.findOne({
-                    where:
-                        {email : userEmail}, 
-                        attributes: ["email"], 
-                        raw:true  
-                        });
+        where: { email: userEmail },
+        attributes: ["email"],
+        raw: true,
+      });
       //console.log(checkEmailUser.email,"findOne으로 찾아온 email값");
-      if(checkEmailUser){
-          console.log(checkEmailUser.email);
-          return [0, -1];
-      }
-      else{
-            const send = async (data) => {
-            //send function data 호출 할때 넣음
-            nodemailer
+      if (checkEmailUser) {
+        console.log(checkEmailUser.email);
+        return [0, -1];
+      } else {
+        const send = async (data) => {
+          //send function data 호출 할때 넣음
+          nodemailer
             .createTransport(email)
             .sendMail(data, function (err, info) {
-                //data=from,to,messageid
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log(info);
-                  //return info.response;
-                  info.response;
-                }
-              });
-          };          
-          const sendmessage = {  
-            //랜덤숫자 발송하기 위한 메세지를 담은 변수
-            from: "min@min.com",
-            to: "b08c00d3ca-35b52b@inbox.mailtrap.io",
-            subject: "[petss]인증 관련 이메일 입니다.",
-            text: "오른쪽 숫자 6자리를 입력해주세요 : " + randomNumber,
-          };         
-          send(sendmessage); //메세지 담은 sendmessage를 메일보냄
-          console.log(sendmessage);
-          return [randomNumber, randomNumber];   
-      }      
-    }catch(err){
+              //data=from,to,messageid
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(info);
+                //return info.response;
+                info.response;
+              }
+            });
+        };
+        const sendmessage = {
+          //랜덤숫자 발송하기 위한 메세지를 담은 변수
+          from: "min@min.com",
+          to: "b08c00d3ca-35b52b@inbox.mailtrap.io",
+          subject: "[petss]인증 관련 이메일 입니다.",
+          text: "오른쪽 숫자 6자리를 입력해주세요 : " + randomNumber,
+        };
+        send(sendmessage); //메세지 담은 sendmessage를 메일보냄
+        console.log(sendmessage);
+        return [randomNumber, randomNumber];
+      }
+    } catch (err) {
       return [-1, -1];
     }
     //인증번호 너무 많이 요청한 경우 429에러뜸. 5회 제한으로 할 수 있게
@@ -175,27 +173,25 @@ module.exports = {
 
   /* 닉넴중복 체크 */
   checkNick: async (userNick) => {
-    console.log(userNick,"컨트롤러에서 서비스로 들어온 nick값");//aa라고뜸
-    
+    console.log(userNick, "컨트롤러에서 서비스로 들어온 nick값"); //aa라고뜸
+
     try {
-        const chekNick = await User.findOne({
-                    where:
-                        {nick : userNick}, 
-                        attributes: ["nick"], 
-                        raw:true  
-                        });
-      console.log(chekNick.nick, "findOne으로 찾아온 nick값");//{ nick: 'aa' }
-      if(chekNick.nick===userNick){
-        console.log("닉넴있음, 400보냄")
+      const chekNick = await User.findOne({
+        where: { nick: userNick },
+        attributes: ["nick"],
+        raw: true,
+      });
+      console.log(chekNick.nick, "findOne으로 찾아온 nick값"); //{ nick: 'aa' }
+      if (chekNick.nick === userNick) {
+        console.log("닉넴있음, 400보냄");
         result = 400;
-      }
-      else{
-        console.log("닉넴없음, 200보냄")
+      } else {
+        console.log("닉넴없음, 200보냄");
         result = 200;
       }
-       return result;
+      return result;
     } catch (err) {
-      console.error(err);;
+      console.error(err);
     }
   },
 };

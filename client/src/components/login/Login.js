@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Modal from "./Modal";
+import Footer from "../footer/Footer";
+import styled, { css } from "styled-components";
 
 function Login({ setIsLogined }) {
   //유저 정보 저장
@@ -56,10 +58,11 @@ function Login({ setIsLogined }) {
         // console.log(e);
       });
   }
+
   //아이디, 비밀번호 찾기 팝업창
   const [openModal, setOpenModal] = useState(false);
 
-  //모달창 노출
+  //팝업창 노출
   const showModal = () => {
     setOpenModal(true);
   };
@@ -129,6 +132,7 @@ function Login({ setIsLogined }) {
                 </form>
               </div>
             </div>
+            <Footer />
           </div>
         </body>
       </context>

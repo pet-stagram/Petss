@@ -21,11 +21,14 @@
   padding: 20px;
 }
 
-.regContainer .logo img {
-  width: 280px;
+#registerLogoImage {
+  width: 300px;
 }
 .regBox {
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .register {
@@ -37,7 +40,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 
 .regInput {
@@ -97,7 +100,7 @@
   cursor: pointer;
 }
 
-.regContainer a {
+#moveLoginPage {
   text-decoration: none;
   color: black;
   font-size: 15px;
@@ -107,13 +110,13 @@
   margin-top: 20px;
 }
 
-.regContainer p {
+.registerMessage {
   font-size: 12px;
   margin-top: 5px;
   color: tomato;
 }
 
-.emailMsg {
+#emailMsg {
   margin-top: 0;
 }
 
