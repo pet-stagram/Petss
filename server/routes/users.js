@@ -274,7 +274,7 @@ router.put("/info",controller.putUserInfo);
 
 /**
  * @swagger
- *  /users/image:
+ *  /users/{userId}/image:
  *   post:
  *      summary: 유저 프로필사진 변경
  *      tags:
@@ -303,7 +303,7 @@ router.post("/:userId/image",upload.single('file'),controller.postUserImage);
 
 /**
  * @swagger
- *  /users/image:
+ *  /users/{userId}/image/basic:
  *   post:
  *      summary: 유저 프로필사진 삭제
  *      tags:
