@@ -50,6 +50,7 @@ function EditProfile() {
   const [userPw, setUserPw] = useState({ pw: "" });
   const [emailcheck, setEmailCheck] = useState("");
 
+  console.log(userState);
   //textarea에 입력하는 글자 수 표현하기 위함.
   const handlesetValue = (e) => {
     setUser({

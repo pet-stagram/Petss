@@ -13,15 +13,13 @@ const socket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    let instanceId = socket.id;
-  
     socket.on("joinRoom",(data)=>{ 
       socket.join(data.roomName);
       roomName = data.roomName;
     });
 /* nodemon으로 하면 서버가 재실행되어 roomName 값이 초기화됨 */
     socket.on("reqMsg", (messageInfo) => {
-      io.sockets.in(roomName).emit("reqMsg", {comment: messageInfo.comment, conversation : messageInfo.conversation, sender: messageInfo.sender});
+      io.sockets.in(roomName).emit("reqMsg", {comment: messageInfo.comment, conversation : messageInfo.conversation, sender: messageInfo.me});
       service.createMessages(messageInfo);
   })
   });

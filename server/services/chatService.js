@@ -47,15 +47,20 @@ module.exports = {
         }
     },
     selectMessages: async (messageDto) => {
-        const { me, conversationId, offset } = messageDto;
+        const { me, conversationId, lastId } = messageDto;
+        
+        const where = {
+            conversation_id : conversationId
+        };
+        
+        if(lastId){
+            where.id = { [Op.lt] : lastId }
+        }
         try{
         const messages = await Message.findAndCountAll({
             limit : 15,
-            offset: offset,
             order:[["sendAt","DESC"]],
-            where:{
-                conversation_id : conversationId
-            },
+            where,
             raw:true,
             nest:true,
             /* Sender 혹은 Receiver가 null이면 나, 아니면 상대방( 이름, 프로필 사진 출력하기 위해 ) */
