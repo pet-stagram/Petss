@@ -5,6 +5,7 @@ const {
 } = require("../sequelize/models/index");
 const { uploadProfileImage } = require("../module/firebase");
 const db = require("../sequelize/models/index");
+const bcrypt = require("bcrypt");
 
 module.exports = {
     /**
@@ -89,15 +90,21 @@ module.exports = {
             throw err;
         }
     },
-    updateUserPw: async (currentUser, userPw) =>{
+    updateUserPw: async (userDto) =>{
+        const hashPw = bcrypt.hashSync(userDto.password, 12);
         try {
             await User.update(
                 {
-                    password: userPw
+                    name: userDto.name,
+                    nick: userDto.nick,
+                    email: userDto.email,
+                    phone: userDto.phone,
+                    self_intro: userDto.selfIntro,
+                    password: hashPw
                 },
                 {
                     where: {
-                        id: currentUser,
+                        id: userDto.id,
                     },
                 }
             );

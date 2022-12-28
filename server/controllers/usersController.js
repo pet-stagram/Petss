@@ -17,7 +17,7 @@ module.exports = {
     },
     getUser: async (req, res) => {
         const currentUser = req.session.u_id;
-        if (false) {
+        if (!currentUser) {
             res.sendStatus(401);
         } else {
             const userId = req.params.userId;
@@ -38,18 +38,21 @@ module.exports = {
         } else {
             const userDto = {
                 id: currentUser,
-                name: req.body.name,
-                nick: req.body.nick,
-                email: req.body.email,
-                selfIntro: req.body.selfIntro,
-                phone: req.body.phone
+                name: req.body.user.name,
+                nick: req.body.user.nick,
+                email: req.body.user.email,
+                selfIntro: req.body.user.selfIntro,
+                phone: req.body.user.phone
             };
-            const userPw = req.body.pw;
+            if(req.body.userPw.pw){
+                userDto.password = req.body.userPw?.pw;
+            }
+            
             try {
-                if(userDto.password)
+                if(!userDto.password)
                     await service.updateUserInfo(userDto);
                 else
-                    await service.updateUserPw(currentUser, userPw);
+                    await service.updateUserPw(userDto);
                 res.sendStatus(201);
             } catch (err) {
                 res.sendStatus(400);
