@@ -1,8 +1,8 @@
-
 const admin = require("../services/adminService");
 const auth = require("../services/authService");
 const posts = require("../services/postsService");
 
+describe('userSer')
 test('메시지 가져오기', () => {
     const postDto = {
         user: 1, // 현재 로그인 중인 유저의 idx

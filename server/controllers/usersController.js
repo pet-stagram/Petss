@@ -31,6 +31,7 @@ module.exports = {
         }
     },
     putUserInfo: async (req, res) => {
+        console.log(req.body);
         const currentUser = req.session.u_id;
         if (!currentUser) {
             res.sendStatus(401);
@@ -39,13 +40,16 @@ module.exports = {
                 id: currentUser,
                 name: req.body.name,
                 nick: req.body.nick,
-                password: req.body.pw,
                 email: req.body.email,
                 selfIntro: req.body.selfIntro,
                 phone: req.body.phone
             };
+            const userPw = req.body.pw;
             try {
-                await service.updateUserInfo(userDto);
+                if(userDto.password)
+                    await service.updateUserInfo(userDto);
+                else
+                    await service.updateUserPw(currentUser, userPw);
                 res.sendStatus(201);
             } catch (err) {
                 res.sendStatus(400);

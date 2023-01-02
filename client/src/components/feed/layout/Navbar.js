@@ -5,36 +5,34 @@ import { NavLink } from "react-router-dom";
 import petssLogo from "../../../images/petss_logo.png";
 import Modal from "react-modal";
 import AddFeed from "../pages/AddFeed";
-import { addFeedStyle, searchStyle } from "../../css/modalStyles";
+import { addFeedStyle, searchStyle, alarmStyle } from "../../css/modalStyles";
 import Search from "../pages/Search";
+import Alarm from "../pages/Alarm";
 import { useUserState } from "../../../ContextProvider";
 import axios from "axios";
 
 const Navbar = ({ setIsLogined }) => {
   const [userState] = useUserState();
   const [searchIsOpen, setSearchIsOpen] = useState(false);
-
+  const [alarmIsOpen, setAlarmIsOpen] = useState(false);
   const [isOpenAddFeed, setIsOpenAddFeed] = useState(false);
 
-  const logout = async() => {
+  const logout = async () => {
     console.log("1");
     await axios({
       method: "GET",
       url: `api/auth/logout`,
       withCredentials: true,
     })
-    .then((result) => {
-      sessionStorage.setItem("isLogin", "false");
-      setIsLogined("false");
-      console.log("2");
-    })
-    .catch((err) => {
+      .then((result) => {
+        sessionStorage.setItem("isLogin", "false");
+        setIsLogined("false");
+        console.log("2");
+      })
+      .catch((err) => {
         console.log(err);
         console.log("3");
-    });
-
-
-
+      });
   };
 
   return userState ? (
@@ -79,7 +77,15 @@ const Navbar = ({ setIsLogined }) => {
           >
             <AddFeed setIsOpenAddFeed={setIsOpenAddFeed} />
           </Modal>
-          <li>알림</li>
+          <li onClick={() => setAlarmIsOpen(true)}>알림</li>
+          <Modal
+            isOpen={alarmIsOpen}
+            onRequestClose={() => setAlarmIsOpen(false)}
+            ariaHideApp={false}
+            style={alarmStyle}
+          >
+            <Alarm />
+          </Modal>
           <li>
             <NavLink to="/edit">설정</NavLink>
           </li>

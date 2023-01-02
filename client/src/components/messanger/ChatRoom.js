@@ -1,40 +1,29 @@
 import styles from "../../css/messanger.module.css";
 import { useInView } from 'react-intersection-observer';
 import { useState,useMemo, useEffect, useCallback, useRef } from "react";
-import axios from "axios";
 import * as common from "../../module/commonFuncion";
+import { useUserState } from '../../ContextProvider';
 
 function ChatRoom({messages, messageView, setMessages, conversationId, msgLength, setMsgLength}) {
     const page = useRef(1);
     const [ref, inView] = useInView();
-    
+    const chatContainer = useRef(null);
     const [loading, setLoading] = useState(false);
-    const [length,setLength] = useState(0);
-    const plusLength = () => {
-        setLength(length+10);
-    }
-    
+    const [hasMore , setHasMore]= useState(true);
+    const messagesEndRef = useRef();
+    const [user,setUser] = useUserState();    
     const fetch = async () => {
-        if(length===0){
-            const reverseData = {
-                chats : messages.chats.reverse(),
-                partner : messages.partner,
-                messageLength : messages.messageLength                
-            }
-        }
         try {
         setLoading(true);
-        const data = await common.getConversationDetail(conversationId, length);
+        const lastId= messages.chats[messages.chats.length - 1]?.id;
+        const data = await common.getConversationDetail(conversationId, lastId);
         if(data.chats.length===0){
-            console.log("없음")
+            setHasMore(false);
         }else{
-            const arr = messages.chats.splice(0, 0, ...data.chats.reverse())
-            const reverseData = {
-                chats : arr,
-                partner : data.partner,
-                messageLength : data.messageLength                
-            }
-            plusLength();
+            setHasMore(true);
+            const copy = {...messages};
+            copy.chats.push(...data.chats);
+            setMessages(copy);
             setLoading(false);
         }
         } catch (err) {
@@ -42,71 +31,60 @@ function ChatRoom({messages, messageView, setMessages, conversationId, msgLength
         }
       };
 
+    useEffect(()=>{
+        messagesEndRef.current?.scrollIntoView();    
+    },[messageView]);
+
     useEffect(() => {
-        if (inView) {
+        if (inView&&hasMore) {
           fetch();
         }
       }, [inView]);
 
   return (
-    <div className={styles.chatRoom}>
+    <div className={styles.chatRoom} ref={chatContainer}>
         <div ref={ref} style={{ position: 'absolute', top: '0px' }} />
-                {loading&&<h6>로딩중</h6>}
-                {messages.chats.map((chat, index) => {
-                    if (chat.senderId === messages.partner.id) {
+                {messages.chats.slice().reverse().map((chat, index) => {
+                    if (chat.senderId === user?.info?.id) {
                         return (
-                            <div
-                                className={styles.messageWrap}
-                                key={index}
-                            >
-                                <span className={styles.message}>
+                            <span className={`${styles.messageWrap} ${styles.myMsgWrap}`} key={index}>
+                                <span className={`${styles.message} ${styles.myMsg}`}>
                                     {chat.content}
                                 </span>
-                            </div>
+                            </span>
                         );
                     } else {
                         return (
-                            <div
-                                className={styles.messageWrap}
-                                key={index}
-                            >
-                                <span className={`${styles.message} ${styles.myMsg}`}
-                                >
+                            <span className={`${styles.messageWrap}  ${styles.partnerMsgWrap}`} key={index}>
+                                <span className={`${styles.message} ${styles.partnerMsg}`}>
                                     {chat.content}
                                 </span>
-                            </div>
+                            </span>
                         );
                     }
                 })}
                 {messageView.map((message,index) => {
-                    if (message.sender === "me") {
+                    if (message.sender === user?.info?.id) {
                         return (
-                            <div
-                                className={`${styles.newMessage} ${styles.myNewMsg}`}
-                                key={index}
-                            >
+                            <span className={`${styles.messageWrap} ${styles.myMsgWrap}`} key={index}>
                                 <span className={`${styles.message} ${styles.myMsg}`}>
                                     {message.comment}
                                 </span>
-                            </div>
+                            </span>
                         );
                     } else {
                         return (
-                            <div
-                                className={styles.newMessage}
-                                style={{ width: "100%", display: "flex" }}
-                                key={index}
-                            >
-                                <span className={styles.message}>
+                            <span className={`${styles.messageWrap} ${styles.partnerMsgWrap}`} key={index}>
+                                <span className={`${styles.message} ${styles.partnerMsg}`}>
                                     {message.comment}
                                 </span>
-                            </div>
+                            </span>
                         );
                     }
                 })}
 
-               
-            </div>
+                <div ref={messagesEndRef}></div>
+    </div>
   )
 }
 

@@ -15,12 +15,11 @@ function Messanger(props) {
     const page = useRef(1);
     const [ref, inView] = useInView();
     const PAGE_ITEMS_COUNT = 10;
-    
     useEffect(() => {
         const fetchConversationDetail = async (conversationId) => {
             try {
                 const messageResult = await common.getConversationDetail(
-                    conversationId, 0
+                    conversationId
                 );
                 setMessages({ ...messages, ...messageResult });
                 setLoading(false);

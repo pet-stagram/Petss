@@ -2,47 +2,45 @@ import React from 'react'
 import ChatRoom from './ChatRoom';
 import styles from "../../css/messanger.module.css";
 import { useEffect, useState, useRef } from 'react';
+import { useUserState } from '../../ContextProvider';
 import {joinChat, getSocket, sendSocketMessage, receiveMessage } from "../../module/socketio";
 
 const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLength }) => {
     const scrollRef = useRef();
-
+    const [user,setUser] = useUserState();
     const [messageView, setMessageView] = useState([]);
     const [conversation, setConversation] = useState(conversationId);
     const [room, setRoom] = useState("");
-
     
     useEffect(() => {
         joinChat(conversationId);
         setRoom(conversationId);
-        
         getSocket().on("reqMsg", (data) => {
             setMessageView((prevMsg) => [...prevMsg, data]);
         });
         /* 대화바뀔 때마다 message가 담긴 state 초기화 */
         setMessageView([]);
-        
-    }, [conversationId]);
-
+    }, []);
+    
     const sendMessage = (partner) => {
         const content = document.querySelector("#sendInput");
+        if(content.value !== ""){
         try {
             const messageInfo = {
                 conversation,
                 content,
-                sender: "me",
                 partner: partner.id,
-                me: 29, //세션
+                me: user?.info?.id, //세션
             };
             sendSocketMessage(messageInfo);
             setTimeout(() => {
                 content.value = "";
-                
             }, 10);
             
         } catch (err) {
             throw err;
         }
+    }
     };
 
     return (
@@ -54,9 +52,9 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
                     {/* 이미지 클릭 시 상대방 프로필 가기 */}        
                     <img
                         className={styles.partnerImage}
-                        src={messages.partner.image}
+                        src={messages?.partner?.image}
                         alt="상대방 이미지"/>
-                    <span>{messages.partner.nick}</span>
+                    <span>{messages?.partner?.nick}</span>
                 
             </div>
             <ChatRoom messages={messages} messageView={messageView} setMessageView={setMessageView} setMessages={setMessages} conversationId ={conversationId} msgLength = {msgLength} setMsgLength = {setMsgLength}/>
@@ -64,8 +62,10 @@ const MessageBox = ({ messages, conversationId, setMessages, msgLength, setMsgLe
                     <input
                         type="text"
                         id="sendInput"
-                        className={styles.sendInput}/>
-                    <button className={styles.sendButton} onClick={() => sendMessage(messages.partner)}>
+                        className={styles.sendInput}
+                        onKeyPress={()=>sendMessage(messages?.partner)}
+                        />
+                    <button className={styles.sendButton} onClick={() => sendMessage(messages?.partner)}>
                         보내기
                     </button>
                 </div>

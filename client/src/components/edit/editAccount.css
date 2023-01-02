@@ -32,7 +32,6 @@
   margin-left: 10px;
   border-radius: 50%;
   overflow: hidden;
-  /* background-image: url("../../images/2.jpg"); */
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -139,4 +138,20 @@
   font-size: 14px;
   margin-top: 5px;
   color: rgb(132, 132, 132);
+}
+#editProfileLabel {
+  cursor: pointer;
+}
+
+@media (max-width: 1500px) {
+  .editAccountWrap {
+    width: 760px;
+    margin: 20px;
+  }
+  .editContainer {
+    padding: 30px;
+  }
+  .editAccountBox {
+    padding: 0 0 0 80px;
+  }
 }

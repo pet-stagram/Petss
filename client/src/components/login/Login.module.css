@@ -1,11 +1,13 @@
 .logContainer {
   font-weight: 500;
   display: flex;
+  flex-direction: column;
   width: 100vw;
   height: 100vh;
   justify-content: center;
   align-items: center;
   background-color: #e1f5fe;
+  padding-top: 120px;
 }
 
 .logContainer a {
@@ -16,6 +18,7 @@
 
 .logContainer .mainBox {
   display: flex;
+  margin-bottom: 20px;
 }
 
 .logoBox {
