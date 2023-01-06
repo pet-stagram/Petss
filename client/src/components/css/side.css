@@ -1,0 +1,26 @@
+h2{
+    margin-bottom: 20px;
+}
+.messageInfo{
+    text-align: left;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    padding: 10px 10px;
+    transition: .3s;
+}
+.messageInfo:hover{
+    background-color: rgba(0, 0, 0, 0.03);
+    transition: .3s;
+    cursor: pointer;
+}
+
+.testBtn{
+    width: 90%;
+    height: 40px;
+    margin: 0 auto;
+    margin-top: 740px;
+    /* test button  */
+    background-color: rgb(255, 205, 95);
+    border: 0; 
+}

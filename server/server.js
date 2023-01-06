@@ -2,34 +2,52 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const session = require("express-session")
-const cookieParser = require('cookie-parser');
-const {sequelize} = require('./models');
+const session = require("express-session");
+const fileStore = require("session-file-store")(session);
+const cookieParser = require("cookie-parser");
+const {sequelize} = require("./sequelize/models");
 require("dotenv").config();
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require("swagger-ui-express");
+const options = require("./swagger");
+const specs = swaggerJsdoc(options);
+const rateLimit = require("express-rate-limit");
+const bcrypt = require("bcrypt");
+const passport = require("passport");
+
+/* multer */
+const multer = require('multer');
+const socket = require("./module/socket");
+const http = require("http");
 
 const app = express();
 const PORT = process.env.SERVER_PORT;
 
+const server = http.createServer(app);
+socket(server);
+
 /* Set express middleware */
 app.use(cors());
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname,"public")));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 app.use(cookieParser(process.env.COOKIE_SECRECT));
 app.use(
     session({
     resave:false,
-    saveUninitialized:false,
+    saveUninitialized:true,
     secret:process.env.COOKIE_SECRET,
+    store: new fileStore({checkPeriod:1000*60*5}),
     cookie:{
         httpOnly:true,
-        secure:false
+        secure:false,
 }}));
+
 
 /* Set Sequelize(DB) */
 sequelize.sync({force:false})
 .then(()=>{
-    console.log('db connected');
+    console.log("db connected");
 })
 .catch((err)=>{
     console.error(err);
@@ -38,13 +56,19 @@ sequelize.sync({force:false})
 /* import Routes */
 
 const authRouter = require("./routes/auth");
-const postRouter = require("./routes/post");
-const userRouter = require("./routes/user");
+const postRouter = require("./routes/posts");
+const userRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
+const chatRouter = require("./routes/chat");
+const searchRouter = require("./routes/search");
 
+app.use('/uploads', express.static('uploads'));
 app.use("/auth",authRouter);
-app.use("/post",postRouter);
-app.use("/user",userRouter);
+app.use("/posts",postRouter);
+app.use("/users",userRouter);
 app.use("/admin",adminRouter);
-
-app.listen(PORT,()=>{console.log("Running...")});
+app.use("/chat",chatRouter);
+app.use("/search",searchRouter);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+/* socket 통신을 위해 app이 아닌 http 서버 사용 */
+server.listen(PORT,()=>{console.log("Running...")});

@@ -1,0 +1,22 @@
+.wrapper {
+  /* display: flex; */
+  display: grid;
+  grid-template-columns: 1fr 4fr 1.2fr;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;600&display=swap");
+
+body {
+  font-family: "Gothic A1", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}

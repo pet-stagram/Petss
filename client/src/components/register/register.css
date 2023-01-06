@@ -1,0 +1,133 @@
+.regContainer {
+  font-family: "Gothic A1", sans-serif;
+  font-weight: 600;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  background-color: #e1f5fe;
+}
+
+.regContainer .mainBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.regContainer .logo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  padding: 20px;
+}
+
+#registerLogoImage {
+  width: 300px;
+}
+.regBox {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.register {
+  border: 1px solid none;
+  background-color: white;
+  border-radius: 5px;
+  width: 500px;
+  padding: 80px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.regInput {
+  font-weight: 600;
+  width: 380px;
+  height: 48px;
+  border: 1px solid rgb(214, 212, 212);
+  /* border-radius: 5px; */
+  padding: 10px;
+  font-size: 15px;
+}
+
+.regRowWrap {
+  margin-bottom: 20px;
+}
+
+.regBox .nameWrap {
+  margin-top: 40px;
+}
+
+.regInput:focus {
+  outline: 1px solid black;
+}
+
+#emailWrap {
+  display: flex;
+  width: 380px;
+  flex-wrap: wrap;
+}
+
+#regEmail,
+#regNick {
+  width: 275px;
+  /* margin-bottom: 10px; */
+}
+
+#certification,
+#NickCheck {
+  width: 100px;
+  padding: 0;
+  margin-left: 5px;
+  background-color: rgb(255, 205, 95);
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+#certification:focus,
+#regBtn:focus {
+  outline: none;
+}
+
+#regBtn {
+  background-color: rgb(255, 205, 95);
+  border: 1px solid none;
+  border-style: none;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+#moveLoginPage {
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+}
+.mvLog {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.registerMessage {
+  font-size: 12px;
+  margin-top: 5px;
+  color: tomato;
+}
+
+#emailMsg {
+  margin-top: 0;
+}
+
+/* 노트북 기준 */
+@media (max-width: 1800px) {
+  .regBox .nameWrap {
+    margin-top: 20px;
+  }
+
+  .regContainer .logo {
+    margin: 20px 0;
+    padding: 20px;
+  }
+}

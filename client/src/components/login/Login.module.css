@@ -1,0 +1,136 @@
+.logContainer {
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: #e1f5fe;
+  padding-top: 120px;
+}
+
+.logContainer a {
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+}
+
+.logContainer .mainBox {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.logoBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logoBox .logo {
+  width: 480px;
+  margin-right: 150px;
+  margin-bottom: 100px;
+}
+
+.logo img {
+  width: 100%;
+}
+
+.login {
+  border: 1px solid none;
+  background-color: white;
+  border-collapse: collapse;
+  border-radius: 10px;
+  width: 400px;
+  height: 460px;
+  padding: 30px 20px;
+}
+
+.loginIcon {
+  text-align: center;
+  margin-bottom: 35px;
+  margin-top: 15px;
+}
+
+.logInput {
+  font-weight: 500;
+  width: 320px;
+  /* margin-bottom: 20px; */
+  margin-left: 20px;
+  height: 45px;
+  border: 1px solid rgb(213, 211, 211);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.logBox #logEmail:focus,
+.logBox #pw:focus {
+  outline: 1px solid black;
+}
+
+#logBtn {
+  background-color: rgb(255, 205, 95);
+  border: 1px solid none;
+  border-style: none;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.findPw {
+  margin-left: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.mvReg {
+  margin-left: 20px;
+  margin-top: 30px;
+  cursor: pointer;
+}
+
+.mvReg a:hover,
+.findPw a:hover {
+  color: #f9a825;
+}
+
+@media (max-width: 1000px) {
+  .logContainer {
+    height: 1000px;
+  }
+  .logContainer .mainBox {
+    display: block;
+  }
+
+  .logContainer .logo {
+    width: 350px;
+    position: relative;
+    top: -40px;
+    left: 70px;
+  }
+
+  .logContainer .logBox {
+    position: relative;
+    top: -100px;
+    left: 50px;
+  }
+}
+
+.logFooter {
+  background-color: #e1f5fe;
+}
+
+.inputwrap {
+  margin-bottom: 20px;
+}
+
+.inputwrap p {
+  font-size: 12px;
+  margin-top: 5px;
+  color: tomato;
+  font-weight: 600;
+  margin-left: 20px;
+}
+.mvReg {
+  margin-bottom: 20px;
+}

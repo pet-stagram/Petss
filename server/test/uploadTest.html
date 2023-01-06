@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            position: relative;
+            background: #f5f6f7;
+        }
+
+    </style>
+</head>
+<body>
+    피드 작성 테스트
+    <form method="post" action="http://localhost:5100/posts" enctype="multipart/form-data" >
+        <input type="text" name="content">
+        <input type="file" name="files" multiple>
+        <input type="submit" value="제출">
+    </form>
+    유저 프로필사진 변경 테스트
+    <form  method="post" action="http://localhost:5100/users/1/image" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="put"/>
+        <input type="file" name="file">
+        <input type="submit" value="제출">
+    </form>
+    
+    <script>
+        const string = "#성공적 #로맨틱 ㅋㅋㅋㅋ";
+        const hashtags = string.match(/#[^\s#]*/g);
+        console.log(hashtags);
+    </script>
+</body>
+</html>

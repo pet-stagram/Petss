@@ -1,0 +1,157 @@
+.editContainer {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.editAccountWrap {
+  width: 950px;
+  margin-left: 80px;
+}
+.editAccountBox {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 0 150px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.editRow {
+  display: flex;
+  margin: 50px 0;
+  align-items: center;
+}
+#rowTop {
+  display: flex;
+  padding-left: 58px;
+}
+
+.editPhotoBtn {
+  width: 60px;
+  height: 60px;
+  margin-left: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  background-color: transparent;
+}
+
+#editprofile {
+  width: 62px;
+  height: 62px;
+  position: relative;
+  bottom: 7px;
+}
+
+.editRow .right {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+#editNick {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+#profileChnBtn {
+  background-color: rgb(246, 246, 246);
+  font-size: 16px;
+  color: rgb(251, 196, 77);
+  font-weight: bold;
+}
+.editLabel {
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+  margin-right: 20px;
+}
+
+.editRowInput {
+  width: 350px;
+  height: 35px;
+  border: 1px solid rgb(186, 185, 185);
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+#editRowEmail,
+#editRowNickName {
+  margin-bottom: 0px;
+}
+
+.editCheck {
+  margin-top: 10px;
+}
+
+.editBtn {
+  background-color: rgb(255, 205, 95);
+  font-size: 15px;
+  padding: 6px 12px;
+  border-radius: 3px;
+  color: #fff;
+  font-weight: bold;
+}
+
+#editNickBtn,
+#editEmailBtn {
+  margin-top: 10px;
+}
+#editCertifi {
+  width: 238px;
+  height: 32px;
+  border: 1px solid rgb(186, 185, 185);
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+#rowIntroduce {
+  align-items: start;
+}
+
+#rowIntroduce p {
+  font-size: 14px;
+}
+
+.editRow textarea {
+  width: 350px;
+  height: 80px;
+  resize: none;
+  font-size: 15px;
+}
+
+.editMsg {
+  font-size: 14px;
+  color: rgb(68, 68, 68);
+}
+
+.selectInput {
+  font-size: 14px;
+  color: rgb(132, 132, 132);
+}
+
+.warningMsg {
+  font-size: 14px;
+  margin-top: 5px;
+  color: rgb(132, 132, 132);
+}
+#editProfileLabel {
+  cursor: pointer;
+}
+
+@media (max-width: 1500px) {
+  .editAccountWrap {
+    width: 760px;
+    margin: 20px;
+  }
+  .editContainer {
+    padding: 30px;
+  }
+  .editAccountBox {
+    padding: 0 0 0 80px;
+  }
+}
