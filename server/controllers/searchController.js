@@ -31,12 +31,9 @@ module.exports = {
                 res.status(400).send("검색결과가 없습니다")      
             }
             else{
-                console.log("aa");
+                //console.log("aa");
                 res.status(200).send(findUser);
             }
-            // else if([findUser[0]===""]||[findUser[1]===""]){
-            //     res.status(400).send("검색결과가 없습니다")
-            // }
         }catch(err){
             res.sendStatus(500);
         }
